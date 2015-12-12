@@ -1,0 +1,166 @@
+/*** REMOTE CHESS STYLES ***/
+
+.nocss { display:none; }
+
+
+/* EVIL HARD RESET AND PAGE LAYOUT */
+
+* { margin:0; padding:0; }
+html { background:#f4f4f4; color:#000; }
+body {
+	background:#fff; color:#000;
+	font-family:sans-serif;
+	text-align:center;
+}
+body, pre { font-size:14px; }
+
+
+/* PAGE LAYOUT */
+
+header {
+	border-bottom:solid 1px #ccc;
+	background:#f4f4f4; color:#000;
+}
+h1 { font-size:1.5em; margin:0.25em 0 0.2em; }
+
+nav {
+	position:absolute; top:0; right:0;
+	height:0px; border:solid 1px #f4f4f4; overflow:hidden;
+	text-align:left; background:#f4f4f4; color:#000;
+}
+nav:hover {
+	height:auto; overflow:visible;
+	border:solid 1px #ccc; padding:0.3em 0.5em;
+}
+nav ul { list-style-type:none; }
+ul, li { margin:0; padding:0; }
+
+
+/* NEW GAME */
+
+body { border-top:none; }
+#new_game h1 { font-size:1.25em; }
+#new_game form { margin:1em 0; border-top:solid 1px #ccc; border-bottom:solid 1px #ccc; padding:0 0 0.5em; }
+#new_game p { margin:1em 0; }
+
+
+/* CHESS BOARD */
+
+h2 { font-size:1em; margin:1em 0; }
+table {
+	margin:1em auto;
+	border:solid 10px #886;
+	border-color:#ba8 #875 #764 #a97;
+	border-spacing:1px;
+	background:#986; color:#ba8;
+}
+td {
+	width:50px; height:50px;
+	text-align:center; vertical-align:middle; 
+	background:#a97;
+	font-size:0;
+}
+th {
+	width:25px; height:25px; border:solid 0px #00f;
+	font-weight:normal;
+}
+tr:nth-child(2n) td:nth-child(2n),
+tr:nth-child(2n+1) td:nth-child(2n+1) {
+	background:#cb9;
+	color:#888;
+}
+tr:nth-child(1) th,
+th:nth-child(10) {
+	transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+}
+table a { display:block; width:100%; height:100%; Xoutline:dashed 1px #0f0;
+	background:rgba(255, 255, 128, 0.5);
+}
+
+td.selected { Xoutline:solid 2px #0f0; }
+div.selected { outline:solid 2px #fff; }
+table.white div.white.selected { outline-color:#ff0; }
+table.black div.black.selected { outline-color:#ff0; }
+table.white div.black.selected { outline-color:#f00;outline:none; }
+table.black div.white.selected { outline-color:#f00;outline:none; }
+table.white.flipped div.white.selected { outline-color:#ff0; }
+table.black.flipped div.black.selected { outline-color:#ff0; }
+table.white.flipped div.black.selected { outline-color:#f00;outline:none; }
+table.black.flipped div.white.selected { outline-color:#f00;outline:none; }
+
+.piece, td div {
+	overflow:hidden; width:50px; height:50px;
+}
+div.white { background:url(icons_white.png); }
+div.black { background:url(icons_black.png); }
+
+.black.king   { background-position:    0px 0; }
+.black.queen  { background-position:  -50px 0; }
+.black.rook   { background-position: -100px 0; }
+.black.bishop { background-position: -150px 0; }
+.black.knight { background-position: -200px 0; }
+.black.pawn   { background-position: -250px 0; }
+
+.white.king   { background-position:    0px 0; }
+.white.queen  { background-position:  -50px 0; }
+.white.rook   { background-position: -100px 0; }
+.white.bishop { background-position: -150px 0; }
+.white.knight { background-position: -200px 0; }
+.white.pawn   { background-position: -250px 0; }
+
+
+/* PROMOTION POPUP */
+
+.popup {
+	list-style-type:none; width:100%;
+	margin-top:-0.5em; Xborder:solid 1px #000; border-width:1px 0px; Xpadding:10px 0;
+	text-align:center; Xbackground:#E6DD8C; color:#000;
+}
+.popup li { display:inline-block; padding:5px 5px 0; font-size:0; }
+.popup li div { overflow:hidden; width:50px; height:50px; }
+
+
+/* RESPONSE FORM */
+
+.send_link {
+	margin:0 0 0 -3em; padding:0.2em 0.5em;
+	border-bottom:solid 1px #ccc;
+	background:#fafafa;
+	white-space:pre-wrap; word-wrap:break-word;
+	font-size:0.75em;
+}
+.send_link a { text-decoration:none; }
+.send_link a:hover { text-decoration:underline; }
+
+input { padding:0.2em 0.3em; }
+.move input[type=text] { width:3em; }
+.names { margin:0 0 -1em; }
+.names input[type=text] { width:6em; text-align:center; }
+.names .set { border:none; font-size:1.1em; font-weight:bold; }
+p { margin:0.5em 0; }
+
+
+/* HISTORY */
+
+.history {
+	display:inline-block; text-align:left;
+	margin:0.5em 0 1em; padding:0.3em 0.5em 1em;
+}
+.history big { display:inline-block; margin:-0.25em 0.1em -0.25em 0; font-size:25px; }
+.history span { padding:0 0.15em; }
+
+
+/* DEBUG */
+
+.debug {
+	height:1.1em; overflow:hidden;
+	border-top:solid 1px #ccc; padding:0.2em;
+	text-align:left; background:#f4f4f4; color:#000;
+}
+.debug:hover {
+	height:auto; overflow:visible;
+}
+
+
+/* EOF */

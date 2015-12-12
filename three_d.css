@@ -1,0 +1,18 @@
+/*** REMOTE CHESS STYLES ***/
+
+body table {
+	perspective: 800px;
+	perspective-origin: 50% 50%;
+	transform:
+		rotateX( 20deg )
+		rotateY( 0deg )
+		rotateZ( 0deg )
+	;
+	/*transition:margin 1s, transform 1s;*/
+
+	margin:-2em auto 2em;
+}
+
+h2 { margin-bottom:0.5em; }
+
+/* EOF */
