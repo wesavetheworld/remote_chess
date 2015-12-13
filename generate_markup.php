@@ -202,7 +202,7 @@ function piece_glyph( $piece )
 {
 	if (USE_UNICODE_GLYPHS) {
 
-		$ret = '<big>';   //...title
+		$ret = '<span class="glyph">';
 
 		switch ($piece) {
 			case 'P' : $ret .= '&#9817;'; break;
@@ -224,7 +224,7 @@ function piece_glyph( $piece )
 			default: return '?';
 		}
 
-		$ret .= '</big>';
+		$ret .= '</span>';
 	}
 	else {
 		$ret = $piece;

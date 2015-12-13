@@ -51,8 +51,9 @@ table {
 	margin:1em auto;
 	border:solid 10px #886;
 	border-color:#ba8 #875 #764 #a97;
-	border-spacing:1px;
+	border-spacing:1px; empty-cells:show;
 	background:#986; color:#ba8;
+	
 }
 td {
 	width:50px; height:50px;
@@ -92,6 +93,8 @@ table.black.flipped div.white.selected { outline-color:#f00;outline:none; }
 .piece, td div {
 	overflow:hidden; width:50px; height:50px;
 }
+.notmoved:hover { outline:1px dashed #fff; }
+
 div.white { background:url(icons_white.png); }
 div.black { background:url(icons_black.png); }
 
@@ -147,7 +150,7 @@ p { margin:0.5em 0; }
 	display:inline-block; text-align:left;
 	margin:0.5em 0 1em; padding:0.3em 0.5em 1em;
 }
-.history big { display:inline-block; margin:-0.25em 0.1em -0.25em 0; font-size:25px; }
+.history .glyph { display:inline-block; margin:-0.25em 0.1em -0.25em 0; font-size:1.5em; }
 .history span { padding:0 0.15em; }
 
 

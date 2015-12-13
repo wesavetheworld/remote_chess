@@ -25,9 +25,10 @@
 * - Proper error messages instead of  die() .
 * - Respond to improper input verbously
 * - Select valid piece of opponent: No error is shown!
-* ? Nice URL: from == to? --> HTTP Redirect!
 *******************************************************************************
 * OPTIONAL
+* - Semantic markup for history
+* ? Nice URL: from == to? --> HTTP Redirect!
 * - GET toggle to show URL to send, URL does not contain that "show" toggle: "Send this"/"Your Move"
 * - Compressed URL: Coordinate only, if piece not adjacent (like text terminal)
 * ?  Compressed URL: History: Remove redundant values
@@ -113,14 +114,6 @@ main_control();   // see  game_logic.php
 <h1>Remote Chess</h1>
 </header>
 
-<nav><ul>
-<li><button onclick="toggleStyle()">Switch Style</button>
-<li><a href="<?= $href_flip ?>">Flip Board</a>
-<li><a href="<?= $href_player ?>">Switch Sides</a>
-<li><a href="./">New Game</a>
-<li><a href="<?= $href_test ?>">Test</a>
-</ul></nav>
-
 <h2><?= $heading ?></h2>
 <? IF ($promotion_popup): ?>
 <ul class="popup">
@@ -161,6 +154,14 @@ main_control();   // see  game_logic.php
 
 <? ENDIF ?>
 <?= $history_markup ?>
+
+<nav><ul>
+<li><button onclick="toggleStyle()">Switch Style</button>
+<li><a href="<?= $href_flip ?>">Flip Board</a>
+<li><a href="<?= $href_player ?>">Switch Sides</a>
+<li><a href="./">New Game</a>
+<li><a href="<?= $href_test ?>">Test</a>
+</ul></nav>
 
 <? IF (DEBUG): ?>
 <pre class="debug">

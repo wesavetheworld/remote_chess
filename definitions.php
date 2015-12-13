@@ -8,7 +8,7 @@
 define( 'DEBUG', !false );
 
 define( 'USE_UNICODE_GLYPHS', true );
-define( 'RECONSTRUCT_FROM_HISTORY', !true );
+define( 'RECONSTRUCT_FROM_HISTORY', true );
 define( 'HISTORY_PROMPT', !false );
 
 define( 'DEFAULT_NAME_WHITE', 'A. White' );
@@ -126,7 +126,8 @@ define( 'INITIAL_BOARD_CODED',
  * TEST LINK
  */
 IF (RECONSTRUCT_FROM_HISTORY):
-	define( 'TEST_LINK', '?player=black&history=mC5QCK&white=A.+White&black=B.+Black&from=F7' );
+/*EnPassant*/	#define( 'TEST_LINK', '?player=black&history=mC5QCK&white=A.+White&black=B.+Black&from=F7' );
+/*Castling*/	define( 'TEST_LINK', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQz&white=A.+White&black=B.+Black&from=E1' );
 ELSE:
 	define( 'TEST_LINK', '?player=black&history=lB5QBJ&white=A.+White&black=B.+Black&base=SaNbBcQdLeBfNgShPiPjPkPmPnPoPpPJnQpWpXpYpZp0p1p2p3s4b6q7l8b9n*s$' );
 ENDIF

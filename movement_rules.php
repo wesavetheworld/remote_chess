@@ -159,12 +159,12 @@ function pawn_move_list( $board_array, $current_player, $field )
 
 
 	// En passant
-debug_out( "\nRC: $row|$col" );
+	
 	if (($row == 3) || ($row == 4)) {
 
 		$e = get_parameter( GET_EN_PASSANT );
 		$e = ord($e) - ord('A');
-debug_out( "\ne = $e" );
+
 		if (($e == $col+1) || ($e == $col-1)) {
 			if ($col > 0) {   // check to the left
 				if (check_target(
@@ -189,9 +189,6 @@ debug_out( "\ne = $e" );
 			}
 		}
 	}
-
-
-	//... Check swapping of pawn into queen or other piece
 
 	return $ret;
 
@@ -410,6 +407,8 @@ function king_move_list( $board_array, $current_player, $field )
 	$moves = Array(
 		Array( +0, -1 ), Array( +0, +1 ),
 		Array( +1, -0 ), Array( -1, +0 ),
+		Array( -1, -1 ), Array( -1, +1 ),
+		Array( +1, -1 ), Array( +1, +1 ),
 	);
 
 	$ret = generic_move_list(
@@ -419,10 +418,35 @@ function king_move_list( $board_array, $current_player, $field )
 		$moves
 	);
 
-	list( $row, $col ) = field_to_rowcol( $field );
+	// Castling
 
-	if ('king not moved yet and line not under attack') {
-		//... Castle kingside or queenside
+	list( $row, $col ) = field_to_rowcol( $field );
+	$dir = ($current_player == WHITES_MOVE) ? +1 : -1 ;
+
+	$open_queenside =
+	(	($board_array[$dir ? 0 : 7][0] == 's')
+	||	($board_array[$dir ? 0 : 7][0] == 'S')
+	)
+	&&	($board_array[$dir ? 0 : 7][1] == '')
+	&&	($board_array[$dir ? 0 : 7][2] == '')
+	&&	($board_array[$dir ? 0 : 7][3] == '')
+	;
+
+	$open_kingside =
+	(	($board_array[$dir ? 0 : 7][7] == 's')
+	||	($board_array[$dir ? 0 : 7][7] == 'S')
+	)
+	&&	($board_array[$dir ? 0 : 7][5] == '')
+	&&	($board_array[$dir ? 0 : 7][6] == '')
+	;
+
+	if (true  || 'line not under attack') {
+		if ($open_queenside) {
+			$ret[] = rowcol_to_field( $row, $col-2 );
+		}
+		if ($open_kingside) {
+			$ret[] = rowcol_to_field( $row, $col+2 );
+		}
 	}
 
 	return $ret;
