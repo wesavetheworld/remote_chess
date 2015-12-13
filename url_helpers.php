@@ -124,7 +124,7 @@ function update_href( $current_link = '', $parameter_name = '', $add_value = '' 
 
 			// Only key given?
 			if (strpos($p, '=') === false) {
-				//  $p  is the key name. 
+				//  $p  is the key name.
 				$params_key[$p] = '';
 			}
 			// Key and value given.

@@ -11,7 +11,7 @@ define( 'OPPONENTS_PIECE', 2 );
 
 /**
  * get_player_pieces() - Returns letter codes for the current player
- */ 
+ */
 function get_player_pieces( $player )
 {
 	return ($player == WHITES_MOVE) ? WHITE_PIECES : BLACK_PIECES ;

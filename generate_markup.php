@@ -351,7 +351,7 @@ function chess_board_markup(
 			// Add TD for field
 			$html .= "\t<td$class>";
 			if ($has_href) $html .= "<a href=\"$href\">";
-			
+
 			$p = piece_in_field( $pieces, $selected, $field_name );
 			if ($p != '') {
 				$html .= $p;
