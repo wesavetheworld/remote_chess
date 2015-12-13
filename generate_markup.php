@@ -55,7 +55,76 @@ function decode_field( $code )
 }
 
 
-## HISTORY MARKUP #############################################################
+/******************************************************************************
+* HISTORY
+******************************************************************************/
+
+/**
+ * history_markup()
+ * See  decode_history  in  game_logic.php , it was the template for this
+ * function.
+ */
+function history_markup( $board, $history, $name_white, $name_black )
+{
+	global $PIECE_NAMES;
+
+	$ret = "<pre class=\"history\">\n";
+	$ret .= "<b>$name_white</b> vs. <b>$name_black</b>\n";
+
+	$length = strlen( $history );
+	for( $i = 0 ; $i < $length ; $i += 2 ) {
+		$from_code = substr( $history, $i, 1 );
+		$to_code   = substr( $history, $i+1, 1 );
+
+		$from_field = decode_field( $from_code );
+		$to_field   = decode_field( $to_code );
+
+		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
+		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
+
+		if ($i % 4 == 0) {
+			$nr = ($i/4 + 1) . ': ';
+			while (false && strlen($nr) < 5) {
+				$nr = ' ' . $nr;
+			}
+			$ret .= $nr;
+		}
+
+		$piece = $board[$f_row][$f_col];
+		$ret .= piece_glyph( $piece );
+		$ret .= strtolower( $from_field );
+
+		if ($board[$t_row][$t_col] != '') {
+			$ret .= '<span>&#215;</span>';
+		} else {
+			$ret .= '<span>&ndash;</span>';
+		}
+
+		$ret .= strtolower( $to_field );
+
+		if ($i % 4 == 0) {
+			$ret .= ', ';
+		} else {
+			$ret .= "\n";
+		}
+
+		$board = apply_move( $board,  $f_row, $f_col,  $t_row, $t_col );
+	}
+
+	if (substr($ret, -1, 1) != "\n") {
+		$ret .= "\n";
+	}
+
+	if (HISTORY_PROMPT) {
+		//...
+	}
+
+	return $ret . "</pre>\n";
+
+} // history_markup
+
+
+## HISTORY MARKUP - OLD #######################################################
 
 /**
  * history_markup_old() - old function, before real history was implemented
@@ -93,7 +162,7 @@ function history_markup_old( $board_array, $history, $name_white, $name_black )
 	$ret .= "</pre>\n";
 	return $ret;
 
-} // history_markup
+} // history_markup_old
 
 
 ## CHESS BOARD MARKUP #########################################################

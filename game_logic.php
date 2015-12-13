@@ -23,6 +23,32 @@ function new_board()
 
 
 /**
+ * decode_history()
+ */
+function decode_history( $base_array, $history )
+{
+	$ret = $base_array;
+
+	$length = strlen( $history );
+	for( $i = 0 ; $i < $length ; $i += 2 ) {
+		$from_code = substr( $history, $i, 1 );
+		$to_code   = substr( $history, $i+1, 1 );
+
+		$from_field = decode_field( $from_code );
+		$to_field   = decode_field( $to_code );
+
+		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
+		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
+
+		$ret = apply_move( $ret,  $f_row, $f_col,  $t_row, $t_col );
+	}
+
+	return $ret;
+
+} // decode_history
+
+
+/**
  * apply_move() - transfers a piece to another field
  */
 function apply_move( $board_array,  $f_row, $f_col,  $t_row, $t_col )
@@ -109,99 +135,6 @@ function select_piece( $board_array, $current_player, $field )
 
 
 /******************************************************************************
-* HISTORY
-******************************************************************************/
-
-/**
- * decode_history()
- */
-function decode_history( $base_array, $history )
-{
-	$ret = $base_array;
-
-	$length = strlen( $history );
-	for( $i = 0 ; $i < $length ; $i += 2 ) {
-		$from_code = substr( $history, $i, 1 );
-		$to_code   = substr( $history, $i+1, 1 );
-
-		$from_field = decode_field( $from_code );
-		$to_field   = decode_field( $to_code );
-
-		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
-		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
-
-		$ret = apply_move( $ret,  $f_row, $f_col,  $t_row, $t_col );
-	}
-
-	return $ret;
-
-} // decode_history
-
-
-/**
- * history_markup()
- */
-function history_markup( $board, $history, $name_white, $name_black )
-{
-	global $PIECE_NAMES;
-
-	$ret = "<pre class=\"history\">\n";
-	$ret .= "<b>$name_white</b> vs. <b>$name_black</b>\n";
-
-	$length = strlen( $history );
-	for( $i = 0 ; $i < $length ; $i += 2 ) {
-		$from_code = substr( $history, $i, 1 );
-		$to_code   = substr( $history, $i+1, 1 );
-
-		$from_field = decode_field( $from_code );
-		$to_field   = decode_field( $to_code );
-
-		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
-		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
-
-		if ($i % 4 == 0) {
-			$nr = ($i/4 + 1) . ': ';
-			while (false && strlen($nr) < 5) {
-				$nr = ' ' . $nr;
-			}
-			$ret .= $nr;
-		}
-
-		$piece = $board[$f_row][$f_col];
-		$ret .= piece_glyph( $piece );
-		$ret .= strtolower( $from_field );
-
-		if ($board[$t_row][$t_col] != '') {
-			$ret .= '<span>&#215;</span>';
-		} else {
-			$ret .= '<span>&ndash;</span>';
-		}
-
-		$ret .= strtolower( $to_field );
-
-		if ($i % 4 == 0) {
-			$ret .= ', ';
-		} else {
-			$ret .= "\n";
-		}
-
-		$board = apply_move( $board,  $f_row, $f_col,  $t_row, $t_col );
-	}
-
-	if (substr($ret, -1, 1) != "\n") {
-		$ret .= "\n";
-	}
-
-	if (HISTORY_PROMPT) {
-		//...
-	}
-
-	return $ret . "</pre>\n";
-
-} // history_markup
-
-
-/******************************************************************************
 * MAIN CONTROL
 ******************************************************************************/
 
@@ -214,15 +147,20 @@ function main_control()
 	global $show_command_form, $promotion_popup, $flip_board;
 	global $preset_from_value, $preset_to_value, $id_focus;
 	global $chess_board_markup, $history_markup;
-	global $board_encoded;
+	global $board_encoded, $game_title;
 	global $href_this, $href_test, $href_player, $href_flip;
-
+	global $game_state_link, $hmw_home_link;
 
 	// Initialize a bit
 
-	$heading = '';
-	$show_command_form = true;
-	$promotion_popup = false;
+	$promotion_popup = false;    //...NYI Show pawn promotion dialog
+	$show_command_form = true;   // Show the move input dialog
+
+	$heading = '';               // "White's move" caption
+	$game_title = '';            // Current game info for page title
+	$game_state_link = '';       // "Send this link"-link ..
+	$hmw_home_link = '';         // .. corrected for my stupid router
+
 
 	// Remember an initial double move of a pawn
 	$get_en_passant = get_parameter( GET_EN_PASSANT );
@@ -435,7 +373,6 @@ function main_control()
 			GET_EN_PASSANT . '2',
 			$get_en_passant
 		);
-		#die( "$href_this\n" );
 
 		// Game state has been updated. In case of an executed move,
 		// the browser needs to reload the page with the updated URL:
@@ -490,17 +427,51 @@ function main_control()
 	}
 
 
+	// Links for copy and paste
+
+	if( (! isset( $_GET[GET_NEW_GAME] ))
+	&&  (isset($_SERVER['HTTP_REFERER']) )
+	&&  ($cmd_from == '')
+	&&  ($cmd_to == '')
+	) {
+		// Empty referer: Not reached by clicking a link in the browser
+
+		$t = str_replace( '&amp;', '&', $href_this );
+		$game_state_link = str_replace( ' ', '+', $t );
+
+		$home_IPs = Array( '192.168.14.1', '213.47.94.176', 'local.at' );
+		foreach( $home_IPs as $ip_address ) {
+			if (strpos($game_state_link, $ip_address) !== false) {
+				$hmw_home_link = str_replace(
+					$ip_address,
+					'harald.ist.org/home',
+					$game_state_link
+				);
+			}
+		}
+
+		if ($hmw_home_link != '') {
+			$game_state_link = $hmw_home_link;
+		}
+	}
+
+
+	if (isset( $_GET[GET_WHITE] )) {
+		$move_nr = 1 + floor( strlen($history) / 4 );
+		$game_title = "$name_white vs. $name_black - Move #$move_nr - ";
+	}
+
+
 	// Debug
 
 	debug_out( "\nHistory: " );
 	debug_out( ((RECONSTRUCT_FROM_HISTORY) ? "on" : "off") );
 	debug_out( "\n\n" );
 
-	$t = str_replace( '&amp;', '&', $href_this );
-	$t = str_replace( ' ', '+', $t );
-	for( $i = 0 ; $i < strlen($t) ; $i += 32 ) {
-		debug_out( substr($t, $i, 32) . "\n" );
+	for( $i = 0 ; $i < strlen($game_state_link) ; $i += 44 ) {
+		debug_out( substr($game_state_link, $i, 44) . "</div>\n" );
 	}
+
 
 } // main_conrol
 

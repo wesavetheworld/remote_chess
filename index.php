@@ -1,4 +1,4 @@
-<?php /* index.php */ $VERSION = '&alpha;0.1.6';
+<?php /* index.php */ $VERSION = '&alpha;0.1.7';
 /******************************************************************************
 * REMOTE CHESS - MAIN SCRIPT and HTML TEMPLATE
 *******************************************************************************
@@ -8,7 +8,40 @@
 * Players enter their move and send the resulting link to their chess partners,
 * in order for them to continue the game likewise.
 *******************************************************************************
+* https://en.wikipedia.org/wiki/Portable_Game_Notation
+* https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+* https://www.reddit.com/r/dailyprogrammer/comments/3t0xdw/20151116_challenge_241_easy_unicode_chess/
+*******************************************************************************
+* https://en.wikipedia.org/wiki/Chess
+* https://en.wikipedia.org/wiki/Castling
+* https://en.wikipedia.org/wiki/Promotion_%28chess%29
+* https://en.wikipedia.org/wiki/En_passant
+* https://en.wikipedia.org/wiki/Checkmate
+* https://en.wikipedia.org/wiki/Stalemate
+* https://en.wikipedia.org/wiki/Draw_%28chess%29
+* https://en.wikipedia.org/wiki/Chess_composition
+* https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
+*******************************************************************************
+*  +--+--+--+--+--+--+--+--+         BLACK          LOCATION_CODES
+*  |A8|B8|C8|D8|E8|F8|G8|H8|    r n b q k b n r     4 5 6 7 8 9 * $
+*  +--+--+--+--+--+--+--+--+
+*  |A7|B7|C7|D7|E7|F7|G7|H7|    p p p p p p p p     W X Y Z 0 1 2 3
+*  +--+--+--+--+--+--+--+--+
+*  |A6|B6|C6|D6|E6|F6|G6|H6|                        O P Q R S T U V
+*  +--+--+--+--+--+--+--+--+
+*  |A5|B5|C5|D5|E5|F5|G5|H5|   S, s: Rook, n.y.m.   G H I J K L M N
+*  +--+--+--+--+--+--+--+--+   L, l: King, n.y.m.
+*  |A4|B4|C4|D4|E4|F4|G4|H4|                        y z A B C D E F
+*  +--+--+--+--+--+--+--+--+
+*  |A3|B3|C3|D3|E3|F3|G3|H3|                        q r s t u v w x
+*  +--+--+--+--+--+--+--+--+
+*  |A2|B2|C2|D2|E2|F2|G2|H2|    P P P P P P P P     i j k l m n o p
+*  +--+--+--+--+--+--+--+--+
+*  |A1|B1|C1|D1|E1|F1|G1|H1|    R N B Q K B N R     a b c d e f g h
+*  +--+--+--+--+--+--+--+--+         WHITE
+******************************************************************************
 * TODO
+* - Name of players and move number in title for nicer bookmarking
 * . Movement rules: En passant, castles, pawn at top
 * . Capture: Utilize "Taken by player" locations "." and ":"
 * ^ Flag: En Passant allowed next turn
@@ -27,6 +60,8 @@
 * - Select valid piece of opponent: No error is shown!
 *******************************************************************************
 * OPTIONAL
+* - Speech bubbles with user comments
+* - Mark "from" field
 * - Semantic markup for history
 * ? Nice URL: from == to? --> HTTP Redirect!
 * - GET toggle to show URL to send, URL does not contain that "show" toggle: "Send this"/"Your Move"
@@ -60,12 +95,13 @@ function debug_array( $array )
 }
 /*****************************************************************************/
 
+//... Log everything! No errors to the browser!
 set_time_limit( 2 );   // Maximum script run time, stops endless loops
 
 include 'definitions.php';       // Constant values, signal names
 include 'game_logic.php';        // Main game control
 include 'movement_rules.php';    // Find fields a piece can move to
-include 'url_helpers.php';       // update_parameters() , etc.
+include 'url_helpers.php';       //  update_parameters() , etc.
 include 'generate_markup.php';   // Output to HTML
 
 main_control();   // see  game_logic.php
@@ -77,7 +113,7 @@ main_control();   // see  game_logic.php
 
 ################################################################ COMMON HEAD ?>
 <!DOCTYPE html><html id="top" lang="en"><head><meta charset="utf-8">
-<title>Remote Chess - <?= $VERSION ?></title>
+<title><?= $game_title ?>Remote Chess - <?= $VERSION ?></title>
 <meta name="author" content="Harald Markus Wirth, http://harald.ist.org/">
 <meta name="description" content="Web service for playing chess via e-mail or instant messenger. No login required.">
 <meta name="keywords" content="remote,mail,chess">
@@ -104,6 +140,7 @@ main_control();   // see  game_logic.php
 	<label for="idSubmit" class="nocss">Submit:</label>
 	<input type="submit" value="Start Game">
 </p>
+<input type="hidden" name="<?= GET_NEW_GAME ?>">
 <script type="text/javascript"> document.getElementById('idWhite').select(); </script>
 </form>
 
@@ -155,6 +192,23 @@ main_control();   // see  game_logic.php
 <? ENDIF ?>
 <?= $history_markup ?>
 
+<? IF ($game_state_link != ''): ?>
+<h2>Send this link:</h2>
+<p class="game_state_link">
+	<a href="<?= $game_state_link ?>"><?= $game_state_link ?></a>
+</p>
+
+<? ENDIF ?>
+<footer>
+	
+</footer>
+
+<?/* IF ($hmw_home_link != ''): ?>
+<p class="game_state_link">
+	<a href="<?= $hmw_home_link ?>"><?= $hmw_home_link ?></a>
+</p>
+
+<? ENDIF */?>
 <nav><ul>
 <li><button onclick="toggleStyle()">Switch Style</button>
 <li><a href="<?= $href_flip ?>">Flip Board</a>

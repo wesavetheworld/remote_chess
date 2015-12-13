@@ -160,7 +160,7 @@ function update_href( $current_link = '', $parameter_name = '', $add_value = '' 
 
 	// SERIALIZE: Build URL parameter string
 
-	$GET_toggles = Array( 'flip' );   // Allow toggling of certain parameters here
+	$GET_toggles = Array( 'flip', 'redirect' );   // Allow toggling of certain parameters here
 
 	$params_out = '';
 	foreach( $params_key as $key => $value ) {

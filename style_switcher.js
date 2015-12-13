@@ -74,11 +74,11 @@ var cookie = readCookie("style");
 var title = cookie ? cookie : getPreferredStyleSheet();
 setActiveStyleSheet(title);
 
+var original_title = document.title;
+
 function toggleStyle()
 {
 	current = getActiveStyleSheet();
-
-	document.title = 'Current: ' + current;
 
 	switch (current) {
 		case 'Perspective':
@@ -87,6 +87,8 @@ function toggleStyle()
 		default:
 			setActiveStyleSheet('Perspective');
 	}
+
+	document.title = original_title + ' - Style: ' + getActiveStyleSheet();
 }
 
 
