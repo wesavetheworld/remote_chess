@@ -1,7 +1,21 @@
 <?php /* definitions.php */ if (!isset($VERSION)) die('Include only.');
 /******************************************************************************
 * REMOTE CHESS - DEFINITIONS
-*******************************************************************************
+******************************************************************************/
+
+## OPTIONS ####################################################################
+
+define( 'DEBUG', !false );
+
+define( 'USE_UNICODE_GLYPHS', true );
+define( 'RECONSTRUCT_FROM_HISTORY', !true );
+define( 'HISTORY_PROMPT', !false );
+
+define( 'DEFAULT_NAME_WHITE', 'A. White' );
+define( 'DEFAULT_NAME_BLACK', 'B. Black' );
+
+
+/******************************************************************************
 * https://en.wikipedia.org/wiki/Portable_Game_Notation
 * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 * https://www.reddit.com/r/dailyprogrammer/comments/3t0xdw/20151116_challenge_241_easy_unicode_chess/
@@ -35,17 +49,6 @@
 *  +--+--+--+--+--+--+--+--+         WHITE
 ******************************************************************************/
 
-## OPTIONS ####################################################################
-
-define( 'DEBUG', !false );
-
-define( 'USE_UNICODE_GLYPHS', true );
-define( 'RECONSTRUCT_FROM_HISTORY', true );
-define( 'HISTORY_PROMPT', !false );
-
-define( 'DEFAULT_NAME_WHITE', 'A. White' );
-define( 'DEFAULT_NAME_BLACK', 'B. Black' );
-
 
 ## CONSTANTS ##################################################################
 
@@ -58,8 +61,8 @@ define( 'BLACKS_MOVE', false );
  *  movement_rules.php:possible_move_list()
  *  generate_markup.php:piece_class_name()
  */
-define( 'WHITE_PIECES', 'PSRNBQLK' );
-define( 'BLACK_PIECES', 'psrnbqlk' );
+define( 'WHITE_PIECES', 'PRNBQLK' );
+define( 'BLACK_PIECES', 'prnbqlk' );
 
 // Used for nicer function calls
 define( 'REMOVE_FROM_LINK', 'REMOVE_FROM_LINK' );   // Remove a GET parameter
@@ -83,7 +86,7 @@ define( 'GET_TO',         'to'        );
 /**
  * GET_PARAMETER_ORDER
  * Parameters not listed here will be ignored by
- *  update_href()  in  definitions.php !
+ *  update_href()  in  url_helpers.php !
  */
 define( 'GET_PARAMETER_ORDER', 'flip player base history enpassant white black from to' );
 
@@ -122,8 +125,11 @@ define( 'INITIAL_BOARD_CODED',
 /**
  * TEST LINK
  */
-//define( 'TEST_LINK', '?&player=white&history=lB0Kks5Q&white=A&black=B' );
-define( 'TEST_LINK', '?player=white&history=lB0Kks5Q&white=A&black=B&base=ranbbcqdkebfngrhpjpkplpmpnpoppPWPXPYPZP0P1P2P3R4N5B6Q7K8B9N*R$' );
+IF (RECONSTRUCT_FROM_HISTORY):
+	define( 'TEST_LINK', '?player=black&history=mC5QCK&white=A.+White&black=B.+Black&from=F7' );
+ELSE:
+	define( 'TEST_LINK', '?player=black&history=lB5QBJ&white=A.+White&black=B.+Black&base=SaNbBcQdLeBfNgShPiPjPkPmPnPoPpPJnQpWpXpYpZp0p1p2p3s4b6q7l8b9n*s$' );
+ENDIF
 
 
 # EOF ?>

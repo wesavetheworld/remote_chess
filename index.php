@@ -4,7 +4,7 @@
 *******************************************************************************
 * Copyleft Tue, Dec 8, 2015 by http://harald.ist.org/
 *******************************************************************************
-* Every state of a game is represented by an URL, which can be bookmarked.
+* Every state of a game is represented by a URL, which can be bookmarked.
 * Players enter their move and send the resulting link to their chess partners,
 * in order for them to continue the game likewise.
 *******************************************************************************
@@ -15,6 +15,7 @@
 * ^ Flag: Castling only if king not moved yet
 * ^ Pawn reaches top: Menu for selecting new piece
 * - Start date and last move date in URL
+* - History: Show En Passant
 * - History: $href_history[$steps] for links back, built when building history
 * - History: GET: goto (history)
 * - History: Implement  HISTORY_PROMPT  in new history_markup()
@@ -114,10 +115,10 @@ main_control();   // see  game_logic.php
 
 <nav><ul>
 <li><button onclick="toggleStyle()">Switch Style</button>
+<li><a href="<?= $href_flip ?>">Flip Board</a>
+<li><a href="<?= $href_player ?>">Switch Sides</a>
 <li><a href="./">New Game</a>
 <li><a href="<?= $href_test ?>">Test</a>
-<li><a href="<?= $href_player ?>">Toggle Player</a>
-<li><a href="<?= $href_flip ?>">Flip Board</a>
 </ul></nav>
 
 <h2><?= $heading ?></h2>

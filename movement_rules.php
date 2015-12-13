@@ -134,6 +134,9 @@ function pawn_move_list( $board_array, $current_player, $field )
 		}
 	}
 
+
+	// Capture diagonaly
+
 	if (check_target(
 		$board_array,
 		$current_player,
@@ -153,6 +156,40 @@ function pawn_move_list( $board_array, $current_player, $field )
 		//... Test: Move not ending in king being in check?
 		$ret[] = rowcol_to_field( $row+$dir*1, $col-1 );
 	}
+
+
+	// En passant
+debug_out( "\nRC: $row|$col" );
+	if (($row == 3) || ($row == 4)) {
+
+		$e = get_parameter( GET_EN_PASSANT );
+		$e = ord($e) - ord('A');
+debug_out( "\ne = $e" );
+		if (($e == $col+1) || ($e == $col-1)) {
+			if ($col > 0) {   // check to the left
+				if (check_target(
+					$board_array,
+					$current_player,
+					$row, $col-1
+					) == OPPONENTS_PIECE
+				) {
+					$ret[] = rowcol_to_field( $row+$dir*1, $col-1 );
+				}
+			}
+
+			if ($col < 7) {   // check to the right
+				if (check_target(
+					$board_array,
+					$current_player,
+					$row, $col+1
+					) == OPPONENTS_PIECE
+				) {
+					$ret[] = rowcol_to_field( $row+$dir*1, $col+1 );
+				}
+			}
+		}
+	}
+
 
 	//... Check swapping of pawn into queen or other piece
 

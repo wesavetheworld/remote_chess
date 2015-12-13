@@ -27,16 +27,51 @@ function new_board()
  */
 function apply_move( $board_array,  $f_row, $f_col,  $t_row, $t_col )
 {
-	$piece = $board_array[$f_row][$f_col];
-	$board_array[$f_row][$f_col] = '';
+	$piece = $board_array[$f_row][$f_col];   // "Take" the piece, ..
+	$board_array[$f_row][$f_col] = '';       // .. clear origin field
+
+	$dx = $t_col - $f_col;
+	$dy = $t_row - $f_row;
+
+
+	// En passant - Remove captured enemy from board
+
+	if( (($dx == +1) || ($dx == -1))
+	&&	(  ($piece == 'P') && ($f_row == 4) && ($dy == +1)
+		|| ($piece == 'p') && ($f_row == 3) && ($dy == -1)
+		)
+	) {
+		if ($piece == 'P') {
+			if ($board_array[$f_row][$t_col] == 'p') {
+				$board_array[$f_row][$t_col] = '';
+			}
+		} else {
+			if ($board_array[$f_row][$t_col] == 'P') {
+				$board_array[$f_row][$t_col] = '';
+			}
+		}
+	}
+
+
+	// Castles
+
+	if( (($piece == 'L') || ($piece == 'l'))
+	) {
+	}
+
 
 	// Turn not yet moved pieces into already moved ones
+
 	if ($piece == 'S') $piece = 'R';   // White rooks
 	if ($piece == 's') $piece = 'r';   // Black rook
 	if ($piece == 'L') $piece = 'K';   // White king
 	if ($piece == 'l') $piece = 'k';   // Black king
 
+
+	// Move piece to target field
+
 	$board_array[$t_row][$t_col] = $piece;
+
 
 	return $board_array;
 
@@ -175,6 +210,9 @@ function main_control()
 	$show_command_form = true;
 	$promotion_popup = false;
 
+	// Remember an initial double move of a pawn
+	$get_en_passant = get_parameter( GET_EN_PASSANT );
+	$new_en_passant = '';
 
 	// Retreive GET data
 	$flip_board = isset( $_GET[GET_FLIP_BOARD] );
@@ -234,7 +272,8 @@ function main_control()
 		list( $clickable, $selected ) = select_piece(
 			$board_array,
 			$current_player,
-			$cmd_from
+			$cmd_from,
+			$get_en_passant
 		);
 
 
@@ -254,14 +293,21 @@ function main_control()
 
 		// En passant
 
-		$en_passant = '';
-		$piece = strtolower( $board_array[$f_row][$t_row] );
-		if(($piece == 'P') && ($f_row == 1)
-		|| ($piece == 'p') && ($f_row == 6)
+		$piece = $board_array[$f_row][$f_col];
+
+		if( (($piece == 'P') && ($f_row == 1))
+		||  (($piece == 'p') && ($f_row == 6))
 		) {
 			if (($t_row == 3) || ($t_row == 4)) {
-				$en_passant = chr( ord('A') + $col );
+				$get_en_passant = chr( ord('A') + $f_col );
 			}
+		}
+
+		if( (($piece == 'P') && ($t_row-$f_row == +1))
+		||  (($piece == 'p') && ($t_row-$f_row == -1))
+		||  (($piece != 'P') && ($piece != 'p'))
+		) {
+			$get_en_passant = '';
 		}
 
 
@@ -344,7 +390,7 @@ function main_control()
 	$href_this = update_href( $href_this, GET_HISTORY, $history );
 	$href_this = update_href( $href_this, GET_WHITE, $name_white );
 	$href_this = update_href( $href_this, GET_BLACK, $name_black );
-	$href_this = update_href( $href_this, GET_EN_PASSANT, $en_passant );
+	$href_this = update_href( $href_this, GET_EN_PASSANT, $get_en_passant );
 
 	$href_this = update_href( $href_this, GET_BASE_BOARD, $board_encoded );
 	debug_out( "\nboard_encoded = $board_encoded" );
@@ -369,6 +415,14 @@ function main_control()
 	// HTTP redirect?
 
 	if ($redirect_after_move) {
+
+		$href_this = update_href(
+			$href_this,
+			GET_EN_PASSANT . '2',
+			$get_en_passant
+		);
+		#die( "$href_this\n" );
+
 		// Game state has been updated. In case of an executed move,
 		// the browser needs to reload the page with the updated URL:
 		header( 'HTTP/1.0 303 Found') ;

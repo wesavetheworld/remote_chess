@@ -129,21 +129,21 @@ function piece_class_name( $code )
 {
 	$class_names = Array(
 		'P' => 'white pawn',
-		'S' => 'white rook',   // Not yet moved rook
+		'S' => 'white rook notmoved',
 		'R' => 'white rook',
 		'N' => 'white knight',
 		'B' => 'white bishop',
 		'Q' => 'white queen',
-		'L' => 'white king',   // Not yet moved king
+		'L' => 'white king notmoved',
 		'K' => 'white king',
 
 		'p' => 'black pawn',
-		's' => 'black rook',   // Not yet moved rook
+		's' => 'black rook notmoved',
 		'r' => 'black rook',
 		'n' => 'black knight',
 		'b' => 'black bishop',
 		'q' => 'black queen',
-		'l' => 'black king',   // Not yet moved king
+		'l' => 'black king notmoved',
 		'k' => 'black king',
 	);
 
