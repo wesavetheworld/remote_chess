@@ -176,7 +176,11 @@ function piece_class_markup( $code, $selected = false )
  */
 function piece_name( $code )
 {
-	return ucfirst( piece_class_name($code) );
+	$ret = ucfirst( piece_class_name($code) );
+
+	$ret = str_replace( 'notmoved', '(not moved yet)', $ret );
+
+	return $ret;
 }
 
 

@@ -61,8 +61,8 @@ define( 'BLACKS_MOVE', false );
  *  movement_rules.php:possible_move_list()
  *  generate_markup.php:piece_class_name()
  */
-define( 'WHITE_PIECES', 'PRNBQLK' );
-define( 'BLACK_PIECES', 'prnbqlk' );
+define( 'WHITE_PIECES', 'PSRNBQLK' );
+define( 'BLACK_PIECES', 'psrnbqlk' );
 
 // Used for nicer function calls
 define( 'REMOVE_FROM_LINK', 'REMOVE_FROM_LINK' );   // Remove a GET parameter

@@ -421,7 +421,7 @@ function king_move_list( $board_array, $current_player, $field )
 	// Castling
 
 	list( $row, $col ) = field_to_rowcol( $field );
-	$dir = ($current_player == WHITES_MOVE) ? +1 : -1 ;
+	$dir = ($current_player == WHITES_MOVE) ? true : false ;
 
 	$open_queenside =
 	(	($board_array[$dir ? 0 : 7][0] == 's')
@@ -436,8 +436,8 @@ function king_move_list( $board_array, $current_player, $field )
 	(	($board_array[$dir ? 0 : 7][7] == 's')
 	||	($board_array[$dir ? 0 : 7][7] == 'S')
 	)
-	&&	($board_array[$dir ? 0 : 7][5] == '')
 	&&	($board_array[$dir ? 0 : 7][6] == '')
+	&&	($board_array[$dir ? 0 : 7][5] == '')
 	;
 
 	if (true  || 'line not under attack') {

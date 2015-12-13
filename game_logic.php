@@ -57,6 +57,20 @@ function apply_move( $board_array,  $f_row, $f_col,  $t_row, $t_col )
 
 	if( (($piece == 'L') || ($piece == 'l'))
 	) {
+		if ($t_col == 2) {
+			$moved_rook = $board_array[$f_row][0];
+			if ($moved_rook == 'S') $moved_rook = 'R';
+			if ($moved_rook == 's') $moved_rook = 'r';
+			$board_array[$f_row][$f_col-1] = $moved_rook;
+			$board_array[$f_row][0] = '';
+		}
+		if ($t_col == 6) {
+			$moved_rook = $board_array[$f_row][7];
+			if ($moved_rook == 'S') $moved_rook = 'R';
+			if ($moved_rook == 's') $moved_rook = 'r';
+			$board_array[$f_row][$f_col+1] = $moved_rook;
+			$board_array[$f_row][7] = '';
+		}
 	}
 
 
