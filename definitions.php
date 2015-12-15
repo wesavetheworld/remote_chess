@@ -1,30 +1,36 @@
 <?php /* definitions.php */ if (!isset($VERSION)) die('Include only.');
 /******************************************************************************
-* REMOTE CHESS - DEFINITIONS
+* REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
+* DEFINITIONS
 ******************************************************************************/
 
-## OPTIONS ####################################################################
+/******************************************************************************
+* OPTIONS
+******************************************************************************/
 
 define( 'DEBUG', !false );
 
 define( 'USE_UNICODE_GLYPHS', true );
 define( 'RECONSTRUCT_FROM_HISTORY', true );
-define( 'HISTORY_PROMPT', !false );
 
 define( 'DEFAULT_NAME_WHITE', 'A. White' );
 define( 'DEFAULT_NAME_BLACK', 'B. Black' );
 
 
-## CONSTANTS ##################################################################
+/******************************************************************************
+* CONSTANTS
+******************************************************************************/
 
 define( 'WHITES_MOVE', true );
 define( 'BLACKS_MOVE', false );
 
 /**
  * If these change, check:
- *  game_logic.php:apply_move()
- *  movement_rules.php:possible_move_list()
- *  generate_markup.php:piece_class_name()
+ * - game_logic.php - apply_move()
+ * - movement_rules.php - possible_move_list()
+ * - generate_markup.php - piece_class_name(), piece_glyph()
+ * Successing letters placed before their predecessor are used to indicate
+ * not yet having been moved (S, L).
  */
 define( 'WHITE_PIECES', 'PSRNBQLK' );
 define( 'BLACK_PIECES', 'psrnbqlk' );
@@ -71,7 +77,9 @@ define( 'LOCATION_CODES',
 	. 'OPQRSTUV'
 	. 'WXYZ0123'
 	. '456789*$'   // Row 8, ")" = H8
-	. '.:'         // "." = taken by white, ":" = taken by black
+	. '.:_'
+		// "." = taken by white, ":" = taken by black
+		// Underscores ("_") are used for history markup
 );
 
 

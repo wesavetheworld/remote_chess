@@ -1,13 +1,21 @@
 <?php /* movement_rules.php */ if (!isset($VERSION)) die('Include only.');
 /******************************************************************************
-* REMOTE CHESS - MOVEMENT RULES
+* REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
+* MOVEMENT RULES
 ******************************************************************************/
 
+/**
+ * Constants
+ */
 define( 'TARGET_OUT_OF_BOUNDS', -1 );
 define( 'EMPTY_FIELD', 0 );
 define( 'PLAYERS_PIECE', 1 );
 define( 'OPPONENTS_PIECE', 2 );
 
+
+/******************************************************************************
+* AIDING FUNCTIONS
+******************************************************************************/
 
 /**
  * get_player_pieces() - Returns letter codes for the current player
@@ -60,8 +68,13 @@ function check_move( $board_array, $current_player,  $f_row, $f_col,  $t_row, $t
 }
 
 
+/******************************************************************************
+* PIECE MOVEMENT RULES
+******************************************************************************/
+
 /**
  * generic_move_list()
+ * Checks, if any of  $moves  is possible. Used by the King, Knight, //...Pawn?
  */
 function generic_move_list( $board_array, $current_player, $field, $moves )
 {
@@ -463,7 +476,6 @@ function king_move_list( $board_array, $current_player, $field )
  */
 function possible_move_list( $board_array, $current_player, $field )
 {
-	$ret = Array();   // List of field names accessible
 	list( $row, $col ) = field_to_rowcol( $field );
 
 	$piece_codes = get_player_pieces( $current_player );
@@ -497,7 +509,7 @@ function possible_move_list( $board_array, $current_player, $field )
 
 
 /**
- * find_movable_pieces() - Creates  $clickable
+ * find_movable_pieces() - Creates  $clickable (Array of field names)
  * Checks the board for pieces that can be moved.
  * If all your pieces are boxed in or any move would result in your king to
  * get into check, an empty array is returned, indicating the end of the game.
@@ -516,6 +528,7 @@ function find_movable_pieces( $board_array, $current_player )
 			&& (strpos($player_pieces, $piece) !== false)
 			) {
 				$field = rowcol_to_field( $row, $col );
+
 				// Check, if piece can move at all
 				$moves = possible_move_list(
 					$board_array,
@@ -524,11 +537,9 @@ function find_movable_pieces( $board_array, $current_player )
 				);
 
 				// First entry of the returned move list is
-				// the checked piece itself:
-
-				// Add to available pieces
+				// the FIELD of the currently checked piece:
 				if (isset( $moves[1] )) {
-					$ret[] = $moves[0];
+					$ret[] = $field; //...$moves[0];
 				}
 
 			}
@@ -538,6 +549,53 @@ function find_movable_pieces( $board_array, $current_player )
 	return $ret;
 
 } // find_movable_pieces
+
+
+/******************************************************************************
+* CHECK for CHECK
+******************************************************************************/
+
+/**
+ * king_in_check() - return true, if king is in check
+ */
+function king_in_check( $board_array, $current_player )//..., $move = '' )
+{
+	$ret = false;
+
+	$king_codes = ($current_player == WHITES_MOVE) ? 'LK' : 'lk' ;
+	$king_field = '';
+	for( $row = 0 ; $row < 8 ; $row++ ) {
+		for( $col = 0 ; $col < 8 ; $col++ ) {
+			$f = $board_array[$row][$col];
+			if ($f != '') {
+				if (strpos($king_codes, $f) !== false) {
+					$king_field = rowcol_to_field(
+						$row,
+						$col
+					);
+				}
+			}
+		}
+	}
+
+	$opponents_pieces = find_movable_pieces(
+		$board_array,
+		! $current_player
+	);
+debug_array( $opponents_pieces, "\nop = " );
+	foreach( $opponents_pieces as $opp ) {
+		$captures = possible_move_list(
+			$board_array,
+			!$current_player,
+			$opp
+		);
+debug_array( $captures, "\nopp=$opp captures = " );
+		$ret |= in_array( $king_field, $captures );
+	}
+
+	return $ret;
+
+} // check_check
 
 
 # EOF ?>

@@ -1,10 +1,15 @@
 <?php /* url_helpers.php */ if (!isset($VERSION)) die('Include only.');
 /******************************************************************************
-* REMOTE CHESS - URL MANAGING, updating of GET parameters
+* REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
+* URL MANAGING, updating of GET parameters
+******************************************************************************/
+
+/******************************************************************************
+* BASIC GET PARAMETER HANDLING
 ******************************************************************************/
 
 /**
- * new_board()
+ * get_parameter()
  */
 function get_parameter( $parameter_name, $default_value = '' )
 {
@@ -17,6 +22,10 @@ function get_parameter( $parameter_name, $default_value = '' )
 	return $ret;
 }
 
+
+/******************************************************************************
+* GET DATA CONVERSION
+******************************************************************************/
 
 /**
  * decode_board()
@@ -81,6 +90,10 @@ function encode_move( $f_row, $f_col, $t_row, $t_col )
 	return $f_code.$t_code;
 }
 
+
+/******************************************************************************
+* GET PARAMETER MANAGEMENT
+******************************************************************************/
 
 /**
  * update_href() - Nice URL formatting

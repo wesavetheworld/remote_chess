@@ -1,194 +1,12 @@
 <?php /* generate_markup.php */ if (!isset($VERSION)) die('Include only.');
 /******************************************************************************
-* REMOTE CHESS - MARKUP CONSTRUCTION
+* REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
+* MARKUP CONSTRUCTION
 ******************************************************************************/
-
-
-## CONVERSIONS ################################################################
-
-/**
- * rowcol_to_field() - transforms 0-based coordinates to field names like "E2"
- */
-function rowcol_to_field( $row, $col )
-{
-	$ret
-	= chr( ord('A') + $col )
-	. chr( ord('1') + $row )
-	;
-
-	return $ret;
-}
-
-
-/**
- * field_to_rowcol() - returns list($row, $col) corresponding to given field
- */
-function field_to_rowcol( $field )
-{
-	$col = ord( $field[0] ) - ord('A');
-	$row = ord( $field[1] ) - ord('1');
-
-	return Array( $row, $col );
-}
-
-
-/**
- * encode_field()
- * decode_field()
- */
-function encode_field( $field )
-{
-	$col = ord($field[0]) - ord('1');
-	$row = ord($field[1]) - ord('A');
-
-	return substr( LOCATION_CODES, $row*8+$col, 1 );
-}
-
-function decode_field( $code )
-{
-	$p = strpos( LOCATION_CODES, $code );
-
-	$col = $p % 8;
-	$row = ($p-$col) / 8;
-
-	return rowcol_to_field( $row, $col );
-}
-
 
 /******************************************************************************
-* HISTORY
+* PSEUDO CONSTANTS
 ******************************************************************************/
-
-/**
- * history_markup()
- * See  decode_history  in  game_logic.php , it was the template for this
- * function.
- */
-function history_markup( $board, $history, $name_white, $name_black )
-{
-	global $PIECE_NAMES;
-
-	$ret = "<pre class=\"history\">\n";
-	$ret .= "<b>$name_white</b> vs. <b>$name_black</b>\n";
-
-	$length = strlen( $history );
-	for( $i = 0 ; $i < $length ; $i += 2 ) {
-		$from_code = substr( $history, $i, 1 );
-		$to_code   = substr( $history, $i+1, 1 );
-
-		$from_field = decode_field( $from_code );
-		$to_field   = decode_field( $to_code );
-
-		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
-		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
-
-		if ($i % 4 == 0) {
-			$nr = ($i/4 + 1) . ': ';
-			while (false && strlen($nr) < 5) {
-				$nr = ' ' . $nr;
-			}
-			$ret .= $nr;
-		}
-
-		$piece = $board[$f_row][$f_col];
-		$ret .= piece_glyph( $piece );
-		$ret .= strtolower( $from_field );
-
-		if ($board[$t_row][$t_col] != '') {
-			$ret .= '<span>&#215;</span>';
-		} else {
-			$ret .= '<span>&ndash;</span>';
-		}
-
-		$ret .= strtolower( $to_field );
-
-		if ($i % 4 == 0) {
-			$ret .= ', ';
-		} else {
-			$ret .= "\n";
-		}
-
-		$board = apply_move( $board,  $f_row, $f_col,  $t_row, $t_col );
-	}
-
-	if (substr($ret, -1, 1) != "\n") {
-		$ret .= "\n";
-	}
-
-	if (HISTORY_PROMPT) {
-		//...
-	}
-
-	return $ret . "</pre>\n";
-
-} // history_markup
-
-
-## HISTORY MARKUP - OLD #######################################################
-
-/**
- * history_markup_old() - old function, before real history was implemented
- * The new function is kept in  game_logic.php  next to  decode_history() ,
- * because  history_markup()  is an extended version of  decode_history() ,
- * so they should be next to each other for comparison.
- */
-function history_markup_old( $board_array, $history, $name_white, $name_black )
-{
-	$ret = "<pre class=\"history\">\n<b>$name_white</b> vs. <b>$name_black</b>\n";
-
-	$move_nr = 0;
-
-	$length = strlen( $history );
-	for( $i = 0 ; $i < $length ; $i+=2 ) {
-
-		$coded_move = substr( $history, $i, 2 );
-		$from = decode_field( $coded_move[0] );
-		$to   = decode_field( $coded_move[1] );
-
-		$move_nr++;
-		$ret .= "$move_nr: $from - $to";
-
-		if ($move_nr % 2 == 0) {
-			$ret .= "\n"; 
-		} else {
-			$ret .= "  ...  ";
-		}
-	}
-
-	if (HISTORY_PROMPT) {
-		$ret .= ++$move_nr . ": ?\n";
-	}
-
-	$ret .= "</pre>\n";
-	return $ret;
-
-} // history_markup_old
-
-
-## CHESS BOARD MARKUP #########################################################
-
-/**
- * valid_field_name() - checks if a field name is well formed
- */
-function valid_field_name( $field )
-{
-	$valid = true;
-
-	if (strlen($field) == 2) {
-		$a = ord( $field[0] );
-		$n = ord( $field[1] );
-
-		$valid &= ($a >= ord('A'));
-		$valid &= ($a <= ord('H'));
-		$valid &= ($n >= ord('1'));
-		$valid &= ($n <= ord('8'));
-	} else {
-		$valid = ($field == '');
-	}
-
-	return $valid;
-}
-
 
 /**
  * piece_class_names()
@@ -225,6 +43,190 @@ function piece_class_name( $code )
 
 
 /**
+ * piece_glyph()
+ */
+function piece_glyph( $piece )
+{
+	if (USE_UNICODE_GLYPHS) {
+
+		$ret = '<span class="glyph">';
+
+		switch ($piece) {
+			case 'P' : $ret .= '&#9817;'; break;
+			case 'S' : // Fall through: Not yet moved white rook
+			case 'R' : $ret .= '&#9814;'; break;
+			case 'N' : $ret .= '&#9816;'; break;
+			case 'B' : $ret .= '&#9815;'; break;
+			case 'Q' : $ret .= '&#9813;'; break;
+			case 'L' : // Fall through: Not yet moved white king
+			case 'K' : $ret .= '&#9812;'; break;
+
+			case 'p' : $ret .= '&#9823;'; break;
+			case 's' : // Fall through: Not yet moved black rook
+			case 'r' : $ret .= '&#9820;'; break;
+			case 'n' : $ret .= '&#9822;'; break;
+			case 'b' : $ret .= '&#9821;'; break;
+			case 'q' : $ret .= '&#9819;'; break;
+			case 'l' : // Fall through: Not yet moved black king
+			case 'k' : $ret .= '&#9818;'; break;
+
+			default:
+				debug_out( "\nPIECE: $piece" );
+				return '?';
+		}
+
+		$ret .= '</span>';
+	}
+	else {
+		$ret = $piece;
+	}
+
+	return $ret;
+
+} // piece_glyph
+
+
+/******************************************************************************
+* HISTORY MARKUP (NEW)
+******************************************************************************/
+
+/**
+ * history_markup()
+ * See  decode_history  in  game_logic.php , it was the template for this
+ * function.
+ */
+function history_markup( $board, $history, $name_white, $name_black )
+{
+	global $PIECE_NAMES;
+
+	$history .= '__';
+
+	$ret = "<pre class=\"history\">\n";
+	$ret .= "<b>$name_white</b> vs. <b>$name_black</b>\n";
+
+	$length = strlen( $history );
+	for( $i = 0 ; $i < $length ; $i += 2 ) {
+		$from_code = substr( $history, $i, 1 );
+		$to_code   = substr( $history, $i+1, 1 );
+
+		$from_field = decode_field( $from_code );
+		$to_field   = decode_field( $to_code );
+
+		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
+		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
+
+		if ($i % 4 == 0) {
+			$nr = ($i/4 + 1) . ': ';
+			while (false && strlen($nr) < 5) {
+				$nr = ' ' . $nr;
+			}
+			$ret .= $nr;
+		}
+
+		if ($from_code != '_') {
+			$piece = $board[$f_row][$f_col];
+			$ret .= piece_glyph( $piece );
+			$ret .= strtolower( $from_field );
+
+			if ($board[$t_row][$t_col] != '') {
+				$ret .= '<span>&#215;</span>';
+			} else {
+				$ret .= '<span>&ndash;</span>';
+			}
+
+			$ret .= strtolower( $to_field );
+
+			if ($i % 4 == 0) {
+				$ret .= ', ';
+			} else {
+				$ret .= "\n";
+			}
+
+			$board = apply_move( $board,  $f_row, $f_col,  $t_row, $t_col );
+		}
+		else {
+			$ret .= '?';   // Finally, add a prompt
+		}
+	}
+
+	if (substr($ret, -1, 1) != "\n") {
+		$ret .= "\n";
+	}
+
+	return $ret . "</pre>\n";
+
+} // history_markup
+
+
+/******************************************************************************
+* HISTORY MARKUP (OLD)
+******************************************************************************/
+
+/**
+ * history_markup_old() - old function, before real history was implemented
+ * The new function is kept in  game_logic.php  next to  decode_history() ,
+ * because  history_markup()  is an extended version of  decode_history() ,
+ * so they should be next to each other for comparison.
+ */
+function history_markup_old( $board_array, $history, $name_white, $name_black )
+{
+	$ret = "<pre class=\"history\">\n<b>$name_white</b> vs. <b>$name_black</b>\n";
+
+	$move_nr = 0;
+
+	$length = strlen( $history );
+	for( $i = 0 ; $i < $length ; $i+=2 ) {
+
+		$coded_move = substr( $history, $i, 2 );
+		$from = decode_field( $coded_move[0] );
+		$to   = decode_field( $coded_move[1] );
+
+		$move_nr++;
+		$ret .= "$move_nr: $from - $to";
+
+		if ($move_nr % 2 == 0) {
+			$ret .= "\n"; 
+		} else {
+			$ret .= "  ...  ";
+		}
+	}
+
+	$ret .= ++$move_nr . ": ?\n";
+
+	$ret .= "</pre>\n";
+	return $ret;
+
+} // history_markup_old
+
+
+/******************************************************************************
+* CHESS BOARD MARKUP
+******************************************************************************/
+
+/**
+ * valid_field_name() - checks if a field name is well formed
+ */
+function valid_field_name( $field )
+{
+	$valid = true;
+
+	if (strlen($field) == 2) {
+		$a = ord( $field[0] );
+		$n = ord( $field[1] );
+
+		$valid &= ($a >= ord('A'));
+		$valid &= ($a <= ord('H'));
+		$valid &= ($n >= ord('1'));
+		$valid &= ($n <= ord('8'));
+	} else {
+		$valid = ($field == '');
+	}
+
+	return $valid;
+}
+
+
+/**
  * piece_class_markup()
  */
 function piece_class_markup( $code, $selected = false )
@@ -247,7 +249,7 @@ function piece_name( $code )
 {
 	$ret = ucfirst( piece_class_name($code) );
 
-	$ret = str_replace( 'notmoved', '(not moved yet)', $ret );
+	$ret = str_replace( 'notmoved', '(not yet moved)', $ret );
 
 	return $ret;
 }
@@ -266,46 +268,6 @@ function piece_name_markup( $code )
 		return '';
 	}
 }
-
-
-/**
- * piece_glyph()
- */
-function piece_glyph( $piece )
-{
-	if (USE_UNICODE_GLYPHS) {
-
-		$ret = '<span class="glyph">';
-
-		switch ($piece) {
-			case 'P' : $ret .= '&#9817;'; break;
-			case 'S' : // Fall through: Not yet moved white rook
-			case 'R' : $ret .= '&#9814;'; break;
-			case 'N' : $ret .= '&#9816;'; break;
-			case 'B' : $ret .= '&#9815;'; break;
-			case 'Q' : $ret .= '&#9813;'; break;
-			case 'L' : // Fall through: Not yet moved white king
-			case 'K' : $ret .= '&#9812;'; break;
-			case 'p' : $ret .= '&#9823;'; break;
-			case 's' : // Fall through: Not yet moved black rook
-			case 'r' : $ret .= '&#9820;'; break;
-			case 'n' : $ret .= '&#9822;'; break;
-			case 'b' : $ret .= '&#9821;'; break;
-			case 'q' : $ret .= '&#9819;'; break;
-			case 'l' : // Fall through: Not yet moved black king
-			case 'k' : $ret .= '&#9818;'; break;
-			default: return '?';
-		}
-
-		$ret .= '</span>';
-	}
-	else {
-		$ret = $piece;
-	}
-
-	return $ret;
-
-} // piece_glyph
 
 
 /**

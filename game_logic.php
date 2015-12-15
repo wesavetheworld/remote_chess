@@ -1,6 +1,7 @@
 <?php /* game_logic.php */ if (!isset($VERSION)) die('Include only.');
 /******************************************************************************
-* REMOTE CHESS - GAME LOGIC and MAIN CONTROL
+* REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
+* GAME LOGIC and MAIN CONTROL
 ******************************************************************************/
 
 /**
@@ -20,32 +21,6 @@ function new_board()
 
 	return $ret;
 }
-
-
-/**
- * decode_history()
- */
-function decode_history( $base_array, $history )
-{
-	$ret = $base_array;
-
-	$length = strlen( $history );
-	for( $i = 0 ; $i < $length ; $i += 2 ) {
-		$from_code = substr( $history, $i, 1 );
-		$to_code   = substr( $history, $i+1, 1 );
-
-		$from_field = decode_field( $from_code );
-		$to_field   = decode_field( $to_code );
-
-		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
-		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
-
-		$ret = apply_move( $ret,  $f_row, $f_col,  $t_row, $t_col );
-	}
-
-	return $ret;
-
-} // decode_history
 
 
 /**
@@ -119,6 +94,32 @@ function apply_move( $board_array,  $f_row, $f_col,  $t_row, $t_col )
 
 
 /**
+ * decode_history()
+ */
+function decode_history( $base_array, $history )
+{
+	$ret = $base_array;
+
+	$length = strlen( $history );
+	for( $i = 0 ; $i < $length ; $i += 2 ) {
+		$from_code = substr( $history, $i, 1 );
+		$to_code   = substr( $history, $i+1, 1 );
+
+		$from_field = decode_field( $from_code );
+		$to_field   = decode_field( $to_code );
+
+		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
+		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
+
+		$ret = apply_move( $ret,  $f_row, $f_col,  $t_row, $t_col );
+	}
+
+	return $ret;
+
+} // decode_history
+
+
+/**
  * select_piece() - Creates  $possible_moves
  * The returned data will be used when building markup with clickable pieces
  */
@@ -140,7 +141,7 @@ function select_piece( $board_array, $current_player, $field )
 
 function main_control()
 {
-	// These globals used as output to HTML template only
+	// These globals are used in the HTML template
 
 	global $current_player, $history;
 	global $heading, $name_white, $name_black;
@@ -150,6 +151,7 @@ function main_control()
 	global $board_encoded, $game_title;
 	global $href_this, $href_test, $href_player, $href_flip;
 	global $game_state_link, $hmw_home_link;
+
 
 	// Initialize a bit
 
@@ -162,18 +164,21 @@ function main_control()
 	$hmw_home_link = '';         // .. corrected for my stupid router
 
 
-	// Remember an initial double move of a pawn
+	//... Remember an initial double move of a pawn
+
 	$get_en_passant = get_parameter( GET_EN_PASSANT );
 	$new_en_passant = '';
 
+
 	// Retreive GET data
+
 	$flip_board = isset( $_GET[GET_FLIP_BOARD] );
-	$history = get_parameter( GET_HISTORY );
+	$history    = get_parameter( GET_HISTORY );
 	$name_white = get_parameter( GET_WHITE, DEFAULT_NAME_WHITE );
 	$name_black = get_parameter( GET_BLACK, DEFAULT_NAME_BLACK );
 
-	// &player set to anything but "white" implies "black" was given
 	if (get_parameter(GET_PLAYER, GET_WHITE) != GET_WHITE) {
+		//  &player  set, but not to "white", is taken as "black"
 		$current_player = BLACKS_MOVE;
 	} else {
 		$current_player = WHITES_MOVE;
@@ -186,6 +191,7 @@ function main_control()
 
 
 	// Trace history
+
 	if (RECONSTRUCT_FROM_HISTORY) {
 		$board_array = decode_history(
 			$base_array,
@@ -200,6 +206,12 @@ function main_control()
 
 	$cmd_from = strtoupper( get_parameter(GET_FROM) ); // Retreive commands
 	$cmd_to   = strtoupper( get_parameter(GET_TO) );
+
+	if (strlen($cmd_to) == 1) {
+		if (strpos(WHITE_PIECES.BLACK_PIECES , $cmd_from) !== false) {
+			//...editor
+		}
+	}
 
 	if (! valid_field_name( $cmd_from )) $cmd_from = '';
 	if (! valid_field_name( $cmd_to   )) $cmd_to   = '';
@@ -318,6 +330,9 @@ function main_control()
 		$heading = 'Select target';
 	}
 
+
+	// Prepare move command form
+
 	$preset_from_value = $cmd_from;
 	$preset_to_value = $cmd_to;
 
@@ -426,6 +441,9 @@ function main_control()
 		$heading .= ' move';
 	}
 
+	if (king_in_check( $board_array, $current_player )) {
+		$heading .= ' - Check!';
+	}
 
 	// Links for copy and paste
 
@@ -457,8 +475,8 @@ function main_control()
 
 
 	if (isset( $_GET[GET_WHITE] )) {
-		$move_nr = 1 + floor( strlen($history) / 4 );
-		$game_title = "$name_white vs. $name_black - Move #$move_nr - ";
+		$turn_nr = 1 + floor( strlen($history) / 4 );
+		$game_title = "$name_white vs. $name_black - Turn #$turn_nr - ";
 	}
 
 
@@ -466,12 +484,7 @@ function main_control()
 
 	debug_out( "\nHistory: " );
 	debug_out( ((RECONSTRUCT_FROM_HISTORY) ? "on" : "off") );
-	debug_out( "\n\n" );
-
-	for( $i = 0 ; $i < strlen($game_state_link) ; $i += 44 ) {
-		debug_out( substr($game_state_link, $i, 44) . "</div>\n" );
-	}
-
+	#debug_array( $board_array, "\nboard" );
 
 } // main_conrol
 
