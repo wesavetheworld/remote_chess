@@ -71,8 +71,8 @@ function field_to_rowcol( $field )
  */
 function encode_field( $field )
 {
-	$col = ord($field[0]) - ord('1');
-	$row = ord($field[1]) - ord('A');
+	$col = ord($field[0]) - ord('A');
+	$row = ord($field[1]) - ord('1');
 
 	return substr( LOCATION_CODES, $row*8+$col, 1 );
 }

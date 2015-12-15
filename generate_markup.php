@@ -45,11 +45,11 @@ function piece_class_name( $code )
 /**
  * piece_glyph()
  */
-function piece_glyph( $piece )
+function piece_glyph( $piece, $class = 'glyph' )
 {
 	if (USE_UNICODE_GLYPHS) {
 
-		$ret = '<span class="glyph">';
+		$ret = "<span class=\"$class\">";
 
 		switch ($piece) {
 			case 'P' : $ret .= '&#9817;'; break;
@@ -87,7 +87,7 @@ function piece_glyph( $piece )
 
 
 /******************************************************************************
-* HISTORY MARKUP (NEW)
+* HISTORY MARKUP
 ******************************************************************************/
 
 /**
@@ -101,9 +101,13 @@ function history_markup( $board, $history, $name_white, $name_black )
 
 	$history .= '__';
 
-	$ret = "<pre class=\"history\">\n";
-	$ret .= "<b>$name_white</b> vs. <b>$name_black</b>\n";
+	$ret
+	= "<h3><strong>$name_white</strong>"
+	. " vs. <strong>$name_black</strong></h3>\n"
+	. "<ul class=\"history\">\n"
+	;
 
+	$skipped_turns = 0;
 	$length = strlen( $history );
 	for( $i = 0 ; $i < $length ; $i += 2 ) {
 		$from_code = substr( $history, $i, 1 );
@@ -115,15 +119,30 @@ function history_markup( $board, $history, $name_white, $name_black )
 		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
 		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
 
-		if ($i % 4 == 0) {
-			$nr = ($i/4 + 1) . ': ';
-			while (false && strlen($nr) < 5) {
-				$nr = ' ' . $nr;
+		switch ($from_code) {
+		case '_':
+			if ($i % 4 == 0) {
+				$ret .= '<li>';
+				$nr = (($i/4 + 1) - $skipped_turns);
+				$ret .= $nr . ': ';
 			}
-			$ret .= $nr;
-		}
 
-		if ($from_code != '_') {
+			$ret .= '?';   // add a prompt
+			break;
+		case '(':
+			$i += 2;
+			$skipped_turns++;
+			$ret = substr( $ret, 0, -2 );
+			$ret .= piece_glyph( substr( $history, $i, 1 ), '' );
+			$ret .= ", ";
+			break;
+		default:
+			if ($i % 4 == 0) {
+				$ret .= '<li>';
+				$nr = (($i/4 + 1) - $skipped_turns);
+				$ret .= $nr . ': ';
+			}
+
 			$piece = $board[$f_row][$f_col];
 			$ret .= piece_glyph( $piece );
 			$ret .= strtolower( $from_field );
@@ -142,62 +161,79 @@ function history_markup( $board, $history, $name_white, $name_black )
 				$ret .= "\n";
 			}
 
-			$board = apply_move( $board,  $f_row, $f_col,  $t_row, $t_col );
-		}
-		else {
-			$ret .= '?';   // Finally, add a prompt
-		}
+			$board = apply_move(
+				$board,
+				$f_row, $f_col,
+				$t_row, $t_col
+			);
+		} // switch
 	}
 
 	if (substr($ret, -1, 1) != "\n") {
 		$ret .= "\n";
 	}
 
-	return $ret . "</pre>\n";
+	return $ret . "</ul>\n";
 
 } // history_markup
 
 
 /******************************************************************************
-* HISTORY MARKUP (OLD)
+* PAWN PROMOTION DIALOG
 ******************************************************************************/
 
-/**
- * history_markup_old() - old function, before real history was implemented
- * The new function is kept in  game_logic.php  next to  decode_history() ,
- * because  history_markup()  is an extended version of  decode_history() ,
- * so they should be next to each other for comparison.
- */
-function history_markup_old( $board_array, $history, $name_white, $name_black )
+function promotion_dialog_markup( $href_this, $current_player, $row, $col, $history )
 {
-	$ret = "<pre class=\"history\">\n<b>$name_white</b> vs. <b>$name_black</b>\n";
+	$current_player = ! $current_player;
+	
+	$player_pieces = get_player_pieces( $current_player );
+	$field = rowcol_to_field( $row, $col );
 
-	$move_nr = 0;
+	$ret  = "<ul class=\"popup\">\n";
 
-	$length = strlen( $history );
-	for( $i = 0 ; $i < $length ; $i+=2 ) {
+	$field_code = encode_field( $field );
 
-		$coded_move = substr( $history, $i, 2 );
-		$from = decode_field( $coded_move[0] );
-		$to   = decode_field( $coded_move[1] );
+	$code_r = '(' . $field_code . $player_pieces[PIECE_ROOK]   . ')';
+	$code_k = '(' . $field_code . $player_pieces[PIECE_KNIGHT] . ')';
+	$code_b = '(' . $field_code . $player_pieces[PIECE_BISHOP] . ')';
+	$code_q = '(' . $field_code . $player_pieces[PIECE_QUEEN]  . ')';
 
-		$move_nr++;
-		$ret .= "$move_nr: $from - $to";
+	if ($current_player == WHITES_MOVE) {
+		$color = GET_WHITE;
+		$next_player = GET_BLACK;
+	} else {
+		$color = GET_BLACK;
+		$next_player = GET_WHITE;
+	}
+	$t_color = ucfirst( $color );
 
-		if ($move_nr % 2 == 0) {
-			$ret .= "\n"; 
-		} else {
-			$ret .= "  ...  ";
-		}
+	$href_this = update_href( $href_this, GET_PLAYER, $next_player );
+
+	$href_r = update_href( $href_this, GET_HISTORY, $history . $code_r );
+	$href_n = update_href( $href_this, GET_HISTORY, $history . $code_k );
+	$href_b = update_href( $href_this, GET_HISTORY, $history . $code_b );
+	$href_q = update_href( $href_this, GET_HISTORY, $history . $code_q );
+
+	if (USE_UNICODE_GLYPHS) {
+		$r = '&#9814;';
+		$n = '&#9816;';
+		$b = '&#9815;';
+		$q = '&#9813;';
+	} else {
+		$r = $player_pieces[PIECE_ROOK];
+		$n = $player_pieces[PIECE_KNIGHT];
+		$b = $player_pieces[PIECE_BISHOP];
+		$q = $player_pieces[PIECE_QUEEN];
 	}
 
-	$ret .= ++$move_nr . ": ?\n";
+	$ret .= "<li><a href=\"$href_r\"><div class=\"$color rook\" title=\"$t_color rook\">$r</div></a>\n";
+	$ret .= "<li><a href=\"$href_n\"><div class=\"$color knight\" title=\"$t_color knight\">$n</div></a>\n";
+	$ret .= "<li><a href=\"$href_b\"><div class=\"$color bishop\" title=\"$t_color bishop\">$b</div></a>\n";
+	$ret .= "<li><a href=\"$href_q\"><div class=\"$color queen\" title=\"$t_color queen\">$q</div></a>\n";
+	$ret .= "</ul>\n\n";
 
-	$ret .= "</pre>\n";
 	return $ret;
-
-} // history_markup_old
-
+}
 
 /******************************************************************************
 * CHESS BOARD MARKUP

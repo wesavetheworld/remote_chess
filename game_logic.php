@@ -105,13 +105,22 @@ function decode_history( $base_array, $history )
 		$from_code = substr( $history, $i, 1 );
 		$to_code   = substr( $history, $i+1, 1 );
 
-		$from_field = decode_field( $from_code );
-		$to_field   = decode_field( $to_code );
+		if ($from_code == '(') {   // Promotion of previously moved pawn
+			$field = decode_field( $to_code );
+			$piece = substr( $history, $i+2, 1 );
+			list( $row, $col ) = field_to_rowcol( $field );
+			$ret[$row][$col] = $piece;
+			$i += 2;
+		}
+		else {   // Normal move
+			$from_field = decode_field( $from_code );
+			$to_field   = decode_field( $to_code );
 
-		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
-		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
+			list( $f_row, $f_col ) = field_to_rowcol( $from_field );
+			list( $t_row, $t_col ) = field_to_rowcol( $to_field );
 
-		$ret = apply_move( $ret,  $f_row, $f_col,  $t_row, $t_col );
+			$ret = apply_move( $ret,  $f_row, $f_col,  $t_row, $t_col );
+		}
 	}
 
 	return $ret;
@@ -145,9 +154,9 @@ function main_control()
 
 	global $current_player, $history;
 	global $heading, $name_white, $name_black;
-	global $show_command_form, $promotion_popup, $flip_board;
+	global $show_command_form, $flip_board;
 	global $preset_from_value, $preset_to_value, $id_focus;
-	global $chess_board_markup, $history_markup;
+	global $chess_board_markup, $history_markup, $promotion_dialog_markup;
 	global $board_encoded, $game_title;
 	global $href_this, $href_test, $href_player, $href_flip;
 	global $game_state_link, $hmw_home_link;
@@ -190,16 +199,12 @@ function main_control()
 	);
 
 
-	// Trace history
+	// Trace history (Reconstruct the current board from initial positions)
 
-	if (RECONSTRUCT_FROM_HISTORY) {
-		$board_array = decode_history(
-			$base_array,
-			$history
-		);
-	} else {
-		$board_array = $base_array;
-	}
+	$board_array = decode_history(
+		$base_array,
+		$history
+	);
 
 
 	// Validate FORM input ("from" and "to" must be field names)
@@ -275,9 +280,19 @@ function main_control()
 		}
 
 
-		// Apply move to URL (old method)
+		// Promotion
 
-		if (! RECONSTRUCT_FROM_HISTORY) {
+		if( (($piece == 'P') && ($t_row == 7))
+		||  (($piece == 'p') && ($t_row == 0))
+		) {
+			$href_this = update_href(
+				$href_this,
+				GET_PROMOTE,
+				chr( ord('A') + $t_col )
+			);
+			$promotion_popup = true;
+			$heading = 'Promote your pawn to:';
+
 			$board_array = apply_move(
 				$board_array,
 				$f_row, $f_col,
@@ -289,7 +304,8 @@ function main_control()
 		// New move applied, prepare for fresh move
 
 		$clickable = $selected = Array();
-		$cmd_from = $cmd_to = '';
+		
+		$cmd_from = $cmd_to = '';   // Fall through to NO COMMAND mode
 		$current_player = ! $current_player;
 
 		$history .= encode_move( $f_row, $f_col,  $t_row, $t_col );
@@ -297,7 +313,9 @@ function main_control()
 		// We changed the board, but the user's browser still shows the
 		// move command in its address bar. An HTTP redirect is used to
 		// update that address, but the URL is not determined yet
-		$redirect_after_move = true;
+		if (! $promotion_popup) {
+			$redirect_after_move = true;
+		}
 	}
 
 	// Exec: Deselect
@@ -341,11 +359,8 @@ function main_control()
 
 	// Generate links for main menu and board markup (pieces)
 
-	if (RECONSTRUCT_FROM_HISTORY) {
-		$board_encoded = encode_board( $base_array );
-	} else {
-		$board_encoded = encode_board( $board_array );
-	}
+	$board_encoded = encode_board( $base_array );
+
 
 	// Name parameter as code for who's player's term this is
 	$p = ($current_player == WHITES_MOVE) ? GET_WHITE : GET_BLACK ;
@@ -389,6 +404,10 @@ function main_control()
 			$get_en_passant
 		);
 
+		if (DEBUG) {
+			die( "Continue: <a href='$href_this'>$href_this</a>" );
+		}
+
 		// Game state has been updated. In case of an executed move,
 		// the browser needs to reload the page with the updated URL:
 		header( 'HTTP/1.0 303 Found') ;
@@ -399,27 +418,23 @@ function main_control()
 
 	// Create HTML markup
 
-	if (RECONSTRUCT_FROM_HISTORY) {
-		$history_markup = history_markup(
-			$base_array,
-			$history,
-			$name_white,
-			$name_black
-		);
-	} else {
-		$history_markup = history_markup_old(
-			$board_array,
-			$history,
-			$name_white,
-			$name_black
-		);
-	}
+	$history_markup = history_markup(
+		$base_array,
+		$history,
+		$name_white,
+		$name_black
+	);
 
-	// Promotion popup
 	if ($promotion_popup) {
+		$promotion_dialog_markup = promotion_dialog_markup(
+			$href_this,
+			$current_player,
+			$t_row, $t_col,
+			$history
+		);
 		$clickable = $selected = Array();
-		$heading = 'Promote your pawn to:';
-		//... Select that pawn
+	} else {
+		$promotion_dialog_markup = '';
 	}
 
 	$chess_board_markup = chess_board_markup(
@@ -471,6 +486,8 @@ function main_control()
 		if ($hmw_home_link != '') {
 			$game_state_link = $hmw_home_link;
 		}
+
+		$game_state_link = str_replace( 'flip&', '', $game_state_link );
 	}
 
 
@@ -483,7 +500,6 @@ function main_control()
 	// Debug
 
 	debug_out( "\nHistory: " );
-	debug_out( ((RECONSTRUCT_FROM_HISTORY) ? "on" : "off") );
 	#debug_array( $board_array, "\nboard" );
 
 } // main_conrol

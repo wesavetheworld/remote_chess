@@ -1,6 +1,7 @@
-===============================================================================
-= REMOTE CHESS
-===============================================================================
+/******************************************************************************
+* REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
+* README
+******************************************************************************/
 
 Table of Contents
 	1. Overview
@@ -29,7 +30,9 @@ should be handled by  index.php , which will likely be the default.
 
 Since short tags are deprecated, you can either set
 	php_value short_open_tag 1
-or change all instances of  <?= STUFF ?>  with  <?php echo STUFF ?> .
+or replace all instances of  <?= STUFF ?>  with  <?php echo STUFF ?> .
+
+There is a bunch of options in  definitions.php .
 
 
 3. MODE OF OPERATION
@@ -84,21 +87,22 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 
 5. TODO
 =======
-. Capture: Utilize "Taken by player" locations "." and ":"
-^ Promption: Menu for selecting new piece
-- Start date and last move date in URL
-- History: Show En Passant
-- History: $href_history[$steps] for links back, built when building history
-- History: GET: goto (history)
+- ET_EN_PASSANT . '2'  ?? main control
 - Detect check mate
-- Respond to improper input verbously
 - Select valid piece of opponent: No error is shown!
 == OPTIONAL ===================================================================
+- History: $href_history[$steps] for links back, built when building history
+- History: GET: goto (history)
+- Keep orientation: &top={white|black}
 - Mark "from" and "to" of last move
 - History: Remove redundant parts (Initial moves of pawns, etc.)
+- History: Show En Passant
 - Chess riddles, $riddle[code]=description html
+. Capture: Utilize "Taken by player" locations "." and ":"
 - Editor: from = piece code, to = field: create piece, delete: "to" only?
+- Start date and last move date in URL
 - Proper error messages instead of  die() .
+- Respond to improper input verbously
 - Speech bubbles with user comments
 - Store/retrieve game state in/from cookies (save/load buttons, auto-save)
 - Semantic markup for history
@@ -107,6 +111,7 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 - Provide everything needed to input the move in initial page (all moves
 ^ list), in order to prevent reloads while entering one's move (JS?)
 - Play against AI
+- base href for shorter links?
 == RE-CHECK ===================================================================
 - CSS: Cross browser compatibility
 - Both modes: RECONSTRUCT_FROM_HISTORY

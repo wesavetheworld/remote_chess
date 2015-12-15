@@ -8,12 +8,11 @@
 * OPTIONS
 ******************************************************************************/
 
-define( 'DEBUG', !false );
+define( 'DEBUG', false );                     // Show  debug_out()  messages
 
-define( 'USE_UNICODE_GLYPHS', true );
-define( 'RECONSTRUCT_FROM_HISTORY', true );
+define( 'USE_UNICODE_GLYPHS', true );         // Use special characters
 
-define( 'DEFAULT_NAME_WHITE', 'A. White' );
+define( 'DEFAULT_NAME_WHITE', 'A. White' );   // Preset names for new games
 define( 'DEFAULT_NAME_BLACK', 'B. Black' );
 
 
@@ -21,23 +20,32 @@ define( 'DEFAULT_NAME_BLACK', 'B. Black' );
 * CONSTANTS
 ******************************************************************************/
 
-define( 'WHITES_MOVE', true );
-define( 'BLACKS_MOVE', false );
+define( 'WHITES_MOVE', true );     //... This could be done nicer, there are..
+define( 'BLACKS_MOVE', false );    //... .. too many black/white related names
 
 /**
  * If these change, check:
- * - game_logic.php - apply_move()
- * - movement_rules.php - possible_move_list()
- * - generate_markup.php - piece_class_name(), piece_glyph()
+ * - game_logic.php
+ *	apply_move()
+ * - movement_rules.php
+ *	possible_move_list()
+ * - generate_markup.php
+ *	piece_class_name()
+ *	piece_glyph()
  * Successing letters placed before their predecessor are used to indicate
  * not yet having been moved (S, L).
  */
 define( 'WHITE_PIECES', 'PSRNBQLK' );
 define( 'BLACK_PIECES', 'psrnbqlk' );
 
+define( 'PIECE_ROOK',   2 );   // Indices to the above strings
+define( 'PIECE_KNIGHT', 3 );
+define( 'PIECE_BISHOP', 4 );
+define( 'PIECE_QUEEN',  5 );
+
+
 // Used for nicer function calls
 define( 'REMOVE_FROM_LINK', 'REMOVE_FROM_LINK' );   // Remove a GET parameter
-define( 'BOARD_FLIPPED', true );
 
 
 /**
@@ -52,8 +60,9 @@ define( 'GET_WHITE',      'white'     );
 define( 'GET_BLACK',      'black'     );
 define( 'GET_FROM',       'from'      );
 define( 'GET_TO',         'to'        );
-define( 'GET_REDIRECT',   'redirect'  );
 define( 'GET_NEW_GAME',   'newgame'   );
+define( 'GET_PROMOTE',    'promote'   );
+define( 'GET_SELECT',     'select'    );
 
 
 /**
@@ -61,7 +70,10 @@ define( 'GET_NEW_GAME',   'newgame'   );
  * Parameters not listed here will be ignored by
  *  update_href()  in  url_helpers.php !
  */
-define( 'GET_PARAMETER_ORDER', 'flip player base history enpassant white black from to redirect' );
+define( 'GET_PARAMETER_ORDER',
+	  'flip player base history enpassant '
+	. 'promote select white black from to'
+);
 
 
 /**
@@ -100,12 +112,9 @@ define( 'INITIAL_BOARD_CODED',
 /**
  * TEST LINK
  */
-IF (RECONSTRUCT_FROM_HISTORY):
 /*EnPassant*/	#define( 'TEST_LINK', '?player=black&history=mC5QCK&white=A.+White&black=B.+Black&from=F7' );
-/*Castling*/	define( 'TEST_LINK', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQz&white=A.+White&black=B.+Black&from=E1' );
-ELSE:
-	define( 'TEST_LINK', '?player=black&history=lB5QBJ&white=A.+White&black=B.+Black&base=SaNbBcQdLeBfNgShPiPjPkPmPnPoPpPJnQpWpXpYpZp0p1p2p3s4b6q7l8b9n*s$' );
-ENDIF
-
+/*Castling*/	#define( 'TEST_LINK', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQz&white=A.+White&black=B.+Black&from=E1' );
+/*Promotion*/	#define( 'TEST_LINK', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91&white=A.+White&black=B.+Black' );
+define( 'TEST_LINK', '?player=black&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91qHKCHqCuedumdf&white=A.+White&black=B.+Black' );
 
 # EOF ?>

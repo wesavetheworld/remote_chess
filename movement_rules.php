@@ -582,14 +582,14 @@ function king_in_check( $board_array, $current_player )//..., $move = '' )
 		$board_array,
 		! $current_player
 	);
-debug_array( $opponents_pieces, "\nop = " );
+
 	foreach( $opponents_pieces as $opp ) {
 		$captures = possible_move_list(
 			$board_array,
 			!$current_player,
 			$opp
 		);
-debug_array( $captures, "\nopp=$opp captures = " );
+
 		$ret |= in_array( $king_field, $captures );
 	}
 

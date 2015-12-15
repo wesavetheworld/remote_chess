@@ -1,4 +1,4 @@
-<?php /* index.php */ $VERSION = '&alpha;0.1.8';
+<?php /* index.php */ $VERSION = '&beta;0.1.8';
 /******************************************************************************
 * REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
 * MAIN SCRIPT and HTML TEMPLATE
@@ -23,7 +23,7 @@ main_control();   // see  game_logic.php
 
 //////////////////////////////////////////////////////////////// COMMON HEAD ?>
 <!DOCTYPE html><html id="top" lang="en"><head><meta charset="utf-8">
-<title><?= $game_title ?>Correspondence Chess - <?= $VERSION ?></title>
+<title><?= $game_title ?>Remote Chess - <?= $VERSION ?></title>
 <meta name="author" content="Harald Markus Wirth, http://harald.ist.org/">
 <meta name="description" content="Web service for playing chess via e-mail or instant messenger. No login required.">
 <meta name="keywords" content="remote,mail,chess">
@@ -58,20 +58,12 @@ main_control();   // see  game_logic.php
 </head><body id="chess_board">
 
 <header>
-<h1>Correspondence Chess</h1>
+<h1>Remote Chess</h1>
 </header>
 
 <h2><?= $heading ?></h2>
-<? IF ($promotion_popup): ?>
-<ul class="popup">
-<li><a href=""><div class="white rook" title="White rook">R</div></a>
-<li><a href=""><div class="white knight" title="White knight">N</div></a>
-<li><a href=""><div class="white bishop" title="White bishop">B</div></a>
-<li><a href=""><div class="white queen" title="White queen">Q</div></a>
-</ul>
-
-<? ENDIF ?>
-<?= $chess_board_markup; ?>
+<?= $promotion_dialog_markup ?>
+<?= $chess_board_markup ?>
 
 <? IF ($show_command_form): ?>
 <form action="./" method="get" accept-charset="utf-8">
@@ -83,7 +75,7 @@ main_control();   // see  game_logic.php
 <input type="hidden" name="<?= GET_WHITE ?>" value="<?= $name_white ?>">
 <input type="hidden" name="<?= GET_BLACK ?>" value="<?= $name_black ?>">
 <input type="hidden" name="<?= GET_BASE_BOARD ?>" value="<?= $board_encoded ?>">
-<? IF (!$promotion_popup): ?>
+<? IF ($promotion_dialog_markup == ''): ?>
 <p class="move">
 	Move
 	<label for="idFrom">from:</label>
