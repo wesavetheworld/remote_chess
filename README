@@ -1,0 +1,115 @@
+===============================================================================
+= REMOTE CHESS
+===============================================================================
+
+Table of Contents
+	1. Overview
+	2. Installing
+	3. Mode of Operation
+	4. Resources
+	5. Todo
+
+
+1. OVERVIEW
+===========
+
+REMOTE CHESS is a web platform for playing chess via e-mail or instant
+messenger. Every state of a game is represented by a URL, saving the game is
+done by bookmarking the page. Players receive a link, enter their move and send
+the resulting link back to their chess partners, so they can continue the game.
+
+
+2. INSTALLING
+=============
+
+Copy all files into a folder in your web space.
+
+You may have to enable PHP. Also, directory requests like xy.com/chess/?params
+should be handled by  index.php , which will likely be the default.
+
+Since short tags are deprecated, you can either set
+	php_value short_open_tag 1
+or change all instances of  <?= STUFF ?>  with  <?php echo STUFF ?> .
+
+
+3. MODE OF OPERATION
+====================
+
+BOARD ENCODING ($history)
+
+  +--+--+--+--+--+--+--+--+         BLACK          LOCATION_CODES
+  |A8|B8|C8|D8|E8|F8|G8|H8|    r n b q k b n r     4 5 6 7 8 9 * $
+  +--+--+--+--+--+--+--+--+
+  |A7|B7|C7|D7|E7|F7|G7|H7|    p p p p p p p p     W X Y Z 0 1 2 3
+  +--+--+--+--+--+--+--+--+
+  |A6|B6|C6|D6|E6|F6|G6|H6|                        O P Q R S T U V
+  +--+--+--+--+--+--+--+--+
+  |A5|B5|C5|D5|E5|F5|G5|H5|   S, s: Rook, n.y.m.   G H I J K L M N
+  +--+--+--+--+--+--+--+--+   L, l: King, n.y.m.
+  |A4|B4|C4|D4|E4|F4|G4|H4|                        y z A B C D E F
+  +--+--+--+--+--+--+--+--+
+  |A3|B3|C3|D3|E3|F3|G3|H3|                        q r s t u v w x
+  +--+--+--+--+--+--+--+--+
+  |A2|B2|C2|D2|E2|F2|G2|H2|    P P P P P P P P     i j k l m n o p
+  +--+--+--+--+--+--+--+--+
+  |A1|B1|C1|D1|E1|F1|G1|H1|    R N B Q K B N R     a b c d e f g h
+  +--+--+--+--+--+--+--+--+         WHITE
+
+
+Starting board, encoded:
+	  'SaNbBcQdLeBfNgSh'   // Row 1, A1..H1
+	. 'PiPjPkPlPmPnPoPp'   // 2
+	. 'pWpXpYpZp0p1p2p3'   // 7
+	. 's4n5b6q7l8b9n*s$'   // 8
+
+
+4. RESOURCES
+============
+
+https://en.wikipedia.org/wiki/Portable_Game_Notation
+https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+https://www.reddit.com/r/dailyprogrammer/comments/3t0xdw/20151116_challenge_241_easy_unicode_chess/
+https://en.wikipedia.org/wiki/Correspondence_chess
+
+https://en.wikipedia.org/wiki/Chess
+https://en.wikipedia.org/wiki/Castling
+https://en.wikipedia.org/wiki/Promotion_%28chess%29
+https://en.wikipedia.org/wiki/En_passant
+https://en.wikipedia.org/wiki/Checkmate
+https://en.wikipedia.org/wiki/Stalemate
+https://en.wikipedia.org/wiki/Draw_%28chess%29
+https://en.wikipedia.org/wiki/Chess_composition
+https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
+
+
+5. TODO
+=======
+. Capture: Utilize "Taken by player" locations "." and ":"
+^ Promption: Menu for selecting new piece
+- Start date and last move date in URL
+- History: Show En Passant
+- History: $href_history[$steps] for links back, built when building history
+- History: GET: goto (history)
+- Detect check mate
+- Respond to improper input verbously
+- Select valid piece of opponent: No error is shown!
+== OPTIONAL ===================================================================
+- Mark "from" and "to" of last move
+- History: Remove redundant parts (Initial moves of pawns, etc.)
+- Chess riddles, $riddle[code]=description html
+- Editor: from = piece code, to = field: create piece, delete: "to" only?
+- Proper error messages instead of  die() .
+- Speech bubbles with user comments
+- Store/retrieve game state in/from cookies (save/load buttons, auto-save)
+- Semantic markup for history
+? Nice URL: from == to? --> HTTP Redirect!
+- Taken by player: visual list of removed pieces
+- Provide everything needed to input the move in initial page (all moves
+^ list), in order to prevent reloads while entering one's move (JS?)
+- Play against AI
+== RE-CHECK ===================================================================
+- CSS: Cross browser compatibility
+- Both modes: RECONSTRUCT_FROM_HISTORY
+- Sync GET parameter order between update_href and form in index.php
+- Replace all hardcoded strings with constants (GET_TO, GET_FROM, ...)
+- Fix everything marked with  "//..."
