@@ -8,7 +8,7 @@
 * OPTIONS
 ******************************************************************************/
 
-define( 'DEBUG', false );                     // Show  debug_out()  messages
+define( 'DEBUG', !false );                     // Show  debug_out()  messages
 
 define( 'USE_UNICODE_GLYPHS', true );         // Use special characters
 
@@ -63,6 +63,7 @@ define( 'GET_TO',         'to'        );
 define( 'GET_NEW_GAME',   'newgame'   );
 define( 'GET_PROMOTE',    'promote'   );
 define( 'GET_SELECT',     'select'    );
+define( 'GET_COMMENT',    'comment'   );
 
 
 /**
@@ -110,11 +111,20 @@ define( 'INITIAL_BOARD_CODED',
 
 
 /**
+ * CHESS_RIDDLES
+ * Exploded by "?"
+ */
+define( 'CHESS_RIDDLES',
+	"?player=white&white=A.+White&black=B.+Black&base=QzkJKTNWpXpZn5&comment=White+moves+and+checkmates+in+two+turns"
+);
+
+
+/**
  * TEST LINK
  */
-/*EnPassant*/	#define( 'TEST_LINK', '?player=black&history=mC5QCK&white=A.+White&black=B.+Black&from=F7' );
-/*Castling*/	#define( 'TEST_LINK', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQz&white=A.+White&black=B.+Black&from=E1' );
-/*Promotion*/	#define( 'TEST_LINK', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91&white=A.+White&black=B.+Black' );
-define( 'TEST_LINK', '?player=black&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91qHKCHqCuedumdf&white=A.+White&black=B.+Black' );
+define( 'TEST_LINK_EP', '?player=black&history=mC5QCK&white=A.+White&black=B.+Black&from=F7' );
+define( 'TEST_LINK_CA', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQz&white=A.+White&black=B.+Black&from=E1' );
+define( 'TEST_LINK_PR', '??player=black&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91qHKCHqCuedumdf&white=A.+White&black=B.+Black' );
+define( 'TEST_LINK', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91&white=A.+White&black=B.+Black' );
 
 # EOF ?>

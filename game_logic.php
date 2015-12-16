@@ -158,7 +158,7 @@ function main_control()
 	global $preset_from_value, $preset_to_value, $id_focus;
 	global $chess_board_markup, $history_markup, $promotion_dialog_markup;
 	global $board_encoded, $game_title;
-	global $href_this, $href_test, $href_player, $href_flip;
+	global $href_this, $href_player, $href_flip;
 	global $game_state_link, $hmw_home_link;
 
 
@@ -207,30 +207,50 @@ function main_control()
 	);
 
 
-	// Validate FORM input ("from" and "to" must be field names)
+	// Execute given command
 
+	// retreive FORM input
+	// Move: "from" and "to" must be field names
+	// Edit: "from" must be the code character for a piece and "to" a field
+
+	$clickable = $selected = Array();
+	$redirect_after_move = false;
+
+	$cmd_piece = get_parameter(GET_FROM);
 	$cmd_from = strtoupper( get_parameter(GET_FROM) ); // Retreive commands
 	$cmd_to   = strtoupper( get_parameter(GET_TO) );
 
-	if (strlen($cmd_to) == 1) {
-		if (strpos(WHITE_PIECES.BLACK_PIECES , $cmd_from) !== false) {
-			//...editor
-		}
-	}
-
-	if (! valid_field_name( $cmd_from )) $cmd_from = '';
-	if (! valid_field_name( $cmd_to   )) $cmd_to   = '';
-
-	if ($cmd_from == $cmd_to) {   // Deselect a piece
+	if ($cmd_from == $cmd_to) {           // Deselect a piece
 		$cmd_from = $cmd_to = '';
 	}
 	if ($cmd_from == '') $cmd_to = '';    // Never allow only TO command
 
+	// Exec: Editor
+	if ((strlen($cmd_from) == 1) && valid_field_name($cmd_to)) {
+		if (strpos(WHITE_PIECES.BLACK_PIECES, $cmd_from) !== false) {
 
-	// Execute given command
+			list( $row, $col ) = field_to_rowcol( $cmd_to );
 
-	$clickable = $selected = Array();
-	$redirect_after_move = false;
+			if ($base_array[$row][$col] == $cmd_piece) {
+				// Delete existing piece
+				$base_array[$row][$col] = '';
+			}
+			else if ($base_array[$row][$col] == '') {
+				// Add new piece
+				$base_array[$row][$col] = $cmd_piece;
+			}
+
+			#$base_array = $board_array;
+			$redirect_after_move = true;
+		}
+
+		// No other commands with FROM being only one char.
+		$cmd_from = $cmd_to = '';
+	}
+
+	// Make sure, no invalid data is being processed as a move
+	if (! valid_field_name( $cmd_from )) $cmd_from = '';
+	if (! valid_field_name( $cmd_to   )) $cmd_to   = '';
 
 	// Exec: Move
 	if (($cmd_from != '') && ($cmd_to != '')) {
@@ -330,7 +350,7 @@ function main_control()
 		if ($pieces_available == 0) {
 			//... If still pieces left, no legal moves? Stalemate.
 			$heading = "Checkmate!";
-			$show_command_form = false;
+			//...disabled editor  $show_command_form = false;
 		} else {
 			debug_out( "\nPieces avail: $pieces_available" );
 		}
@@ -360,6 +380,7 @@ function main_control()
 	// Generate links for main menu and board markup (pieces)
 
 	$board_encoded = encode_board( $base_array );
+debug_out( "\nboard_encoded = $board_encoded\nboard_initial = ".INITIAL_BOARD_CODED );
 
 
 	// Name parameter as code for who's player's term this is
@@ -375,7 +396,6 @@ function main_control()
 	$href_this = update_href( $href_this, GET_EN_PASSANT, $get_en_passant );
 
 	$href_this = update_href( $href_this, GET_BASE_BOARD, $board_encoded );
-	debug_out( "\nboard_encoded = $board_encoded" );
 
 	if ($flip_board) {
 		$href_this = update_href( $href_this, GET_FLIP_BOARD, '' );
@@ -389,23 +409,21 @@ function main_control()
 	} else {
 		$href_player = update_href( $href_this, GET_PLAYER, GET_BLACK );
 	}
-
-	// Test link
-	$href_test = update_href( TEST_LINK, '', '' );
+debug_out( "\nhref_this = $href_this" );
 
 
 	// HTTP redirect?
 
 	if ($redirect_after_move) {
 
-		$href_this = update_href(
-			$href_this,
-			GET_EN_PASSANT . '2',
-			$get_en_passant
-		);
+		#$href_this = update_href(
+		#	$href_this,
+		#	GET_EN_PASSANT . '2',
+		#	$get_en_passant
+		#);
 
 		if (DEBUG) {
-			die( "Continue: <a href='$href_this'>$href_this</a>" );
+			#die( "Continue: <a href='$href_this'>$href_this</a>" );
 		}
 
 		// Game state has been updated. In case of an executed move,
@@ -457,8 +475,11 @@ function main_control()
 	}
 
 	if (king_in_check( $board_array, $current_player )) {
-		$heading .= ' - Check!';
+		$heading .= ' - <strong>Check!</strong>';
 	}
+
+	$heading = get_parameter( GET_COMMENT, $heading );
+
 
 	// Links for copy and paste
 
@@ -499,7 +520,6 @@ function main_control()
 
 	// Debug
 
-	debug_out( "\nHistory: " );
 	#debug_array( $board_array, "\nboard" );
 
 } // main_conrol

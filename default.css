@@ -13,7 +13,8 @@ body {
 	text-align:center;
 }
 body, pre { font-size:14px; }
-
+a { text-decoration:none; }
+a:hover { text-decoration:underline; }
 
 /* PAGE LAYOUT */
 
@@ -37,7 +38,7 @@ nav:hover {
 }
 nav ul { list-style-type:none; }
 ul, li { margin:0; padding:0 0 0.2em; }
-
+nav li:first-child { text-align:right; }
 
 /* NEW GAME */
 
@@ -49,6 +50,7 @@ ul, li { margin:0; padding:0 0 0.2em; }
 /* CHESS BOARD */
 
 h2 { font-size:1em; margin:1em 0; }
+h2 strong { color:#c10; }
 table {
 	margin:1em auto;
 	border:solid 10px #886;
@@ -60,8 +62,7 @@ table {
 td {
 	width:50px; height:50px;
 	text-align:center; vertical-align:middle; 
-	background:#a97;
-	font-size:0;
+	color:#000; background:#a97; font-size:0;
 }
 th {
 	width:25px; height:25px; border:solid 0px #00f;

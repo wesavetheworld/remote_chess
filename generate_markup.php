@@ -132,9 +132,8 @@ function history_markup( $board, $history, $name_white, $name_black )
 		case '(':
 			$i += 2;
 			$skipped_turns++;
-			$ret = substr( $ret, 0, -2 );
-			$ret .= piece_glyph( substr( $history, $i, 1 ), '' );
-			$ret .= ", ";
+			//...$ret = substr( $ret, 0, -1 );
+			//...$ret .= piece_glyph( substr( $history, $i, 1 ), '' );
 			break;
 		default:
 			if ($i % 4 == 0) {
@@ -238,29 +237,6 @@ function promotion_dialog_markup( $href_this, $current_player, $row, $col, $hist
 /******************************************************************************
 * CHESS BOARD MARKUP
 ******************************************************************************/
-
-/**
- * valid_field_name() - checks if a field name is well formed
- */
-function valid_field_name( $field )
-{
-	$valid = true;
-
-	if (strlen($field) == 2) {
-		$a = ord( $field[0] );
-		$n = ord( $field[1] );
-
-		$valid &= ($a >= ord('A'));
-		$valid &= ($a <= ord('H'));
-		$valid &= ($n >= ord('1'));
-		$valid &= ($n <= ord('8'));
-	} else {
-		$valid = ($field == '');
-	}
-
-	return $valid;
-}
-
 
 /**
  * piece_class_markup()

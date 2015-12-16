@@ -1,4 +1,4 @@
-<?php /* index.php */ $VERSION = '&beta;0.1.8';
+<?php /* index.php */ $VERSION = 'v0.1.9&beta;';
 /******************************************************************************
 * REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
 * MAIN SCRIPT and HTML TEMPLATE
@@ -99,7 +99,11 @@ main_control();   // see  game_logic.php
 <li><a href="<?= $href_flip ?>">Flip Board</a>
 <li><a href="<?= $href_player ?>">Switch Sides</a>
 <li><a href="./">New Game</a>
-<li><a href="<?= $href_test ?>">Test</a>
+<li><a href="./?base=">Empty Board</a>
+<li><a href="<?= update_href( TEST_LINK, '', '' ); ?>">Test:Temp</a>
+<li><a href="<?= update_href( TEST_LINK_EP, '', '' ); ?>">Test:EnPassant</a>
+<li><a href="<?= update_href( TEST_LINK_CA, '', '' ); ?>">Test:Castle</a>
+<li><a href="<?= update_href( TEST_LINK_PR, '', '' ); ?>">Test:Promotion</a>
 </ul></nav>
 
 <? ENDIF ///////////////////////////////////////////////////// COMMON FOOTER ?>

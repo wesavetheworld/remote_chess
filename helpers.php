@@ -40,6 +40,29 @@ function debug_array( $array, $name = '' )
 ******************************************************************************/
 
 /**
+ * valid_field_name() - checks if a field name is well formed
+ */
+function valid_field_name( $field )
+{
+	$valid = true;
+
+	if (strlen($field) == 2) {
+		$a = ord( $field[0] );
+		$n = ord( $field[1] );
+
+		$valid &= ($a >= ord('A'));
+		$valid &= ($a <= ord('H'));
+		$valid &= ($n >= ord('1'));
+		$valid &= ($n <= ord('8'));
+	} else {
+		$valid = ($field == '');
+	}
+
+	return $valid;
+}
+
+
+/**
  * rowcol_to_field() - transforms 0-based coordinates to field names like "E2"
  */
 function rowcol_to_field( $row, $col )

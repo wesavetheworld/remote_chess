@@ -87,10 +87,12 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 
 5. TODO
 =======
-- ET_EN_PASSANT . '2'  ?? main control
 - Detect check mate
-- Select valid piece of opponent: No error is shown!
+- Prohibit moves that put own king in check
+- Prohibit illegal castles
 == OPTIONAL ===================================================================
+- Select valid piece of opponent: No error is shown!
+- History: Show promotions
 - History: $href_history[$steps] for links back, built when building history
 - History: GET: goto (history)
 - Keep orientation: &top={white|black}
@@ -99,7 +101,6 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 - History: Show En Passant
 - Chess riddles, $riddle[code]=description html
 . Capture: Utilize "Taken by player" locations "." and ":"
-- Editor: from = piece code, to = field: create piece, delete: "to" only?
 - Start date and last move date in URL
 - Proper error messages instead of  die() .
 - Respond to improper input verbously
