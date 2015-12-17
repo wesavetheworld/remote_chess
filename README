@@ -91,6 +91,7 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 - Prohibit moves that put own king in check
 - Prohibit illegal castles
 == OPTIONAL ===================================================================
+- Extend the "Send this link" section by move of previous player, times, etc.
 - Select valid piece of opponent: No error is shown!
 - History: Show promotions
 - History: $href_history[$steps] for links back, built when building history

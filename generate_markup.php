@@ -102,7 +102,7 @@ function history_markup( $board, $history, $name_white, $name_black )
 	$history .= '__';
 
 	$ret
-	= "<h3><strong>$name_white</strong>"
+	= "<h3 class=\"game_header\"><strong>$name_white</strong>"
 	. " vs. <strong>$name_black</strong></h3>\n"
 	. "<ul class=\"history\">\n"
 	;
@@ -127,7 +127,7 @@ function history_markup( $board, $history, $name_white, $name_black )
 				$ret .= $nr . ': ';
 			}
 
-			$ret .= '?';   // add a prompt
+			$ret .= '<span>?</span>';   // add a prompt
 			break;
 		case '(':
 			$i += 2;

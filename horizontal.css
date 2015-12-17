@@ -1,0 +1,16 @@
+/*** REMOTE CHESS STYLES ***/
+
+body {
+	width:550px;
+	Xborder-right:solid 1px #ccc;
+}
+
+.game_header { position:absolute; top:1em; left:550px; padding-left:1em; }
+.history {
+	position:absolute; top:3em; left:550px; padding-left:1em;
+}
+
+footer { margin-top:1em; }
+
+
+/* EOF */

@@ -1,4 +1,4 @@
-<?php /* index.php */ $VERSION = 'v0.1.9&beta;';
+<?php /* index.php */ $VERSION = 'v0.1.10&beta;';
 /******************************************************************************
 * REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
 * MAIN SCRIPT and HTML TEMPLATE
@@ -30,6 +30,7 @@ main_control();   // see  game_logic.php
 <meta name="robots" content="index,follow">
 <link rel="stylesheet" type="text/css" href="default.css">
 <link rel="alternate stylesheet" type="text/css" href="three_d.css" title="Perspective">
+<link rel="alternate stylesheet" type="text/css" href="horizontal.css" title="Horizontal">
 <link rel="shortcut icon" href="chess-icon.png">
 <script type="text/javascript" src="chess_board.js"></script>
 <script type="text/javascript" src="style_switcher.js"></script>
@@ -82,6 +83,8 @@ main_control();   // see  game_logic.php
 <? IF ($game_state_link != ''):  ?>
 <h2>Send this link:</h2>
 <p class="game_state_link">
+	<?= substr($game_title, 0, -3) ?>:
+	<br>
 	<a href="<?= $game_state_link ?>"><?= $game_state_link ?></a>
 </p>
 <? ENDIF ?>
@@ -92,15 +95,15 @@ main_control();   // see  game_logic.php
 
 <? IF ($show_command_form): ?>
 <form action="./" method="get" accept-charset="utf-8">
-<? IF ($flip_board): ?>
+<?  IF ($flip_board): ?>
 <input type="hidden" name="<?= GET_FLIP_BOARD ?>" value="">
-<? ENDIF ?>
+<?  ENDIF ?>
 <input type="hidden" name="<?= GET_PLAYER ?>" value="<?= ($current_player == WHITES_MOVE) ? GET_WHITE : GET_BLACK ?>">
 <input type="hidden" name="<?= GET_HISTORY ?>" value="<?= $history ?>">
 <input type="hidden" name="<?= GET_WHITE ?>" value="<?= $name_white ?>">
 <input type="hidden" name="<?= GET_BLACK ?>" value="<?= $name_black ?>">
 <input type="hidden" name="<?= GET_BASE_BOARD ?>" value="<?= $board_encoded ?>">
-<? IF ($promotion_dialog_markup == ''): ?>
+<?  IF ($promotion_dialog_markup == ''): ?>
 <p class="move">
 	Move
 	<label for="idFrom">from:</label>
@@ -110,10 +113,10 @@ main_control();   // see  game_logic.php
 	<label for="idSubmit" class="nocss">Submit:</label>
 	<input type="submit" id="idSubmit" value="Submit">
 </p>
-<? ENDIF ?>
-<? IF ($id_focus != ''): ?>
+<?  ENDIF ?>
+<?  IF (false && ($id_focus != '')): ?>
 <script type="text/javascript"> document.getElementById('<?= $id_focus ?>').focus(); </script>
-<? ENDIF ?>
+<?  ENDIF ?>
 </form>
 
 <? ENDIF ?>

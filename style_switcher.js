@@ -82,6 +82,9 @@ function toggleStyle()
 
 	switch (current) {
 		case 'Perspective':
+			setActiveStyleSheet('Horizontal');
+			break;
+		case 'Horizontal':
 			setActiveStyleSheet(null);
 			break;
 		default:
