@@ -8,7 +8,7 @@
 * OPTIONS
 ******************************************************************************/
 
-define( 'DEBUG', !false );                     // Show  debug_out()  messages
+define( 'DEBUG', false );                     // Show  debug_out()  messages
 
 define( 'USE_UNICODE_GLYPHS', true );         // Use special characters
 
@@ -72,8 +72,8 @@ define( 'GET_COMMENT',    'comment'   );
  *  update_href()  in  url_helpers.php !
  */
 define( 'GET_PARAMETER_ORDER',
-	  'flip player base history enpassant '
-	. 'promote select white black from to'
+	'flip player base history enpassant promote select white black from to'
+	. ' comment'
 );
 
 
@@ -112,11 +112,8 @@ define( 'INITIAL_BOARD_CODED',
 
 /**
  * CHESS_RIDDLES
- * Exploded by "?"
  */
-define( 'CHESS_RIDDLES',
-	"?player=white&white=A.+White&black=B.+Black&base=QzkJKTNWpXpZn5&comment=White+moves+and+checkmates+in+two+turns"
-);
+define( 'CHESS_RIDDLE', "?player=white&base=QzkJKTNWpXpZn5&comment=White+moves+and+checkmates+in+two+turns" );
 
 
 /**

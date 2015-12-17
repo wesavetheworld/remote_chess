@@ -39,6 +39,8 @@ nav:hover {
 nav ul { list-style-type:none; }
 ul, li { margin:0; padding:0 0 0.2em; }
 nav li:first-child { text-align:right; }
+nav button { margin-bottom:0.4em; }
+nav hr { margin:0.2em 0; }
 
 /* NEW GAME */
 
@@ -182,7 +184,7 @@ footer {
 	border-bottom:solid 1em #f4f4f4;
 	background:#f4f4f4; color:#000;
 }
-
+footer h3 { Xposition:absolute; Xtop:0; Xleft:0; margin:0; padding:0.1em; font-size:0.72em; }
 
 /* DEBUG */
 

@@ -455,6 +455,11 @@ debug_out( "\nhref_this = $href_this" );
 		$promotion_dialog_markup = '';
 	}
 
+	if ($current_player == BLACKS_MOVE) {
+		//... GET switch
+		//...$flip_board = ! $flip_board;
+	}
+
 	$chess_board_markup = chess_board_markup(
 		$href_this,
 		$board_array,
@@ -483,10 +488,12 @@ debug_out( "\nhref_this = $href_this" );
 
 	// Links for copy and paste
 
-	if( (! isset( $_GET[GET_NEW_GAME] ))
-	&&  (isset($_SERVER['HTTP_REFERER']) )
-	&&  ($cmd_from == '')
-	&&  ($cmd_to == '')
+	if( (! isset( $_GET[GET_NEW_GAME] ))     // Don't show for first move
+	&&  (! isset( $_GET[GET_BASE_BOARD] ))   // Base board given? Riddle.
+	&&  (isset($_SERVER['HTTP_REFERER']) )   // Don't show after click
+	&&  ($_SERVER['QUERY_STRING'] != '')
+	&&  ($cmd_from == '')                    // Don't show while ..
+	&&  ($cmd_to == '')                      // .. command being entered
 	) {
 		// Empty referer: Not reached by clicking a link in the browser
 

@@ -118,4 +118,5 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 - Both modes: RECONSTRUCT_FROM_HISTORY
 - Sync GET parameter order between update_href and form in index.php
 - Replace all hardcoded strings with constants (GET_TO, GET_FROM, ...)
+- Test with links2 or lynx
 - Fix everything marked with  "//..."

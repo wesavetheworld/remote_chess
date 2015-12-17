@@ -38,6 +38,7 @@ main_control();   // see  game_logic.php
 
 <form action="./" method="get" accept-charset="utf-8">
 <h1>Remote Chess</h1>
+
 <p>Enter names:</p>
 <p class="names">
 	<label for="idWhite" class="nocss"><?= ucfirst(GET_WHITE) ?>:</label>
@@ -60,6 +61,30 @@ main_control();   // see  game_logic.php
 <header>
 <h1>Remote Chess</h1>
 </header>
+
+<h2 class="nocss">Site Navigation</h2>
+<nav><ul>
+<li><button onclick="toggleStyle()">Switch Style</button>
+<hr>
+<li><a href="./">New Game</a>
+<li><a href="<?= $href_flip ?>">Flip Board</a>
+<li><a href="<?= $href_player ?>">Switch Sides</a>
+<li><a href="./?base=">Empty Board</a>
+<hr>
+<li><a href="<?= update_href( TEST_LINK, '', '' ); ?>">Test:Temp</a>
+<li><a href="<?= update_href( TEST_LINK_EP, '', '' ); ?>">Test:EnPassant</a>
+<li><a href="<?= update_href( TEST_LINK_CA, '', '' ); ?>">Test:Castle</a>
+<li><a href="<?= update_href( TEST_LINK_PR, '', '' ); ?>">Test:Promotion</a>
+<hr>
+<li><a href="<?= update_href( CHESS_RIDDLE, '', '' ); ?>">Riddle</a>
+</ul></nav>
+
+<? IF ($game_state_link != ''):  ?>
+<h2>Send this link:</h2>
+<p class="game_state_link">
+	<a href="<?= $game_state_link ?>"><?= $game_state_link ?></a>
+</p>
+<? ENDIF ?>
 
 <h2><?= $heading ?></h2>
 <?= $promotion_dialog_markup ?>
@@ -94,26 +119,9 @@ main_control();   // see  game_logic.php
 <? ENDIF ?>
 <?= $history_markup ?>
 
-<nav><ul>
-<li><button onclick="toggleStyle()">Switch Style</button>
-<li><a href="<?= $href_flip ?>">Flip Board</a>
-<li><a href="<?= $href_player ?>">Switch Sides</a>
-<li><a href="./">New Game</a>
-<li><a href="./?base=">Empty Board</a>
-<li><a href="<?= update_href( TEST_LINK, '', '' ); ?>">Test:Temp</a>
-<li><a href="<?= update_href( TEST_LINK_EP, '', '' ); ?>">Test:EnPassant</a>
-<li><a href="<?= update_href( TEST_LINK_CA, '', '' ); ?>">Test:Castle</a>
-<li><a href="<?= update_href( TEST_LINK_PR, '', '' ); ?>">Test:Promotion</a>
-</ul></nav>
-
 <? ENDIF ///////////////////////////////////////////////////// COMMON FOOTER ?>
 <footer>
-<? IF (($game_state_link != '') && ($_SERVER['QUERY_STRING'] != '')): ?>
-<h2>Send this link:</h2>
-<p class="game_state_link">
-	<a href="<?= $game_state_link ?>"><?= $game_state_link ?></a>
-</p>
-<? ENDIF ?>
+<h3><?= $VERSION ?></h3>
 <? IF (DEBUG): ?>
 <pre class="debug">
 <?= $debug_html ?>
