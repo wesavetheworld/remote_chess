@@ -24,6 +24,75 @@ function new_board()
 
 
 /**
+ * find_king()
+ */
+function find_king( $board_array, $current_player )
+{
+	$king_codes = ($current_player == WHITES_MOVE) ? 'LK' : 'lk' ;
+	$king_field = '';
+
+	for( $row = 0 ; $row < 8 ; $row++ ) {
+		for( $col = 0 ; $col < 8 ; $col++ ) {
+
+			$f = $board_array[$row][$col];
+
+			if ($f != '') {
+				if (strpos($king_codes, $f) !== false) {
+					$king_field = rowcol_to_field(
+						$row,
+						$col
+					);
+				}
+			}
+		}
+	}
+
+	return $king_field;
+
+} // find_king
+
+
+/**
+ * hot_fields()
+ */
+function hot_fields( $board_array, $current_player )
+{
+	$ret = Array();
+	$hot_array = new_board();
+
+	$movable_opponents = find_movable_pieces(
+		$board_array,
+		! $current_player
+	);
+
+	foreach( $movable_opponents as $from_field ) {
+
+		$possible_moves = possible_move_list(
+			$board_array,
+			! $current_player,
+			$from_field
+		);
+
+		foreach( $possible_moves as $to_field ) {
+			list( $row, $col ) = field_to_rowcol( $to_field );
+			$hot_array[$row][$col] = 'not empty';
+		}
+	}
+
+	for( $row = 0 ; $row < 8 ; $row++ ) {
+		for( $col = 0 ; $col < 8 ; $col++ ) {
+			if ($hot_array[$row][$col] == 'not empty') {
+				$ret[] = rowcol_to_field( $row, $col );
+			}
+		}
+	}
+
+	return $ret;
+
+} // hot_fields
+
+
+/**
  * apply_move() - transfers a piece to another field
  */
 function apply_move( $board_array,  $f_row, $f_col,  $t_row, $t_col )
@@ -132,16 +201,61 @@ function decode_history( $base_array, $history )
  * select_piece() - Creates  $possible_moves
  * The returned data will be used when building markup with clickable pieces
  */
-function select_piece( $board_array, $current_player, $field )
+function select_piece( $board_array, $current_player, $from_field )
 {
+	// Find fields, this piece can generally move to
+	// Also checks for obstacles and possible captures
+
 	$clickable = $selected = possible_move_list(
 		$board_array,
 		$current_player,
-		$field
+		$from_field
 	);
 
+	// Eliminate moves that would end in own king being in check
+
+	$new = Array( $clickable[0] );
+	list( $f_row, $f_col ) = field_to_rowcol( $from_field );
+
+	foreach( $clickable as $to_field ) {
+
+		if ($from_field != $to_field) {     // Ignore deselection
+
+			list( $t_row, $t_col ) = field_to_rowcol( $to_field );
+
+			$new_array = apply_move(    // Try the move
+				$board_array,
+				$f_row, $f_col,
+				$t_row, $t_col
+			);
+
+			$king_field = find_king(    // Locate the king
+				$new_array,
+				$current_player
+			);
+
+			$hot_fields = hot_fields(   // See, if the king would..
+				$new_array,         // ..end up under attack
+				$current_player
+			);
+
+			if (! in_array( $king_field, $hot_fields )) {
+				$new[] = $to_field;
+			}
+		}
+	}
+
+	//...if (count($new) <= 1) {
+	//...	$new = Array();
+	//...}
+	//... But we shouldn't get movable pieces in the first place, ..
+	//... ..if there are no possible moves!
+
+	$clickable = $selected = $new;
+
 	return Array( $clickable, $selected );
-}
+
+} // select_piece
 
 
 /******************************************************************************

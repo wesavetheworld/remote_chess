@@ -102,7 +102,7 @@ function history_markup( $board, $history, $name_white, $name_black )
 	$history .= '__';
 
 	$ret
-	= "<h3 class=\"game_header\"><strong>$name_white</strong>"
+	= "<h3 class=\"history_header\"><strong>$name_white</strong>"
 	. " vs. <strong>$name_black</strong></h3>\n"
 	. "<ul class=\"history\">\n"
 	;
@@ -144,7 +144,7 @@ function history_markup( $board, $history, $name_white, $name_black )
 
 			$piece = $board[$f_row][$f_col];
 			$ret .= piece_glyph( $piece );
-			$ret .= strtolower( $from_field );
+			$ret .= '<span>' . strtolower( $from_field ) . '</span>';
 
 			if ($board[$t_row][$t_col] != '') {
 				$ret .= '<span>&#215;</span>';
@@ -152,7 +152,7 @@ function history_markup( $board, $history, $name_white, $name_black )
 				$ret .= '<span>&ndash;</span>';
 			}
 
-			$ret .= strtolower( $to_field );
+			$ret .= '<span>' . strtolower( $to_field ) . '</span>';
 
 			if ($i % 4 == 0) {
 				$ret .= ', ';

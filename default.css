@@ -38,8 +38,8 @@ nav:hover {
 }
 nav ul { list-style-type:none; }
 ul, li { margin:0; padding:0 0 0.2em; }
-nav li:first-child { text-align:right; }
-nav button { margin-bottom:0.4em; }
+nav li:nth-child(2) { text-align:right; }
+nav button { margin:0.2em 0 }
 nav hr { margin:0.2em 0; }
 
 /* NEW GAME */
@@ -173,7 +173,7 @@ text-align:left;
 /* GAME STATE LINK */
 
 .game_state_link {
-	width:450px; margin:0 auto 1em; word-break:break-all;
+	width:480px; margin:0 auto 1em; word-break:break-all;
 }
 .game_state_link h2 { margin:1em 0; }
 

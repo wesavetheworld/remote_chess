@@ -33,7 +33,6 @@ main_control();   // see  game_logic.php
 <link rel="alternate stylesheet" type="text/css" href="horizontal.css" title="Horizontal">
 <link rel="shortcut icon" href="chess-icon.png">
 <script type="text/javascript" src="chess_board.js"></script>
-<script type="text/javascript" src="style_switcher.js"></script>
 <? IF ($_SERVER['QUERY_STRING'] == ''): /////////////////////////// NEW GAME ?>
 </head><body id="new_game">
 
@@ -57,28 +56,12 @@ main_control();   // see  game_logic.php
 </form>
 
 <? ELSE: /////////////////////////////////////////////////////// CHESS BOARD ?>
+<script type="text/javascript" src="style_switcher.js"></script>
 </head><body id="chess_board">
 
 <header>
 <h1>Remote Chess</h1>
 </header>
-
-<h2 class="nocss">Site Navigation</h2>
-<nav><ul>
-<li><button onclick="toggleStyle()">Switch Style</button>
-<hr>
-<li><a href="./">New Game</a>
-<li><a href="<?= $href_flip ?>">Flip Board</a>
-<li><a href="<?= $href_player ?>">Switch Sides</a>
-<li><a href="./?base=">Empty Board</a>
-<hr>
-<li><a href="<?= update_href( TEST_LINK, '', '' ); ?>">Test:Temp</a>
-<li><a href="<?= update_href( TEST_LINK_EP, '', '' ); ?>">Test:EnPassant</a>
-<li><a href="<?= update_href( TEST_LINK_CA, '', '' ); ?>">Test:Castle</a>
-<li><a href="<?= update_href( TEST_LINK_PR, '', '' ); ?>">Test:Promotion</a>
-<hr>
-<li><a href="<?= update_href( CHESS_RIDDLE, '', '' ); ?>">Riddle</a>
-</ul></nav>
 
 <? IF ($game_state_link != ''):  ?>
 <h2>Send this link:</h2>
@@ -87,9 +70,9 @@ main_control();   // see  game_logic.php
 	<br>
 	<a href="<?= $game_state_link ?>"><?= $game_state_link ?></a>
 </p>
-<? ENDIF ?>
 
-<h2><?= $heading ?></h2>
+<? ENDIF ?>
+<h2 class="game_header"><?= $heading ?></h2>
 <?= $promotion_dialog_markup ?>
 <?= $chess_board_markup ?>
 
@@ -121,6 +104,23 @@ main_control();   // see  game_logic.php
 
 <? ENDIF ?>
 <?= $history_markup ?>
+
+<nav><ul>
+<h2 class="nocss">Site Navigation</h2>
+<li><button onclick="toggleStyle()">Switch Style</button>
+<hr>
+<li><a href="./">New Game</a>
+<li><a href="<?= $href_flip ?>">Flip Board</a>
+<li><a href="<?= $href_player ?>">Switch Sides</a>
+<li><a href="./?base=">Empty Board</a>
+<hr>
+<li><a href="<?= update_href( TEST_LINK, '', '' ); ?>">Test:Temp</a>
+<li><a href="<?= update_href( TEST_LINK_EP, '', '' ); ?>">Test:EnPassant</a>
+<li><a href="<?= update_href( TEST_LINK_CA, '', '' ); ?>">Test:Castle</a>
+<li><a href="<?= update_href( TEST_LINK_PR, '', '' ); ?>">Test:Promotion</a>
+<hr>
+<li><a href="<?= update_href( CHESS_RIDDLE, '', '' ); ?>">Riddle</a>
+</ul></nav>
 
 <? ENDIF ///////////////////////////////////////////////////// COMMON FOOTER ?>
 <footer>

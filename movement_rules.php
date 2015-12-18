@@ -476,6 +476,7 @@ function king_move_list( $board_array, $current_player, $field )
  */
 function possible_move_list( $board_array, $current_player, $field )
 {
+	$ret = Array();
 	list( $row, $col ) = field_to_rowcol( $field );
 
 	$piece_codes = get_player_pieces( $current_player );
@@ -491,19 +492,19 @@ function possible_move_list( $board_array, $current_player, $field )
 
 	if (strpos($piece_codes, $piece) !== false) {
 		switch( strtolower($piece) ) {
-			case 'p': return pawn_move_list( $b, $c, $f );
+			case 'p': $ret = pawn_move_list( $b, $c, $f ); break;
 			case 's': // Fall through: Not yet mode rook
-			case 'r': return rook_move_list( $b, $c, $f );
-			case 'n': return knight_move_list( $b, $c, $f ); 
-			case 'b': return bishop_move_list( $b, $c, $f );
-			case 'q': return queen_move_list( $b, $c, $f );
+			case 'r': $ret = rook_move_list( $b, $c, $f ); break;
+			case 'n': $ret = knight_move_list( $b, $c, $f ); break;
+			case 'b': $ret = bishop_move_list( $b, $c, $f ); break;
+			case 'q': $ret = queen_move_list( $b, $c, $f ); break;
 			case 'l': // Fall through: Not yet moved king
-			case 'k': return king_move_list( $b, $c, $f );
+			case 'k': $ret = king_move_list( $b, $c, $f ); break;
 			default: die( 'Error: possible_move_list(): unknown piece.' );
 		}
 	}
 
-	return Array();
+	return $ret;
 
 } // possible_move_list
 
@@ -558,36 +559,23 @@ function find_movable_pieces( $board_array, $current_player )
 /**
  * king_in_check() - return true, if king is in check
  */
-function king_in_check( $board_array, $current_player )//..., $move = '' )
+function king_in_check( $board_array, $current_player )
 {
 	$ret = false;
-
-	$king_codes = ($current_player == WHITES_MOVE) ? 'LK' : 'lk' ;
-	$king_field = '';
-	for( $row = 0 ; $row < 8 ; $row++ ) {
-		for( $col = 0 ; $col < 8 ; $col++ ) {
-			$f = $board_array[$row][$col];
-			if ($f != '') {
-				if (strpos($king_codes, $f) !== false) {
-					$king_field = rowcol_to_field(
-						$row,
-						$col
-					);
-				}
-			}
-		}
-	}
+	$king_field = find_king( $board_array, $current_player );
 
 	$opponents_pieces = find_movable_pieces(
 		$board_array,
-		! $current_player
+		! $current_player,
+		true
 	);
 
-	foreach( $opponents_pieces as $opp ) {
+	// See, if any of the opponents pieces can capture the player's king
+	foreach( $opponents_pieces as $o ) {
 		$captures = possible_move_list(
 			$board_array,
-			!$current_player,
-			$opp
+			! $current_player,
+			$o
 		);
 
 		$ret |= in_array( $king_field, $captures );
@@ -595,7 +583,7 @@ function king_in_check( $board_array, $current_player )//..., $move = '' )
 
 	return $ret;
 
-} // check_check
+} // king_in_check
 
 
 # EOF ?>
