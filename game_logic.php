@@ -251,6 +251,7 @@ function select_piece( $board_array, $current_player, $from_field )
 	//... But we shouldn't get movable pieces in the first place, ..
 	//... ..if there are no possible moves!
 
+	//...$clickable = $selected = (count($new) == 1) ? Array() : $new ;
 	$clickable = $selected = $new;
 
 	return Array( $clickable, $selected );
@@ -459,14 +460,26 @@ function main_control()
 			$board_array,
 			$current_player
 		);
+debug_array($clickable, "\nmain_control: clickable");
 
-		$pieces_available = count( $clickable );
-		if ($pieces_available == 0) {
-			//... If still pieces left, no legal moves? Stalemate.
-			$heading = "Checkmate!";
-			//...disabled editor  $show_command_form = false;
-		} else {
-			debug_out( "\nPieces avail: $pieces_available" );
+		if (count($clickable) == 1) {
+			$test = select_piece(
+				$board_array,
+				$current_player,
+				$clickable[0]
+			);
+			if (count($test[0]) == 1) {
+				$clickable = $selected = Array();
+			}
+			debug_array($test, "\ntest");
+		}
+
+		if (count($clickable) == 0) {
+			if (king_in_check( $board_array, $current_player )) {
+				$heading = "<strong>Checkmate!</strong>";
+			} else {
+				$heading = "<strong>Stalemate!</strong>";
+			}
 		}
 	}
 
@@ -530,12 +543,6 @@ debug_out( "\nhref_this = $href_this" );
 
 	if ($redirect_after_move) {
 
-		#$href_this = update_href(
-		#	$href_this,
-		#	GET_EN_PASSANT . '2',
-		#	$get_en_passant
-		#);
-
 		if (DEBUG) {
 			#die( "Continue: <a href='$href_this'>$href_this</a>" );
 		}
@@ -569,7 +576,7 @@ debug_out( "\nhref_this = $href_this" );
 		$promotion_dialog_markup = '';
 	}
 
-	if ($current_player == BLACKS_MOVE) {
+	if ($current_player == BLACKS_MOVE) {   // Keep orientation steady
 		//... GET switch
 		//...$flip_board = ! $flip_board;
 	}
@@ -593,7 +600,9 @@ debug_out( "\nhref_this = $href_this" );
 		$heading .= ' move';
 	}
 
-	if (king_in_check( $board_array, $current_player )) {
+	if( king_in_check( $board_array, $current_player )
+	&&  (strpos( $heading, 'mate') === false)
+	) {
 		$heading .= ' - <strong>Check!</strong>';
 	}
 

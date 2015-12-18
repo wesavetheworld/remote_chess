@@ -474,10 +474,10 @@ function king_move_list( $board_array, $current_player, $field )
 /**
  * possible_move_list() - returns fields a piece can move to
  */
-function possible_move_list( $board_array, $current_player, $field )
+function possible_move_list( $board_array, $current_player, $from_field, $recursion = true )
 {
 	$ret = Array();
-	list( $row, $col ) = field_to_rowcol( $field );
+	list( $row, $col ) = field_to_rowcol( $from_field );
 
 	$piece_codes = get_player_pieces( $current_player );
 
@@ -488,7 +488,7 @@ function possible_move_list( $board_array, $current_player, $field )
 
 	$b = $board_array;
 	$c = $current_player;
-	$f = $field;
+	$f = $from_field;
 
 	if (strpos($piece_codes, $piece) !== false) {
 		switch( strtolower($piece) ) {
@@ -515,7 +515,7 @@ function possible_move_list( $board_array, $current_player, $field )
  * If all your pieces are boxed in or any move would result in your king to
  * get into check, an empty array is returned, indicating the end of the game.
  */
-function find_movable_pieces( $board_array, $current_player )
+function find_movable_pieces( $board_array, $current_player, $recursion = true )
 {
 	$ret = Array();
 	$player_pieces = get_player_pieces( $current_player );
@@ -534,12 +534,14 @@ function find_movable_pieces( $board_array, $current_player )
 				$moves = possible_move_list(
 					$board_array,
 					$current_player,
-					$field
+					$field,
+					$recursion
 				);
 
 				// First entry of the returned move list is
 				// the FIELD of the currently checked piece:
 				if (isset( $moves[1] )) {
+#debug_array($moves,"\nfind_movable_pieces: ".($current_player?'WHITE':'BLACK').": field = $field, moves");
 					$ret[] = $field; //...$moves[0];
 				}
 
@@ -567,7 +569,7 @@ function king_in_check( $board_array, $current_player )
 	$opponents_pieces = find_movable_pieces(
 		$board_array,
 		! $current_player,
-		true
+		false // no recursion
 	);
 
 	// See, if any of the opponents pieces can capture the player's king
