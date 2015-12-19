@@ -1,4 +1,4 @@
-<?php /* index.php */ $VERSION = 'v0.1.10&beta;';
+<?php /* index.php */ $VERSION = 'v0.2&beta;';
 /******************************************************************************
 * REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
 * MAIN SCRIPT and HTML TEMPLATE
@@ -97,7 +97,7 @@ main_control();   // see  game_logic.php
 	<input type="submit" id="idSubmit" value="Submit">
 </p>
 <?  ENDIF ?>
-<?  IF (false && ($id_focus != '')): ?>
+<?  IF ($id_focus != ''): ?>
 <script type="text/javascript"> document.getElementById('<?= $id_focus ?>').focus(); </script>
 <?  ENDIF ?>
 </form>
@@ -118,6 +118,7 @@ main_control();   // see  game_logic.php
 <li><a href="<?= update_href( TEST_LINK_EP, '', '' ); ?>">Test:EnPassant</a>
 <li><a href="<?= update_href( TEST_LINK_CA, '', '' ); ?>">Test:Castle</a>
 <li><a href="<?= update_href( TEST_LINK_PR, '', '' ); ?>">Test:Promotion</a>
+<li><a href="<?= update_href( TEST_LINK_MATE, '', '' ); ?>">Test:Mate</a>
 <hr>
 <li><a href="<?= update_href( CHESS_RIDDLE, '', '' ); ?>">Riddle</a>
 </ul></nav>

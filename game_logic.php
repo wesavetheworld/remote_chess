@@ -462,6 +462,22 @@ function main_control()
 		);
 debug_array($clickable, "\nmain_control: clickable");
 
+		// Get rid of moves with king in check afterwards
+		$new = Array();
+		foreach( $clickable as $from_field ) {
+			// Get two arrays (clickable, selected)
+			$temp = select_piece(
+				$board_array,
+				$current_player,
+				$from_field
+			);
+			// Ignore moves with only one "deselection entry"
+			if (count($temp[0]) > 1) {
+				$new[] = $from_field;
+			}
+		}
+		$clickable = $new;
+/*//...
 		if (count($clickable) == 1) {
 			$test = select_piece(
 				$board_array,
@@ -473,7 +489,7 @@ debug_array($clickable, "\nmain_control: clickable");
 			}
 			debug_array($test, "\ntest");
 		}
-
+*/
 		if (count($clickable) == 0) {
 			if (king_in_check( $board_array, $current_player )) {
 				$heading = "<strong>Checkmate!</strong>";
@@ -609,6 +625,14 @@ debug_out( "\nhref_this = $href_this" );
 	$heading = get_parameter( GET_COMMENT, $heading );
 
 
+	// Game title
+
+	if (isset( $_GET[GET_WHITE] )) {
+		$turn_nr = 1 + floor( strlen($history) / 4 );
+		$game_title = "$name_white vs. $name_black - Turn #$turn_nr - ";
+	}
+
+
 	// Links for copy and paste
 
 	if( (! isset( $_GET[GET_NEW_GAME] ))     // Don't show for first move
@@ -639,12 +663,6 @@ debug_out( "\nhref_this = $href_this" );
 		}
 
 		$game_state_link = str_replace( 'flip&', '', $game_state_link );
-	}
-
-
-	if (isset( $_GET[GET_WHITE] )) {
-		$turn_nr = 1 + floor( strlen($history) / 4 );
-		$game_title = "$name_white vs. $name_black - Turn #$turn_nr - ";
 	}
 
 

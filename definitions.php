@@ -121,7 +121,8 @@ define( 'CHESS_RIDDLE', "?player=white&base=QzkJKTNWpXpZn5&comment=White+moves+a
  */
 define( 'TEST_LINK_EP', '?player=black&history=mC5QCK&white=A.+White&black=B.+Black&from=F7' );
 define( 'TEST_LINK_CA', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQz&white=A.+White&black=B.+Black&from=E1' );
-define( 'TEST_LINK_PR', '??player=black&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91qHKCHqCuedumdf&white=A.+White&black=B.+Black' );
+define( 'TEST_LINK_PR', '?player=black&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91qHKCHqCuedumdf&white=A.+White&black=B.+Black' );
+define( 'TEST_LINK_MATE', '?player=white&white=A.+White&black=B.+Black&base=KePmpuqRq2k8' );
 define( 'TEST_LINK', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91&white=A.+White&black=B.+Black' );
 
 # EOF ?>

@@ -6,9 +6,10 @@
 Table of Contents
 	1. Overview
 	2. Installing
-	3. Mode of Operation
-	4. Resources
-	5. Todo
+	3. Files
+	4. Mode of Operation
+	5. Resources
+	6. Todo
 
 
 1. OVERVIEW
@@ -18,6 +19,14 @@ REMOTE CHESS is a web platform for playing chess via e-mail or instant
 messenger. Every state of a game is represented by a URL, saving the game is
 done by bookmarking the page. Players receive a link, enter their move and send
 the resulting link back to their chess partners, so they can continue the game.
+
+The benefit of this system is, that the users have maximum control over their
+data without the need to identify themselves on the server. The program can be
+used in text browsers linke links2 or lynx and is meant to be very simple.
+
+Using this program makes more sense with E-Mail, because instant messengers
+tend to induce speedy exchange of moves. This may cause copy/pasting becoming
+too frequent and annoying.
 
 
 2. INSTALLING
@@ -35,8 +44,64 @@ or replace all instances of  <?= STUFF ?>  with  <?php echo STUFF ?> .
 There is a bunch of options in  definitions.php .
 
 
-3. MODE OF OPERATION
+3. FILES
+========
+index.php           - Include all files, call main_control(), HTML template
+helpers.php         - Conversions
+definitions.php     - Settings, constants
+movement_rules.php  - See, what moves a piece can do
+url_helpers.php     - Manipulate the GET parameters of a link
+generate_markup.php - Create HTML for the chess board, game's history, etc.
+game_logic.php      - main_control() - Handle any input in one huge function
+
+icons_white.png, icons_black.png - CSS sprites for each player.
+
+
+4. MODE OF OPERATION
 ====================
+
+SOME DEFINITIONS
+----------------
+A chess board is divided into rows ("Ranks" 1 to 8) and columns ("Files" A to H).
+The bottom left field (for White) is named A1, right to it is B1, a.s.o.
+Fields A1 and H8 (bottom left for each player) have a dark color, A8 and H1 are
+colored brightly. In this case, the rule applies: "White queen to white field,
+black queen to black field". See diagram below.
+
+PROGRAM FLOW
+------------
+After  index.php  is loaded, it immediately includes all other PHP files and
+calls the main program in  game_logic.php:main_control() . After it is finished
+and returns to  index.php , the results (global variables) are used to build the
+markup for the page, mainly a table and a list of history entries.
+
+The main function is very long and described in more detail below. According to
+the given parameters, a specific game state is assumed and executed:
+
+MAIN ACTIONS
+* New game (when called without GET parameters, asks for player names)
+* Select a piece of the current player
+* Select a field to move a piece to
+* Promote a pawn that reached the top of the board
+
+SECONDARY ACTIONS
+* Flip board            ?flip
+* Switch player         ?player=<white|black>
+* Clear board           ?base=   (Empty)
+* Create/Remove piece   Editor: from=<piece code>, to=<field name>
+                        To remove a piece, you must name the correct piece code
+
+GAME STATE STORAGE
+------------------
+The complete game state is being stored in the very link of the page. This is
+done using the GET parameters:
+
+	&player=<white|black>
+	&history=<coded list of moves>
+	&white=<Name of white player>
+	&black=<Name of black player>
+	&enpassant=<file name>
+
 
 BOARD ENCODING ($history)
 
@@ -58,15 +123,64 @@ BOARD ENCODING ($history)
   |A1|B1|C1|D1|E1|F1|G1|H1|    R N B Q K B N R     a b c d e f g h
   +--+--+--+--+--+--+--+--+         WHITE
 
-
-Starting board, encoded:
+Example: starting board, encoded:
 	  'SaNbBcQdLeBfNgSh'   // Row 1, A1..H1
 	. 'PiPjPkPlPmPnPoPp'   // 2
 	. 'pWpXpYpZp0p1p2p3'   // 7
 	. 's4n5b6q7l8b9n*s$'   // 8
 
 
-4. RESOURCES
+FUNCTION main_control()
+-----------------------
+The main program consists of several sections, which can roughly be divided
+into:
+	* Initialization
+	* Fetch GET parameters
+	* Build  $board_array  from  &base=  and/or  $history .
+	* Analyse  from  and  to  and execute
+		* EDITOR
+		* COMMAND
+		* MOVE
+		* SELECT/DESELECT
+	* Create  $href_this  (Adding GET parameters describing current state)
+	* Possible redirection (in order to make the URL nicer)
+	* Building markup
+	* Set  $heading  and  $game_title , if
+	* Set a default  $game_title , if none given
+	* Create  $game_state_link  (The link that is sent to the other player)
+
+
+MOVING A PIECE (HTTP Redirect)
+------------------------------
+When  from  and  to  contain valid field names and the move is possible, it
+will be applied to the current  $board_array  and the move is added to the
+history. To get rid of the GET parameters  from  and  to ,  $redirect_after_move
+is set in order to trigger the according actions later in  main_control() .
+
+
+CASTLING
+--------
+Rooks and kings are initially coded as  S, L  or  s, l  indicating, that they
+have not yet been moved. The code will be switched to  R, K  or  r, k  in
+apply_move(), preventing them from being considered for castling.
+
+
+EN PASSANT
+----------
+When a pawn is moved two ranks on its first move, the other player may be
+allowed to capture that pawn en passant, but only immediately after the pawn
+was moved. A special GET parameter  &enpassant=<file name>  indicates the file
+of the pawn that moved 2 ranks in the move before.
+
+
+PROMOTING A PAWN
+----------------
+When a pawn reaches the top, the redirect that would be triggered by this MOVE
+action is supressed, which results in a pawn promotion menu to be shown instead.
+Selecting a replacement will trigger a "normal" move with a redirect.
+
+
+5. RESOURCES
 ============
 
 http://derstandard.at/r1229777262316/Raetsel--Sudoku
@@ -88,39 +202,36 @@ https://en.wikipedia.org/wiki/Chess_composition
 https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 
 
-5. TODO
-=======
-- Detect check mate
-- Prohibit moves that put own king in check
-- Prohibit illegal castles
+6. TODO v0.2b
+=============
+- Detect Draw
 == OPTIONAL ===================================================================
-- Extend the "Send this link" section by move of previous player, times, etc.
-- Select valid piece of opponent: No error is shown!
+- Refactor: The algorithm for finding legal moves (regarding the king being in
+  check after a move) is somewhat confusing and spread all over the place.
+- Refactor: Semantic markup for history
+- Send This Link Section: Start date and last move date in URL
+- Send This Link Section: Move of previous player
+- Previous Move: Mark "from" and "to"
 - History: Show promotions
 - History: $href_history[$steps] for links back, built when building history
 - History: GET: goto (history)
-- Keep orientation: &top={white|black}
-- Mark "from" and "to" of last move
 - History: Remove redundant parts (Initial moves of pawns, etc.)
 - History: Show En Passant
-- Chess riddles, $riddle[code]=description html
+- Keep orientation: &top={white|black}
+- Chess Riddles: $riddle[code]=description html
 . Capture: Utilize "Taken by player" locations "." and ":"
-- Start date and last move date in URL
-- Proper error messages instead of  die() .
-- Respond to improper input verbously
-- Speech bubbles with user comments
+- Speech bubbles over pieces with user comments, dialog sequences
 - Store/retrieve game state in/from cookies (save/load buttons, auto-save)
-- Semantic markup for history
-? Nice URL: from == to? --> HTTP Redirect!
 - Taken by player: visual list of removed pieces
-- Provide everything needed to input the move in initial page (all moves
-^ list), in order to prevent reloads while entering one's move (JS?)
+- JS Request Reduction: Provide everything needed for selecting a full move
 - Play against AI
-- base href for shorter links?
+- <base href> for shorter links?
+- Errors: Proper error messages instead of  die() .
+- Errors: Select valid piece of opponent: No error is shown! Must be ignored completly.
+- Errors: Respond to improper input verbously
 == RE-CHECK ===================================================================
 - CSS: Cross browser compatibility
-- Both modes: RECONSTRUCT_FROM_HISTORY
-- Sync GET parameter order between update_href and form in index.php
+- Sync GET parameter order between  update_href()  and form in  index.php
 - Replace all hardcoded strings with constants (GET_TO, GET_FROM, ...)
 - Test with links2 or lynx
 - Fix everything marked with  "//..."
