@@ -102,8 +102,8 @@ function history_markup( $board, $history, $name_white, $name_black )
 	$history .= '__';
 
 	$ret
-	= "<h3 class=\"history_header\"><strong>$name_white</strong>"
-	. " vs. <strong>$name_black</strong></h3>\n"
+	= "<h2><strong>$name_white</strong>"
+	. " vs. <strong>$name_black</strong></h2>\n"
 	. "<ul class=\"history\">\n"
 	;
 
@@ -122,12 +122,12 @@ function history_markup( $board, $history, $name_white, $name_black )
 		switch ($from_code) {
 		case '_':
 			if ($i % 4 == 0) {
-				$ret .= '<li>';
+				$ret .= "\t<li>";
 				$nr = (($i/4 + 1) - $skipped_turns);
 				$ret .= $nr . ': ';
 			}
 
-			$ret .= '<span>?</span>';   // add a prompt
+			$ret .= '<span><strong>?</strong></span>';   // add a prompt
 			break;
 		case '(':
 			$i += 2;
@@ -137,7 +137,7 @@ function history_markup( $board, $history, $name_white, $name_black )
 			break;
 		default:
 			if ($i % 4 == 0) {
-				$ret .= '<li>';
+				$ret .= "\t<li>";
 				$nr = (($i/4 + 1) - $skipped_turns);
 				$ret .= $nr . ': ';
 			}
@@ -181,6 +181,9 @@ function history_markup( $board, $history, $name_white, $name_black )
 * PAWN PROMOTION DIALOG
 ******************************************************************************/
 
+/**
+ * promotion_dialog_markup()
+ */
 function promotion_dialog_markup( $href_this, $current_player, $row, $col, $history )
 {
 	$current_player = ! $current_player;
@@ -232,7 +235,8 @@ function promotion_dialog_markup( $href_this, $current_player, $row, $col, $hist
 	$ret .= "</ul>\n\n";
 
 	return $ret;
-}
+
+} // promotion_dialog_markup
 
 /******************************************************************************
 * CHESS BOARD MARKUP

@@ -225,6 +225,7 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 - Taken by player: visual list of removed pieces
 - JS Request Reduction: Provide everything needed for selecting a full move
 - Play against AI
+- Rename files with dash using underscore
 - <base href> for shorter links?
 - Errors: Proper error messages instead of  die() .
 - Errors: Select valid piece of opponent: No error is shown! Must be ignored completly.

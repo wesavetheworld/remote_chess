@@ -272,7 +272,7 @@ function main_control()
 	global $show_command_form, $flip_board;
 	global $preset_from_value, $preset_to_value, $id_focus;
 	global $chess_board_markup, $history_markup, $promotion_dialog_markup;
-	global $board_encoded, $game_title;
+	global $board_encoded, $game_title, $turn_nr;
 	global $href_this, $href_player, $href_flip;
 	global $game_state_link, $hmw_home_link;
 
