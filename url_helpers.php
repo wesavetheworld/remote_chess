@@ -28,7 +28,7 @@ function get_parameter( $parameter_name, $default_value = '' )
 ******************************************************************************/
 
 /**
- * decode_board()
+ * decode_board() - Convert between coded GET parameter and  $board_array
  * encode_board()
  */
 function decode_board( $board_coded )
@@ -133,24 +133,23 @@ function update_href( $current_link = '', $parameter_name = '', $add_value = '' 
 	// Create array using named indices ("params_key[name]=value")
 	$params_key = Array();
 	if ($params_url != '') {
-		foreach( $params_exp as $p ) {
-
-			// Only key given?
-			if (strpos($p, '=') === false) {
-				//  $p  is the key name.
-				$params_key[$p] = '';
-			}
-			// Key and value given.
-			else {
-				list($key, $value) = explode( '=', $p );
+		foreach( $params_exp as $key_name ) {
+			if (strpos($key_name, '=') !== false) {
+				// Key and value given.
+				list($key, $value) = explode( '=', $key_name );
 				$params_key[$key] = $value;
+			} else {
+				// No value,  $p  is the key name.
+				$params_key[$key_name] = '';
 			}
 		}
 	}
 
 	//  $params_key  now contains all parameters found in  $current_link .
 
-	// Add or update the given parameter
+
+	// Add (or update) the new parameter
+
 	if ($parameter_name != '') {
 		$params_key[$parameter_name] = $add_value;
 	}
@@ -177,8 +176,7 @@ function update_href( $current_link = '', $parameter_name = '', $add_value = '' 
 
 	$params_out = '';
 	foreach( $params_key as $key => $value ) {
-		if ($value != REMOVE_FROM_LINK)
-		{
+		if ($value != REMOVE_FROM_LINK) {
 			if ($key != GET_BASE_BOARD) {
 				if ($value != '') {
 					$params_out .= "&$key=$value";

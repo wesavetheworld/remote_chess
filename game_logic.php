@@ -216,6 +216,7 @@ function select_piece( $board_array, $current_player, $from_field )
 
 	$new = Array( $clickable[0] );
 	list( $f_row, $f_col ) = field_to_rowcol( $from_field );
+	$piece = $board_array[$f_row][$f_col];
 
 	foreach( $clickable as $to_field ) {
 
@@ -240,18 +241,50 @@ function select_piece( $board_array, $current_player, $from_field )
 			);
 
 			if (! in_array( $king_field, $hot_fields )) {
-				$new[] = $to_field;
+				// King is NOT under attack when doing the move
+				$attacked = false;   // Not direclty, at least
+
+				// Check, if we try to castle and any fields
+				// are under attack, preventing the move
+				$dir = $t_col - $f_col;
+
+				if ($piece == 'L') {    // White king
+					if ($dir < 0) { // B, C, D must be free
+						$attacked
+						=  in_array( 'B1', $hot_fields )
+						|| in_array( 'C1', $hot_fields )
+						|| in_array( 'D1', $hot_fields )
+						;
+					} else {        // F and G must be free
+						$attacked
+						=  in_array( 'F1', $hot_fields )
+						|| in_array( 'G1', $hot_fields )
+						;
+					}
+				}
+
+				if ($piece == 'l') {    // Black king
+					if ($dir < 0) { // B, C, D must be free
+						$attacked
+						=  in_array( 'B8', $hot_fields )
+						|| in_array( 'C8', $hot_fields )
+						|| in_array( 'D8', $hot_fields )
+						;
+					} else {        // F and G must be free
+						$attacked
+						=  in_array( 'F8', $hot_fields )
+						|| in_array( 'G8', $hot_fields )
+						;
+					}
+				}
+
+				if (/* normal move or */ ! $attacked) {
+					$new[] = $to_field;
+				}
 			}
 		}
 	}
 
-	//...if (count($new) <= 1) {
-	//...	$new = Array();
-	//...}
-	//... But we shouldn't get movable pieces in the first place, ..
-	//... ..if there are no possible moves!
-
-	//...$clickable = $selected = (count($new) == 1) ? Array() : $new ;
 	$clickable = $selected = $new;
 
 	return Array( $clickable, $selected );

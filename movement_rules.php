@@ -435,22 +435,23 @@ function king_move_list( $board_array, $current_player, $field )
 
 	list( $row, $col ) = field_to_rowcol( $field );
 	$dir = ($current_player == WHITES_MOVE) ? true : false ;
+	$row = ($dir ? 0 : 7);
 
 	$open_queenside =
-	(	($board_array[$dir ? 0 : 7][0] == 's')
-	||	($board_array[$dir ? 0 : 7][0] == 'S')
+	(	($board_array[$row][0] == 's')
+	||	($board_array[$row][0] == 'S')
 	)
-	&&	($board_array[$dir ? 0 : 7][1] == '')
-	&&	($board_array[$dir ? 0 : 7][2] == '')
-	&&	($board_array[$dir ? 0 : 7][3] == '')
+	&&	($board_array[$row][1] == '')
+	&&	($board_array[$row][2] == '')
+	&&	($board_array[$row][3] == '')
 	;
 
 	$open_kingside =
-	(	($board_array[$dir ? 0 : 7][7] == 's')
-	||	($board_array[$dir ? 0 : 7][7] == 'S')
+	(	($board_array[$row][7] == 's')
+	||	($board_array[$row][7] == 'S')
 	)
-	&&	($board_array[$dir ? 0 : 7][6] == '')
-	&&	($board_array[$dir ? 0 : 7][5] == '')
+	&&	($board_array[$row][6] == '')
+	&&	($board_array[$row][5] == '')
 	;
 
 	if (true  || 'line not under attack') {

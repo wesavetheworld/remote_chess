@@ -242,6 +242,7 @@ function promotion_dialog_markup( $href_this, $current_player, $row, $col, $hist
 
 } // promotion_dialog_markup
 
+
 /******************************************************************************
 * CHESS BOARD MARKUP
 ******************************************************************************/
@@ -314,7 +315,7 @@ function piece_in_field( $pieces, $selected, $field_name )
 
 
 /**
- * get_pieces()
+ * get_pieces() - Get associative array of pieces orderd by field name
  */
 function get_pieces( $board )
 {

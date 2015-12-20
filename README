@@ -205,6 +205,7 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 6. TODO v0.2b
 =============
 - Detect Draw
+- Castle: Check, if some of the fields are under attack by enemy pieces
 == OPTIONAL ===================================================================
 - Refactor: The algorithm for finding legal moves (regarding the king being in
   check after a move) is somewhat confusing and spread all over the place.
