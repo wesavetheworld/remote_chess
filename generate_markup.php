@@ -104,7 +104,7 @@ function history_markup( $board, $history, $name_white, $name_black )
 	$ret
 	= "<h2><strong>$name_white</strong>"
 	. " vs. <strong>$name_black</strong></h2>\n"
-	. "<ul class=\"history\">\n"
+	. "<ul>\n"
 	;
 
 	$skipped_turns = 0;
@@ -118,6 +118,10 @@ function history_markup( $board, $history, $name_white, $name_black )
 
 		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
 		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
+
+		if (($i > 0) && ($i % 100 == 0)) {
+			$ret .= "</ul><ul>\n";
+		}
 
 		switch ($from_code) {
 		case '_':

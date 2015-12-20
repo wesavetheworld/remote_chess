@@ -217,6 +217,7 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 - History: GET: goto (history)
 - History: Remove redundant parts (Initial moves of pawns, etc.)
 - History: Show En Passant
+- History: No prompt, when check mate
 - Keep orientation: &top={white|black}
 - Chess Riddles: $riddle[code]=description html
 . Capture: Utilize "Taken by player" locations "." and ":"

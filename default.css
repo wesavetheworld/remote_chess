@@ -6,11 +6,37 @@
 /* EVIL HARD RESET AND PAGE LAYOUT */
 
 * { margin:0; padding:0; }
-html { background:#f4f4f4; color:#000; }
+html { background:#eaeaea; background:#ccc; color:#000; text-align:center;
+	background:#888 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAIAAAAmzuBxAAAAAXNSR0IArs4c6QAAAAZiS0dEAJAAkACQJVm32wAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wCGAwaK1POoBsAAABCSURBVBjTfc/BDQAhDANBk9eWnZJTAp8gBHfY31lFyshMrQGAzoXnqgrPfcOwpPDchWEgPN/Fl49vf3kXL+7CsKQJRZIfxgj2msAAAAAASUVORK5CYII=)
+	repeat scroll 0 0;
+}
 body {
+	position:relative;
 	background:#fff; color:#000;
 	font-family:sans-serif;
 	text-align:center;
+	    -webkit-box-shadow:2px 2px 12px #60645d;  /*666*/
+	       -moz-box-shadow:2px 2px 12px #60645d;
+		    box-shadow:2px 2px 12px #60645d;
+}
+@media (min-width:1025px) {
+	body {
+		Xdisplay:inline-block;
+/*
+		margin:0.5em 0;
+		border:solid 4px #666;
+		border-radius:0.5em;
+*/
+	}
+}
+@media (max-width:970px) {
+	body {
+		display:inline-block;
+		width:550px;
+	}
+	body section {
+		margin:0; padding:0;
+	}
 }
 body, pre { font-size:14px; }
 a { text-decoration:none; }
@@ -20,7 +46,8 @@ a:hover { text-decoration:underline; }
 
 header {
 	border-bottom:solid 1px #ccc;
-	background:#f4f4f4; color:#000;
+	background:#eaeaea; color:#000;
+	Xborder-radius:0.5em 0.5em 0 0;
 }
 header h1 {
 	height:1em; margin:0 0 0.25em; font-size:1.5em;
@@ -29,22 +56,22 @@ header h1 {
 
 section {
 	display:inline-block;
-	margin:0 1em 0.5em;
+	margin:0 1.25em 0.5em 0;
 	vertical-align:top;
 }
-
+section:nth-child(2) { Xmargin-left:1.25em; }
 
 /* NEW GAME */
 
-#new_game h1 { font-size:1.25em; margin-top:0.75em; }
-#new_game form { margin:1em 0 0; border-top:solid 1px #ccc; Xborder-bottom:solid 1px #ccc; padding:0 0 0.5em; }
+#new_game h1 { font-size:1.25em; padding-top:0.75em; border-top:solid 1px #ccc; }
+#new_game form { border-top:solid 1em #eaeaea; padding:0 0 0.5em; }
 #new_game p { margin:1em 0; }
 
 
 /* GAME STATE LINK */
 
 .game_state_link p {
-	Xwidth:480px; width:16em; margin:0 auto 1em; word-break:break-all;
+	Xwidth:480px; width:14em; margin:0 auto 1em; word-break:break-all;
 }
 
 h2 { border-bottom:solid 1px #ccc; margin:1em 0; font-size:1em; }
@@ -156,11 +183,17 @@ p { margin:0.5em 0; }
 /* HISTORY */
 
 .history {
-	list-style-type:none; Xlist-style-position:inside;
-	display:inline-block;  width:16em;
-	Xfont-family:monospace;
-text-align:left;
+	display:inline-block;  Xwidth:14em; margin-bottom:1em;
+	text-align:left;
 }
+.history ul {
+	display:block;
+	float:left;
+	list-style-type:none;
+	Xlist-style-position:inside;
+	margin:0 1em 1em;
+}
+.history ul:nth-child(2) { margin-left:0; }
 .history h2 { font-weight:normal; }
 .history h2 strong { color:#000; }
 .history li { white-space:nowrap; }
@@ -176,36 +209,37 @@ text-align:left;
 
 /* FOOTER */
 footer {
-	Xmargin:1.5em 0 0;
 	border-top:solid 1px #ccc;
-	border-bottom:solid 1em #f4f4f4;
-	background:#f4f4f4; color:#000;
+	border-bottom:solid 1px #eaeaea;
+	Xborder-radius:0 0 0.5em 0.5em;
+	background:#eaeaea; color:#000;
 }
-footer h3 { margin:0; padding:0.1em; font-size:0.72em; font-weight:normal; }
+footer h3 { margin:0; padding:0.3em; font-size:0.65em; font-weight:normal; }
+footer p { display:inline-block; vertical-align:middle; }
 
 
 /* NAVIGATION */
 nav {
-	position:absolute; top:0; right:0; overflow:hidden;
-	height:1.7em; margin-top:-1px; border:solid 1px #f4f4f4;
+	position:absolute; top:1px; right:0px; overflow:hidden;
+	width:12em; height:1.5em; margin-top:-1px; border:solid 1px #eaeaea;
 	Xborder:solid 1px #ccc; padding:0.2em 0.5em;
-	text-align:left; background:#f4f4f4; color:#000;
+	text-align:left; background:#eaeaea; color:#000;
 }
 nav:hover {
 	height:auto; overflow:visible;
 }
 nav ul { list-style-type:none; }
-ul, li { margin:0; padding:0 0 0.2em; }
+ul, li { margin:0; padding:0 0 0.1em; }
 nav li:first-child { text-align:right; }
-nav button { margin:0.2em 0 }
-nav hr { margin:0.2em 0; }
+nav button { margin:0 0 0.2em 1em; }
+nav hr { clear:both; margin:0.2em 0; }
 
 
 /* DEBUG */
 
 .debug {
 	Xheight:1.1em; Xoverflow:hidden; padding:0.2em 0.3em;
-	text-align:left; background:#f4f4f4; color:#000;
+	text-align:left; background:#eaeaea; color:#000;
 }
 .debug:hover {
 	height:auto; overflow:visible;

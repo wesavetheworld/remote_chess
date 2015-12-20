@@ -1,4 +1,4 @@
-<?php /* index.php */ $VERSION = 'v0.2.1&beta;';
+<?php /* index.php */ $VERSION = 'v0.2.3&beta;';
 /******************************************************************************
 * REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
 * MAIN SCRIPT and HTML TEMPLATE
@@ -26,10 +26,11 @@ main_control();   // see  game_logic.php
 <title><?= $game_title ?>Remote Chess - <?= $VERSION ?></title>
 <meta name="author" content="Harald Markus Wirth, http://harald.ist.org/">
 <meta name="description" content="Web service for playing chess via e-mail or instant messenger. No login required.">
-<meta name="keywords" content="remote,mail,chess">
+<meta name="keywords" content="remote,correspondence,mail,chess,fern,post,brief,schach">
 <meta name="robots" content="index,follow">
 <link rel="stylesheet" type="text/css" href="default.css">
 <link rel="alternate stylesheet" type="text/css" href="three_d.css" title="Perspective">
+<link rel="alternate stylesheet" type="text/css" href="no_guides.css" title="No Guides">
 <link rel="shortcut icon" href="chess-icon.png">
 <script type="text/javascript" src="chess_board.js"></script>
 <? IF ($_SERVER['QUERY_STRING'] == ''): /////////////////////////// NEW GAME ?>
@@ -68,7 +69,7 @@ main_control();   // see  game_logic.php
 <p>
 	Turn #<?= $turn_nr //...substr($game_title, 0, -3) ?>:
 	<br>
-	<a href="<?= $game_state_link ?>"><?= $game_state_link ?></a>
+	<a href="<?= $game_state_link ?>" title="Copy/paste this link"><?= $game_state_link ?></a>
 </p>
 </section><!-- /game_state_link -->
 
@@ -120,11 +121,12 @@ main_control();   // see  game_logic.php
 	<li><a href="<?= $href_player ?>">Switch Sides</a>
 	<li><a href="./?base=">Empty Board</a>
 	<hr>
-	<li><a href="<?= update_href( TEST_LINK, '', '' ); ?>">Test:Temp</a>
-	<li><a href="<?= update_href( TEST_LINK_EP, '', '' ); ?>">Test:EnPassant</a>
-	<li><a href="<?= update_href( TEST_LINK_CA, '', '' ); ?>">Test:Castle</a>
-	<li><a href="<?= update_href( TEST_LINK_PR, '', '' ); ?>">Test:Promotion</a>
-	<li><a href="<?= update_href( TEST_LINK_MATE, '', '' ); ?>">Test:Mate</a>
+	<li><a href="<?= update_href( TEST_LINK, '', '' ); ?>">Test: Temp</a>
+	<li><a href="<?= update_href( TEST_LINK_EP, '', '' ); ?>">Test: EnPassant</a>
+	<li><a href="<?= update_href( TEST_LINK_CA, '', '' ); ?>">Test: Castle</a>
+	<li><a href="<?= update_href( TEST_LINK_PR, '', '' ); ?>">Test: Promotion</a>
+	<li><a href="<?= update_href( TEST_LINK_MATE, '', '' ); ?>">Test: Mate</a>
+	<li><a href="<?= update_href( TEST_LINK_HISTORY, '', '' ); ?>">Test: History</a>
 	<hr>
 	<li><a href="<?= update_href( CHESS_RIDDLE, '', '' ); ?>">Riddle</a>
 </ul>
@@ -132,7 +134,7 @@ main_control();   // see  game_logic.php
 
 <? ENDIF ///////////////////////////////////////////////////// COMMON FOOTER ?>
 <footer>
-<h3><?= $VERSION ?></h3>
+<h3>Remote Chess <?= $VERSION ?><br>Copy(l)eft 2015 by <a href="https://github.com/hwirth/remote_chess">hmw</a></h3>
 <? IF (DEBUG): ?>
 <pre class="debug">
 <?= $debug_html ?>

@@ -82,16 +82,20 @@ function toggleStyle()
 
 	switch (current) {
 		case 'Perspective':
-			setActiveStyleSheet('Horizontal');
+			setActiveStyleSheet('No Guides');
 			break;
-		case 'Horizontal':
+		case 'No Guides':
 			setActiveStyleSheet(null);
 			break;
 		default:
 			setActiveStyleSheet('Perspective');
 	}
 
-	document.title = original_title + ' - Style: ' + getActiveStyleSheet();
+	var title = getActiveStyleSheet();
+	if (title == null) {
+		title = 'Default';
+	}
+	document.title = original_title + ' - Style: ' + title;
 }
 
 

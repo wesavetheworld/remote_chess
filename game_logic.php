@@ -663,6 +663,7 @@ debug_out( "\nhref_this = $href_this" );
 		}
 
 		$game_state_link = str_replace( 'flip&', '', $game_state_link );
+		$game_state_link = str_replace( '&', '&amp;', $game_state_link );
 	}
 
 
