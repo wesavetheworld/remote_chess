@@ -31,6 +31,7 @@ main_control();   // see  game_logic.php
 <link rel="stylesheet" type="text/css" href="default.css">
 <link rel="alternate stylesheet" type="text/css" href="three_d.css" title="Perspective">
 <link rel="alternate stylesheet" type="text/css" href="no_guides.css" title="No Guides">
+<link rel="alternate stylesheet" type="text/css" href="fancy.css" title="Fancy">
 <link rel="shortcut icon" href="chess-icon.png">
 <script type="text/javascript" src="chess_board.js"></script>
 <? IF ($_SERVER['QUERY_STRING'] == ''): /////////////////////////// NEW GAME ?>
@@ -63,17 +64,18 @@ main_control();   // see  game_logic.php
 <h1>Remote Chess</h1>
 </header>
 
-<? IF ($game_state_link != ''):  ?>
 <section class="game_state_link">
-<h2>Send this link:</h2>
+<h2>Return Link</h2>
+<? IF ($game_state_link != ''):  ?>
+<!-- h2>Send this link:</h2 -->
 <p>
 	Turn #<?= $turn_nr //...substr($game_title, 0, -3) ?>:
 	<br>
 	<a href="<?= $game_state_link ?>" title="Copy/paste this link"><?= $game_state_link ?></a>
 </p>
+<? ENDIF ?>
 </section><!-- /game_state_link -->
 
-<? ENDIF ?>
 <section class="game_window">
 <h2><?= $heading ?></h2>
 <?= $promotion_dialog_markup ?>

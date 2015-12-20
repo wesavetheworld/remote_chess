@@ -11,6 +11,8 @@
 define( 'DEBUG', false );                     // Show  debug_out()  messages
 
 define( 'USE_UNICODE_GLYPHS', true );         // Use special characters
+define( 'STEADY_BOARD', !false );              // true: Black plays downwards,
+                                              // board never flips
 
 define( 'DEFAULT_NAME_WHITE', 'A. White' );   // Preset names for new games
 define( 'DEFAULT_NAME_BLACK', 'B. Black' );
@@ -64,7 +66,6 @@ define( 'GET_NEW_GAME',   'newgame'   );
 define( 'GET_PROMOTE',    'promote'   );
 define( 'GET_SELECT',     'select'    );
 define( 'GET_COMMENT',    'comment'   );
-define( 'GET_HELP',       'help'      );
 
 
 /**

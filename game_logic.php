@@ -625,9 +625,9 @@ debug_out( "\nhref_this = $href_this" );
 		$promotion_dialog_markup = '';
 	}
 
-	if ($current_player == BLACKS_MOVE) {   // Keep orientation steady
+	if ((STEADY_BOARD) && ($current_player == BLACKS_MOVE)) {
 		//... GET switch
-		//...$flip_board = ! $flip_board;
+		$flip_board = ! $flip_board;
 	}
 
 	$chess_board_markup = chess_board_markup(
@@ -698,11 +698,6 @@ debug_out( "\nhref_this = $href_this" );
 		$game_state_link = str_replace( 'flip&', '', $game_state_link );
 		$game_state_link = str_replace( '&', '&amp;', $game_state_link );
 	}
-
-
-	// Debug
-
-	#debug_array( $board_array, "\nboard" );
 
 } // main_conrol
 

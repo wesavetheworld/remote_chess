@@ -390,13 +390,13 @@ function chess_board_markup(
 
 			$field_name = $col_name . $row_name;
 
-			$class = in_array($field_name, $selected)
+			$class = in_array( $field_name, $selected )
 			?	' class="selected"'
 			:	''
 			;
 
 			//$base_link
-			$has_href = in_array($field_name, $clickable);
+			$has_href = in_array( $field_name, $clickable );
 
 			if ($class == '') {
 				$href = update_href( $base_href, GET_FROM, $field_name );

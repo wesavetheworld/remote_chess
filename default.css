@@ -70,8 +70,9 @@ section:nth-child(2) { Xmargin-left:1.25em; }
 
 /* GAME STATE LINK */
 
+.game_state_link { width:14em; }
 .game_state_link p {
-	Xwidth:480px; width:14em; margin:0 auto 1em; word-break:break-all;
+	Xwidth:480px; margin:0 auto 1em; word-break:break-all; font-family:monospace;
 }
 
 h2 { border-bottom:solid 1px #ccc; margin:1em 0; font-size:1em; }
@@ -115,7 +116,8 @@ table a {
 }
 table a:focus { outline:solid 2px #00f; }
 
-td.selected { Xoutline:solid 2px #0f0; }
+td.prev_move { background:#fff; }
+td.selected { Xbackground:#fff; }
 div.selected { outline:solid 2px #fff; }
 table.white div.white.selected { outline-color:#ff0; }
 table.black div.black.selected { outline-color:#ff0; }

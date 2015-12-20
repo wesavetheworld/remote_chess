@@ -130,8 +130,8 @@ Example: starting board, encoded:
 	. 's4n5b6q7l8b9n*s$'   // 8
 
 
-FUNCTION main_control()
------------------------
+MAIN_CONTROL()
+--------------
 The main program consists of several sections, which can roughly be divided
 into:
 	* Initialization
@@ -154,15 +154,28 @@ MOVING A PIECE (HTTP Redirect)
 ------------------------------
 When  from  and  to  contain valid field names and the move is possible, it
 will be applied to the current  $board_array  and the move is added to the
-history. To get rid of the GET parameters  from  and  to ,  $redirect_after_move
+history. To clear the URL of parameters  from  and  to ,  $redirect_after_move
 is set in order to trigger the according actions later in  main_control() .
+
+
+ILLEGAL MOVES
+-------------
+Rules for moving a piece are handled in piece specific functions which return a
+list of fields, the piece could physically move to. This does not include
+considerations of the king's safety, but includes possible enemies to capture.
+See  movement_rules.php .
+
+Sopme possible moves may be forbidden. For instance, when the king would be
+left in check after the move, or in case of casteling, when some of the fields
+between king and rook are under attack. These considerations are done, when
+clickable fields are calculated in  game_locig.php:select_piece() .
 
 
 CASTLING
 --------
 Rooks and kings are initially coded as  S, L  or  s, l  indicating, that they
 have not yet been moved. The code will be switched to  R, K  or  r, k  in
-apply_move(), preventing them from being considered for castling.
+apply_move(), preventing them from being considered for castling again.
 
 
 EN PASSANT
@@ -205,8 +218,8 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 6. TODO v0.2b
 =============
 - Detect Draw
-- Castle: Check, if some of the fields are under attack by enemy pieces
 == OPTIONAL ===================================================================
+- Date and Time in Title
 - Refactor: The algorithm for finding legal moves (regarding the king being in
   check after a move) is somewhat confusing and spread all over the place.
 - Refactor: Semantic markup for history
@@ -222,9 +235,9 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 - Keep orientation: &top={white|black}
 - Chess Riddles: $riddle[code]=description html
 . Capture: Utilize "Taken by player" locations "." and ":"
+- Capture: visual list of removed pieces, Utilize locations "." and ":"
 - Speech bubbles over pieces with user comments, dialog sequences
 - Store/retrieve game state in/from cookies (save/load buttons, auto-save)
-- Taken by player: visual list of removed pieces
 - JS Request Reduction: Provide everything needed for selecting a full move
 - Play against AI
 - Rename files with dash using underscore

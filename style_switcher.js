@@ -85,6 +85,9 @@ function toggleStyle()
 			setActiveStyleSheet('No Guides');
 			break;
 		case 'No Guides':
+			setActiveStyleSheet('Fancy');
+			break;
+		case 'Fancy':
 			setActiveStyleSheet(null);
 			break;
 		default:
