@@ -175,6 +175,10 @@ function decode_history( $base_array, $history, $goto )
 		$length = $goto * 2;
 	}
 
+	if (substr($history, $length, 1) == '(') {
+		$length += 2;
+	}
+
 	for( $i = 0 ; $i < $length ; $i += 2 ) {
 		$from_code = substr( $history, $i, 1 );
 		$to_code   = substr( $history, $i+1, 1 );
