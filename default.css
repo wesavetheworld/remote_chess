@@ -66,6 +66,7 @@ section:nth-child(4) { Xmargin-right:0; }
 .game_state_link { width:14em; }
 .game_state_link p { margin:0 auto 1em; word-break:break-all; }
 .game_state_link a { font-family:monospace; font-size:0.82em; }
+.game_state_link p:nth-child(4) { margin:-1em auto 0; padding:1em 0; }
 
 h2 { border-bottom:solid 1px #ccc; margin:1em 0; font-size:1em; }
 h2 strong { color:#c10; }
@@ -125,8 +126,8 @@ table.black.flipped div.white.selected { outline-color:#f00;outline:none; }
 }
 .notmoved:hover { Xoutline:1px dashed #fff; }
 
-div.white { background:url(symbols_white.png); }
-div.black { background:url(symbols_black.png); }
+div.white { background:url(symbols_white_50px.png); }
+div.black { background:url(symbols_black_50px.png); }
 
 .black.king   { background-position:    0px 0; }
 .black.queen  { background-position:  -50px 0; }

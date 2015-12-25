@@ -28,6 +28,7 @@ function debug_out( $message )
 	if (DEBUG_TO_FILE) {
 		if (($fh = fopen(DEBUG_FILE_NAME, 'a')) !== false) {
 			fwrite( $fh, $message );
+			fclose( $fh );
 		}
 	}
 }

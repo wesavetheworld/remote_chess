@@ -1,4 +1,4 @@
-<?php /* index.php */ $VERSION = 'v0.2.5&beta;';
+<?php /* index.php */ $VERSION = 'v0.2.6&beta;';
 /******************************************************************************
 * REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
 * MAIN SCRIPT and HTML TEMPLATE
@@ -34,6 +34,7 @@ main_control();   // see  game_logic.php
 <link rel="alternate stylesheet" type="text/css" href="fancy.css" title="Fancy">
 <link rel="alternate stylesheet" type="text/css" href="ponies.css" title="Ponies">
 <link rel="alternate stylesheet" type="text/css" href="large.css" title="Large">
+<link rel="alternate stylesheet" type="text/css" href="small.css" title="Small">
 <link rel="shortcut icon" href="chess-icon.png">
 <script type="text/javascript" src="chess_board.js"></script>
 <script type="text/javascript" src="style_switcher.js"></script>

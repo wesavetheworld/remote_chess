@@ -9,7 +9,7 @@
 ******************************************************************************/
 
 define( 'DEBUG', false );                      // Show  debug_out()  messages
-define( 'DEBUG_TO_FILE', !false );              // Write messages to file
+define( 'DEBUG_TO_FILE', false );              // Write messages to file
 define( 'DEBUG_FILE_NAME', '../debug.log' );
 
 define( 'USE_UNICODE_GLYPHS', true );          // Use special characters
@@ -117,6 +117,7 @@ define( 'INITIAL_BOARD_CODED',
 /**
  * CHESS_RIDDLES
  */
+// http://derstandard.at/2000004889739/Loesungen-Schachraetsel-2206-2207-2208 (This is 2207)
 define( 'CHESS_RIDDLE', "?player=white&base=QzkJKTNWpXpZn5&comment=White+moves+and+checkmates+in+two+turns" );
 
 

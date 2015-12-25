@@ -1,0 +1,31 @@
+/*** SMALL ICONS - REMOTE CHESS STYLES ***/
+
+td {
+	width:40px; height:40px;
+}
+
+div.white { background:url(symbols_white_40px.png); }
+div.black { background:url(symbols_black_40px.png); }
+
+.piece, td div {
+	overflow:hidden; width:40px; height:40px;
+}
+
+.black.king   { background-position:    0px 0; }
+.black.queen  { background-position:  -40px 0; }
+.black.rook   { background-position:  -80px 0; }
+.black.bishop { background-position: -120px 0; }
+.black.knight { background-position: -160px 0; }
+.black.pawn   { background-position: -200px 0; }
+
+.white.king   { background-position:    0px 0; }
+.white.queen  { background-position:  -40px 0; }
+.white.rook   { background-position:  -80px 0; }
+.white.bishop { background-position: -120px 0; }
+.white.knight { background-position: -160px 0; }
+.white.pawn   { background-position: -200px 0; }
+
+.popup li div { overflow:hidden; width:40px; height:40px; }
+
+
+/* EOF */

@@ -1,0 +1,31 @@
+/*** REMOTE CHESS STYLES ***/
+
+
+td {
+	width:100px; height:100px;
+}
+
+div.white { background:url(ponies_white_100px.png); }
+div.black { background:url(ponies_black_100px.png); }
+
+.piece, td div {
+	overflow:hidden; width:100px; height:100px;
+}
+
+.black.king   { background-position:    0px 0; }
+.black.queen  { background-position: -100px 0; }
+.black.rook   { background-position: -200px 0; }
+.black.bishop { background-position: -300px 0; }
+.black.knight { background-position: -400px 0; }
+.black.pawn   { background-position: -500px 0; }
+
+.white.king   { background-position:    0px 0; }
+.white.queen  { background-position: -100px 0; }
+.white.rook   { background-position: -200px 0; }
+.white.bishop { background-position: -300px 0; }
+.white.knight { background-position: -400px 0; }
+.white.pawn   { background-position: -500px 0; }
+
+.popup li div { overflow:hidden; width:100px; height:100px; }
+
+/* EOF */

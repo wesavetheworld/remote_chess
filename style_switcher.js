@@ -94,6 +94,9 @@ function toggleStyle()
 			setActiveStyleSheet('Large');
 			break;
 		case 'Large':
+			setActiveStyleSheet('Small');
+			break;
+		case 'Small':
 			setActiveStyleSheet(null);
 			break;
 		default:

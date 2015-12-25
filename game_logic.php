@@ -254,17 +254,18 @@ function select_piece( $board_array, $current_player, $from_field )
 				$attacked = false;   // Not direclty, at least
 
 				// Check, if we try to castle and any fields
-				// are under attack, preventing the move
+				// are under attack, preventing the move.
 				$dir = $t_col - $f_col;
 
 				if ($piece == 'L') {    // White king
-					if ($dir < 0) { // B, C, D must be free
+					if ($dir == -2) { // B, C, D must be free
 						$attacked
 						=  in_array( 'B1', $hot_fields )
 						|| in_array( 'C1', $hot_fields )
 						|| in_array( 'D1', $hot_fields )
 						;
-					} else {        // F and G must be free
+					}
+					else if ($dir == +2) { // F and G must be free
 						$attacked
 						=  in_array( 'F1', $hot_fields )
 						|| in_array( 'G1', $hot_fields )
@@ -273,13 +274,14 @@ function select_piece( $board_array, $current_player, $from_field )
 				}
 
 				if ($piece == 'l') {    // Black king
-					if ($dir < 0) { // B, C, D must be free
+					if ($dir = -2) { // B, C, D must be free
 						$attacked
 						=  in_array( 'B8', $hot_fields )
 						|| in_array( 'C8', $hot_fields )
 						|| in_array( 'D8', $hot_fields )
 						;
-					} else {        // F and G must be free
+					}
+					else if ($dir == +2) { // F and G must be free
 						$attacked
 						=  in_array( 'F8', $hot_fields )
 						|| in_array( 'G8', $hot_fields )
@@ -422,7 +424,7 @@ function main_control()
 		} else {
 			$color = 'White';
 		}
-		debug_out( "$name_white vs. $name_black, $turn_nr, $color: $cmd_from - $cmd_to\n" );
+		debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, $color: $cmd_from - $cmd_to\n" );
 
 
 		list($f_row, $f_col) = field_to_rowcol( $cmd_from );
@@ -643,7 +645,7 @@ function main_control()
 	if (isset( $_GET[GET_GOTO] )) {
 		$clickable = $selected = Array();
 	}
-	else if (($history > '') || ($cmd_from == $cmd_to)) {
+	else if (($history > '') && ($cmd_from == $cmd_to)) {
 		if (substr($history, -4, 1) == '(') {
 			// Skip promotion
 			$selected[] = decode_field( substr($history, -3, 1) );

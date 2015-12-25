@@ -103,7 +103,7 @@ done using the GET parameters:
 	&enpassant=<file name>
 
 
-BOARD ENCODING ($history)
+BOARD ENCODING
 
   +--+--+--+--+--+--+--+--+         BLACK          LOCATION_CODES
   |A8|B8|C8|D8|E8|F8|G8|H8|    r n b q k b n r     4 5 6 7 8 9 * $
@@ -128,6 +128,24 @@ Example: starting board, encoded:
 	. 'PiPjPkPlPmPnPoPp'   // 2
 	. 'pWpXpYpZp0p1p2p3'   // 7
 	. 's4n5b6q7l8b9n*s$'   // 8
+
+
+HISTORY
+-------
+The game is stored in a string, kept in the GET parameter  &history . The
+history consists of a list of moves, encoded by one character for the origin
+and the target field according to the  LOCATION_CODES  shown above. The meaning
+of each move is implied and reconstructed in  decode_history()  and
+ history_markup() .
+
+PROMOTIONS are encoded as an "empty" round, using 4 characters:
+"(AB)" where A stands for the top rank field, a pawn moved to in the previous
+move, and B is the piece code of what the pawn became according to the player's
+choice when promoting that pawn.
+
+Since the ROUND NUMBER is derived from the string length of the history,
+certain routines need to subtract the amounts of occurances of opening
+parantheses "(" multiplied by 4.
 
 
 MAIN_CONTROL()
@@ -211,6 +229,7 @@ https://en.wikipedia.org/wiki/En_passant
 https://en.wikipedia.org/wiki/Checkmate
 https://en.wikipedia.org/wiki/Stalemate
 https://en.wikipedia.org/wiki/Draw_%28chess%29
+https://en.wikipedia.org/wiki/Threefold_repetition
 https://en.wikipedia.org/wiki/Chess_composition
 https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 
@@ -218,15 +237,12 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 6. TODO v0.2b
 =============
 - Detect Draw
-! Selected rook in new game
 == OPTIONAL ===================================================================
 - mailto:username@example.com?subject=Subject&body=message%20goes%20here
   http://stackoverflow.com/questions/13231125/automically-open-default-email-client-and-pre-populate-content
 - "A. White's move - Check!": Dash still green --> black
 ? Get rid of redirect, use params for visualizing last move
 - Date and Time in Title
-- Refactor: The algorithm for finding legal moves (regarding the king being in
-  check after a move) is somewhat confusing and spread all over the place.
 - Refactor: Semantic markup for history
 - Send This Link Section: Start date and last move date in URL
 - Send This Link Section: Move of previous player
@@ -235,14 +251,14 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 - History: Remove redundant parts (Initial moves of pawns, etc.)
 - History: Show En Passant
 - History: No prompt, when check mate
-- History: Cont: Make it possible to continue playing from a previous move?
-- History: Cont: Click history back, Return Link shows link to clear rest of history
+? History: Cont: Make it possible to continue playing from a previous move
+? History: Cont: Click history back, Return Link shows link to clear rest of history
+? History: Show previous move
 - Keep orientation: &top={white|black}
 - Chess Riddles: $riddle[code]=description html
 . Capture: Utilize "Taken by player" locations "." and ":"
 - Capture: visual list of removed pieces, Utilize locations "." and ":"
 - Speech bubbles over pieces with user comments, dialog sequences
-- Store/retrieve game state in/from cookies (save/load buttons, auto-save)
 - JS Request Reduction: Provide everything needed for selecting a full move
 - Play against AI
 - Rename files with dash using underscore
