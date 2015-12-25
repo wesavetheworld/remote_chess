@@ -63,10 +63,11 @@ section:nth-child(2) { Xmargin-left:1.25em; }
 
 /* NEW GAME */
 
+#new_game { display:inline-block; width:30em; }
 #new_game h1 { font-size:1.25em; padding-top:0.75em; border-top:solid 1px #ccc; }
 #new_game form { border-top:solid 1em #eaeaea; padding:0 0 0.5em; }
 #new_game p { margin:1em 0; }
-
+#new_game input { margin:0.5em; }
 
 /* GAME STATE LINK */
 
@@ -77,7 +78,7 @@ section:nth-child(2) { Xmargin-left:1.25em; }
 
 h2 { border-bottom:solid 1px #ccc; margin:1em 0; font-size:1em; }
 h2 strong { color:#c10; }
-
+section h2:nth-child(3) { margin-top:3em; }
 
 .game_window h2 { color:#0a0; }
 
@@ -133,8 +134,8 @@ table.black.flipped div.white.selected { outline-color:#f00;outline:none; }
 }
 .notmoved:hover { Xoutline:1px dashed #fff; }
 
-div.white { background:url(icons_white.png); }
-div.black { background:url(icons_black.png); }
+div.white { background:url(symbols_white.png); }
+div.black { background:url(symbols_black.png); }
 
 .black.king   { background-position:    0px 0; }
 .black.queen  { background-position:  -50px 0; }
@@ -174,7 +175,9 @@ div.black { background:url(icons_black.png); }
 .send_link a { text-decoration:none; }
 .send_link a:hover { text-decoration:underline; }
 
-input { padding:0.2em 0.3em; }
+label { display:inline-block; width:5em; text-align:right; }
+input { padding:0.2em 0.3em; margin-right:4em; }
+input[type=submit] { margin-left:4em; }
 .move input[type=text] { width:3em; }
 .names { margin:0 0 -1em; }
 .names input[type=text] { width:6em; text-align:center; }
@@ -192,7 +195,6 @@ p { margin:0.5em 0; }
 	display:block;
 	float:left;
 	list-style-type:none;
-	Xlist-style-position:inside;
 	margin:0 1em 1em;
 }
 .history ul:nth-child(2) { margin-left:0; }
@@ -205,6 +207,7 @@ p { margin:0.5em 0; }
 	font-size:1.5em;
 }
 .history span { display:inline-block; width:1.2em; text-align:center; }
+.history a:hover span { text-decoration:underline; }
 .history li strong { color:#0a0; } 
 .promotion { text-align:center; }
 

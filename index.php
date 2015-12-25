@@ -32,8 +32,10 @@ main_control();   // see  game_logic.php
 <link rel="alternate stylesheet" type="text/css" href="three_d.css" title="Perspective">
 <link rel="alternate stylesheet" type="text/css" href="no_guides.css" title="No Guides">
 <link rel="alternate stylesheet" type="text/css" href="fancy.css" title="Fancy">
+<link rel="alternate stylesheet" type="text/css" href="ponies.css" title="Ponies">
 <link rel="shortcut icon" href="chess-icon.png">
 <script type="text/javascript" src="chess_board.js"></script>
+<script type="text/javascript" src="style_switcher.js"></script>
 <? IF ($_SERVER['QUERY_STRING'] == ''): /////////////////////////// NEW GAME ?>
 </head><body id="new_game">
 
@@ -57,7 +59,6 @@ main_control();   // see  game_logic.php
 </form>
 
 <? ELSE: /////////////////////////////////////////////////////// CHESS BOARD ?>
-<script type="text/javascript" src="style_switcher.js"></script>
 </head><body id="chess_board">
 
 <header>
@@ -65,9 +66,36 @@ main_control();   // see  game_logic.php
 </header>
 
 <section class="game_state_link">
-<h2>Return Link</h2>
+<? IF ($show_command_form): ?>
+<h2>Command</h2>
+<form action="./" method="get" accept-charset="utf-8">
+<?  IF ($flip_board): ?>
+<input type="hidden" name="<?= GET_FLIP_BOARD ?>" value="">
+<?  ENDIF ?>
+<input type="hidden" name="<?= GET_PLAYER ?>" value="<?= ($current_player == WHITES_MOVE) ? GET_WHITE : GET_BLACK ?>">
+<input type="hidden" name="<?= GET_HISTORY ?>" value="<?= $history ?>">
+<input type="hidden" name="<?= GET_WHITE ?>" value="<?= $name_white ?>">
+<input type="hidden" name="<?= GET_BLACK ?>" value="<?= $name_black ?>">
+<input type="hidden" name="<?= GET_BASE_BOARD ?>" value="<?= $board_encoded ?>">
+<?  IF ($promotion_dialog_markup == ''): ?>
+<p class="move">
+	<label for="idFrom">From:</label>
+	<input type="text" id="idFrom" name="from" value="<?= $preset_from_value ?>">
+</p><p class="move">
+	<label for="idTo">to:</label>
+	<input type="text" id="idTo" name="to" value="<?= $preset_to_value ?>">
+</p><p>
+	<label for="idSubmit" class="nocss">Submit:</label>
+	<input type="submit" id="idSubmit" value="Submit">
+</p>
+<?  ENDIF ?>
+<?  IF ($id_focus != ''): ?>
+<script type="text/javascript"> document.getElementById('<?= $id_focus ?>').focus(); </script>
+<?  ENDIF ?>
+</form>
+<? ENDIF ?>
 <? IF ($game_state_link != ''):  ?>
-<!-- h2>Send this link:</h2 -->
+<h2>Return Link</h2><!-- h2>Send this link:</h2 -->
 <p>
 	Turn #<?= $turn_nr //...substr($game_title, 0, -3) ?>:
 	<br>
@@ -80,35 +108,8 @@ main_control();   // see  game_logic.php
 <h2><?= $heading ?></h2>
 <?= $promotion_dialog_markup ?>
 <?= $chess_board_markup ?>
-
-<? IF ($show_command_form): ?>
-<form action="./" method="get" accept-charset="utf-8">
-<?  IF ($flip_board): ?>
-<input type="hidden" name="<?= GET_FLIP_BOARD ?>" value="">
-<?  ENDIF ?>
-<input type="hidden" name="<?= GET_PLAYER ?>" value="<?= ($current_player == WHITES_MOVE) ? GET_WHITE : GET_BLACK ?>">
-<input type="hidden" name="<?= GET_HISTORY ?>" value="<?= $history ?>">
-<input type="hidden" name="<?= GET_WHITE ?>" value="<?= $name_white ?>">
-<input type="hidden" name="<?= GET_BLACK ?>" value="<?= $name_black ?>">
-<input type="hidden" name="<?= GET_BASE_BOARD ?>" value="<?= $board_encoded ?>">
-<?  IF ($promotion_dialog_markup == ''): ?>
-<p class="move">
-	Move
-	<label for="idFrom">from:</label>
-	<input type="text" id="idFrom" name="from" value="<?= $preset_from_value ?>">
-	<label for="idTo">to:</label>
-	<input type="text" id="idTo" name="to" value="<?= $preset_to_value ?>">
-	<label for="idSubmit" class="nocss">Submit:</label>
-	<input type="submit" id="idSubmit" value="Submit">
-</p>
-<?  ENDIF ?>
-<?  IF ($id_focus != ''): ?>
-<script type="text/javascript"> document.getElementById('<?= $id_focus ?>').focus(); </script>
-<?  ENDIF ?>
-</form>
 </section><!-- /game_window -->
 
-<? ENDIF ?>
 <section class="history">
 <?= $history_markup ?>
 </section><!-- /history -->

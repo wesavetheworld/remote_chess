@@ -25,6 +25,8 @@ header, nav {
 	border-radius:0.5em 0.5em 0 0;
 }
 
+#new_game { width:30em; }
+
 
 /* FOOTER */
 footer {

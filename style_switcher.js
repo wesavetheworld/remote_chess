@@ -88,6 +88,9 @@ function toggleStyle()
 			setActiveStyleSheet('Fancy');
 			break;
 		case 'Fancy':
+			setActiveStyleSheet('Ponies');
+			break;
+		case 'Ponies':
 			setActiveStyleSheet(null);
 			break;
 		default:

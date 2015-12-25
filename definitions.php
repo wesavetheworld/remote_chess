@@ -11,9 +11,9 @@
 define( 'DEBUG', false );                     // Show  debug_out()  messages
 
 define( 'USE_UNICODE_GLYPHS', true );         // Use special characters
-define( 'STEADY_BOARD', !false );              // true: Black plays downwards,
+define( 'STEADY_BOARD', false );              // true: Black plays downwards,
                                               // board never flips
-
+                                              
 define( 'DEFAULT_NAME_WHITE', 'A. White' );   // Preset names for new games
 define( 'DEFAULT_NAME_BLACK', 'B. Black' );
 
@@ -66,15 +66,15 @@ define( 'GET_NEW_GAME',   'newgame'   );
 define( 'GET_PROMOTE',    'promote'   );
 define( 'GET_SELECT',     'select'    );
 define( 'GET_COMMENT',    'comment'   );
-
-
+define( 'GET_GOTO',       'goto'      );
+// Update GET_PARAMETER_ORDER, if you add or change any parameters above!
 /**
  * GET_PARAMETER_ORDER
  * Parameters not listed here will be ignored by
  *  update_href()  in  url_helpers.php !
  */
 define( 'GET_PARAMETER_ORDER',
-	'flip player base history enpassant promote select white black from to'
+	'flip player base history enpassant promote select white black from to goto'
 	. ' comment'
 );
 

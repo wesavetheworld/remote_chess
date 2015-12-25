@@ -165,11 +165,16 @@ function apply_move( $board_array,  $f_row, $f_col,  $t_row, $t_col )
 /**
  * decode_history()
  */
-function decode_history( $base_array, $history )
+function decode_history( $base_array, $history, $goto )
 {
 	$ret = $base_array;
 
 	$length = strlen( $history );
+
+	if (($goto != '') && ($length >= $goto)) {
+		$length = $goto * 2;
+	}
+
 	for( $i = 0 ; $i < $length ; $i += 2 ) {
 		$from_code = substr( $history, $i, 1 );
 		$to_code   = substr( $history, $i+1, 1 );
@@ -331,6 +336,7 @@ function main_control()
 
 	$flip_board = isset( $_GET[GET_FLIP_BOARD] );
 	$history    = get_parameter( GET_HISTORY );
+	$goto       = get_parameter( GET_GOTO );
 	$name_white = get_parameter( GET_WHITE, DEFAULT_NAME_WHITE );
 	$name_black = get_parameter( GET_BLACK, DEFAULT_NAME_BLACK );
 
@@ -351,7 +357,8 @@ function main_control()
 
 	$board_array = decode_history(
 		$base_array,
-		$history
+		$history,
+		$goto
 	);
 
 
@@ -609,6 +616,7 @@ debug_out( "\nhref_this = $href_this" );
 	$history_markup = history_markup(
 		$base_array,
 		$history,
+		$href_this,
 		$name_white,
 		$name_black
 	);
@@ -628,6 +636,11 @@ debug_out( "\nhref_this = $href_this" );
 	if ((STEADY_BOARD) && ($current_player == BLACKS_MOVE)) {
 		//... GET switch
 		$flip_board = ! $flip_board;
+	}
+
+	if (isset( $_GET[GET_GOTO] )) {
+		$clickable = $selected = Array();
+		//...Make it possible to continue playing from a previous move?
 	}
 
 	$chess_board_markup = chess_board_markup(

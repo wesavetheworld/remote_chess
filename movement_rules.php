@@ -415,7 +415,7 @@ function queen_move_list( $board_array, $current_player, $field )
 } // queen
 
 
-function king_move_list( $board_array, $current_player, $field )
+function king_move_list( $board_array, $current_player, $field, $piece )
 {
 	$moves = Array(
 		Array( +0, -1 ), Array( +0, +1 ),
@@ -433,33 +433,35 @@ function king_move_list( $board_array, $current_player, $field )
 
 	// Castling
 
-	list( $row, $col ) = field_to_rowcol( $field );
-	$dir = ($current_player == WHITES_MOVE) ? true : false ;
-	$row = ($dir ? 0 : 7);
+	if (strtolower($piece) == 'l') {
+		list( $row, $col ) = field_to_rowcol( $field );
+		$dir = ($current_player == WHITES_MOVE) ? true : false ;
+		$row = ($dir ? 0 : 7);
 
-	$open_queenside =
-	(	($board_array[$row][0] == 's')
-	||	($board_array[$row][0] == 'S')
-	)
-	&&	($board_array[$row][1] == '')
-	&&	($board_array[$row][2] == '')
-	&&	($board_array[$row][3] == '')
-	;
+		$open_queenside =
+		(	($board_array[$row][0] == 's')
+		||	($board_array[$row][0] == 'S')
+		)
+		&&	($board_array[$row][1] == '')
+		&&	($board_array[$row][2] == '')
+		&&	($board_array[$row][3] == '')
+		;
 
-	$open_kingside =
-	(	($board_array[$row][7] == 's')
-	||	($board_array[$row][7] == 'S')
-	)
-	&&	($board_array[$row][6] == '')
-	&&	($board_array[$row][5] == '')
-	;
+		$open_kingside =
+		(	($board_array[$row][7] == 's')
+		||	($board_array[$row][7] == 'S')
+		)
+		&&	($board_array[$row][6] == '')
+		&&	($board_array[$row][5] == '')
+		;
 
-	if (true  || 'line not under attack') {
-		if ($open_queenside) {
-			$ret[] = rowcol_to_field( $row, $col-2 );
-		}
-		if ($open_kingside) {
-			$ret[] = rowcol_to_field( $row, $col+2 );
+		if (true  || 'line not under attack') {
+			if ($open_queenside) {
+				$ret[] = rowcol_to_field( $row, $col-2 );
+			}
+			if ($open_kingside) {
+				$ret[] = rowcol_to_field( $row, $col+2 );
+			}
 		}
 	}
 
@@ -500,7 +502,9 @@ function possible_move_list( $board_array, $current_player, $from_field )
 			case 'b': $ret = bishop_move_list( $b, $c, $f ); break;
 			case 'q': $ret = queen_move_list( $b, $c, $f ); break;
 			case 'l': // Fall through: Not yet moved king
-			case 'k': $ret = king_move_list( $b, $c, $f ); break;
+			case 'k':
+				$ret = king_move_list( $b, $c, $f, $piece );
+				break;
 			default: die( 'Error: possible_move_list(): unknown piece.' );
 		}
 	}

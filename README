@@ -219,6 +219,7 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 =============
 - Detect Draw
 == OPTIONAL ===================================================================
+? Get rid of redirect, use params for visualizing last move
 - Date and Time in Title
 - Refactor: The algorithm for finding legal moves (regarding the king being in
   check after a move) is somewhat confusing and spread all over the place.
@@ -227,11 +228,11 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 - Send This Link Section: Move of previous player
 - Previous Move: Mark "from" and "to"
 - History: Show promotions
-- History: $href_history[$steps] for links back, built when building history
-- History: GET: goto (history)
 - History: Remove redundant parts (Initial moves of pawns, etc.)
 - History: Show En Passant
 - History: No prompt, when check mate
+- History: Cont: Make it possible to continue playing from a previous move?
+- History: Cont: Click history back, Return Link shows link to clear rest of history
 - Keep orientation: &top={white|black}
 - Chess Riddles: $riddle[code]=description html
 . Capture: Utilize "Taken by player" locations "." and ":"
@@ -247,6 +248,7 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 - Errors: Respond to improper input verbously
 == RE-CHECK ===================================================================
 - CSS: Cross browser compatibility
+- Long history, long player names
 - Sync GET parameter order between  update_href()  and form in  index.php
 - Replace all hardcoded strings with constants (GET_TO, GET_FROM, ...)
 - Test with links2 or lynx

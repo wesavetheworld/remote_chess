@@ -90,12 +90,30 @@ function piece_glyph( $piece, $class = 'glyph' )
 * HISTORY MARKUP
 ******************************************************************************/
 
+function history_link( $href_this, $i, $player )
+{
+	$i /= 2;
+
+	if ($player == WHITES_MOVE) {
+		$i += 1;
+	} else {
+		$i += 2;
+	}
+
+	$ret = update_href( $href_this, GET_GOTO, $i );
+	if ($i == 0) {
+		$ret .= '&amp;goto=0';
+	}
+
+	return $ret;
+}
+
 /**
  * history_markup()
  * See  decode_history  in  game_logic.php , it was the template for this
  * function.
  */
-function history_markup( $board, $history, $name_white, $name_black )
+function history_markup( $board, $history, $href_this, $name_white, $name_black )
 {
 	global $PIECE_NAMES;
 
@@ -119,29 +137,36 @@ function history_markup( $board, $history, $name_white, $name_black )
 		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
 		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
 
-		if (($i > 0) && ($i % 100 == 0)) {
+		if (($i > 0) && ($i % 96 == 0)) {
 			$ret .= "</ul><ul>\n";
 		}
 
 		switch ($from_code) {
-		case '_':
+		case '_':   // Last item, show prompt
 			if ($i % 4 == 0) {
+				$link = $href_this; //history_link( $href_this, $i, WHITES_MOVE );
 				$ret .= "\t<li>";
+				$ret .= "<a href=\"$link\">";
 				$nr = (($i/4 + 1) - $skipped_turns);
 				$ret .= $nr . ': ';
 			}
 
 			$ret .= '<span><strong>?</strong></span>';   // add a prompt
 			break;
-		case '(':
+
+		case '(':   // Pawn Promotion
 			$i += 2;
 			$skipped_turns++;
-			//...$ret = substr( $ret, 0, -1 );
-			//...$ret .= piece_glyph( substr( $history, $i, 1 ), '' );
 			break;
-		default:
+
+		default:   // Move
 			if ($i % 4 == 0) {
-				$ret .= "\t<li>";
+				if ($i < $length) {
+					$link = history_link( $href_this, $i, WHITES_MOVE );
+				} else {
+					$link = $href_this;
+				}
+				$ret .= "\t<li><a href=\"$link\">";
 				$nr = (($i/4 + 1) - $skipped_turns);
 				$ret .= $nr . ': ';
 			}
@@ -159,9 +184,14 @@ function history_markup( $board, $history, $name_white, $name_black )
 			$ret .= '<span>' . strtolower( $to_field ) . '</span>';
 
 			if ($i % 4 == 0) {
-				$ret .= ', ';
+				if ($i+4 < $length) {
+					$link = history_link( $href_this, $i, BLACKS_MOVE );
+				} else {
+					$link = $href_this;
+				}
+				$ret .= "</a>, <a href=\"$link\">";
 			} else {
-				$ret .= "\n";
+				$ret .= "</a>\n";
 			}
 
 			$board = apply_move(
@@ -171,6 +201,8 @@ function history_markup( $board, $history, $name_white, $name_black )
 			);
 		} // switch
 	}
+
+	$ret .= '</a>';
 
 	if (substr($ret, -1, 1) != "\n") {
 		$ret .= "\n";
