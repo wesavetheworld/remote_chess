@@ -1,6 +1,7 @@
 /*** REMOTE CHESS STYLES ***/
 
 table a { background:none; }
+body td.selected { outline:none; }
 
 
 /* EOF */

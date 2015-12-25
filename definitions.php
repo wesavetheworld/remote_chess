@@ -8,13 +8,15 @@
 * OPTIONS
 ******************************************************************************/
 
-define( 'DEBUG', false );                     // Show  debug_out()  messages
+define( 'DEBUG', false );                      // Show  debug_out()  messages
+define( 'DEBUG_TO_FILE', !false );              // Write messages to file
+define( 'DEBUG_FILE_NAME', '../debug.log' );
 
-define( 'USE_UNICODE_GLYPHS', true );         // Use special characters
-define( 'STEADY_BOARD', false );              // true: Black plays downwards,
-                                              // board never flips
+define( 'USE_UNICODE_GLYPHS', true );          // Use special characters
+define( 'STEADY_BOARD', false );               // true: Black plays downwards,
+                                               // board never flips
                                               
-define( 'DEFAULT_NAME_WHITE', 'A. White' );   // Preset names for new games
+define( 'DEFAULT_NAME_WHITE', 'A. White' );    // Preset names for new games
 define( 'DEFAULT_NAME_BLACK', 'B. Black' );
 
 

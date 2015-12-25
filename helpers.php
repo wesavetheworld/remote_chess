@@ -20,7 +20,16 @@ $debug_html = 'Remote Chess ' . $VERSION;
 function debug_out( $message )
 {
 	global $debug_html;
-	$debug_html .= $message;
+
+	if (DEBUG) {
+		$debug_html .= $message;
+	}
+
+	if (DEBUG_TO_FILE) {
+		if (($fh = fopen(DEBUG_FILE_NAME, 'a')) !== false) {
+			fwrite( $fh, $message );
+		}
+	}
 }
 
 /**

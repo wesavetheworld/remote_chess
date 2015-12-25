@@ -15,19 +15,9 @@ body {
 	background:#fff; color:#000;
 	font-family:sans-serif;
 	text-align:center;
-	    -webkit-box-shadow:2px 2px 12px #60645d;  /*666*/
-	       -moz-box-shadow:2px 2px 12px #60645d;
-		    box-shadow:2px 2px 12px #60645d;
-}
-@media (min-width:1025px) {
-	body {
-		Xdisplay:inline-block;
-/*
-		margin:0.5em 0;
-		border:solid 4px #666;
-		border-radius:0.5em;
-*/
-	}
+	-webkit-box-shadow:2px 2px 12px #60645d;  /*666*/
+	   -moz-box-shadow:2px 2px 12px #60645d;
+	        box-shadow:2px 2px 12px #60645d;
 }
 @media (max-width:970px) {
 	body {
@@ -37,6 +27,8 @@ body {
 	body section {
 		margin:0; padding:0;
 	}
+	.history { width:470px; }
+	.history h2 { width:auto; }
 }
 body, pre { font-size:14px; }
 a { text-decoration:none; }
@@ -56,10 +48,10 @@ header h1 {
 
 section {
 	display:inline-block;
-	margin:0 1.25em 0.5em 0;
+	margin:0 1em 0.5em 1em;
 	vertical-align:top;
 }
-section:nth-child(2) { Xmargin-left:1.25em; }
+section:nth-child(4) { Xmargin-right:0; }
 
 /* NEW GAME */
 
@@ -72,9 +64,8 @@ section:nth-child(2) { Xmargin-left:1.25em; }
 /* GAME STATE LINK */
 
 .game_state_link { width:14em; }
-.game_state_link p {
-	Xwidth:480px; margin:0 auto 1em; word-break:break-all; font-family:monospace;
-}
+.game_state_link p { margin:0 auto 1em; word-break:break-all; }
+.game_state_link a { font-family:monospace; font-size:0.82em; }
 
 h2 { border-bottom:solid 1px #ccc; margin:1em 0; font-size:1em; }
 h2 strong { color:#c10; }
@@ -118,7 +109,7 @@ table a {
 table a:focus { outline:solid 2px #00f; }
 
 td.prev_move { background:#fff; }
-td.selected { Xbackground:#fff; }
+td.selected { outline:dotted 2px #fff; }
 div.selected { outline:solid 2px #fff; }
 table.white div.white.selected { outline-color:#ff0; }
 table.black div.black.selected { outline-color:#ff0; }
@@ -195,9 +186,9 @@ p { margin:0.5em 0; }
 	display:block;
 	float:left;
 	list-style-type:none;
-	margin:0 1em 1em;
+	margin:0 2em 1em 0;
 }
-.history ul:nth-child(2) { margin-left:0; }
+.history ul:nth-child(2) { Xmargin-left:0; }
 .history h2 { font-weight:normal; }
 .history h2 strong { color:#000; }
 .history li { white-space:nowrap; }
@@ -207,6 +198,10 @@ p { margin:0.5em 0; }
 	font-size:1.5em;
 }
 .history span { display:inline-block; width:1.2em; text-align:center; }
+.history a { color:#000; }
+.history a:hover { color:#00f; }
+.history a:visited span { color:#986; }
+.history a:active span { color:#f00; }
 .history a:hover span { text-decoration:underline; }
 .history li strong { color:#0a0; } 
 .promotion { text-align:center; }
@@ -237,7 +232,7 @@ nav ul { list-style-type:none; }
 ul, li { margin:0; padding:0 0 0.1em; }
 nav li:first-child { text-align:right; }
 nav button { margin:0 0 0.2em 1em; }
-nav hr { clear:both; margin:0.2em 0; }
+nav hr { clear:both; height:1px; margin:0.2em 0; color:#ccc; background:#ccc; border:none; outline:none; }
 
 
 /* DEBUG */

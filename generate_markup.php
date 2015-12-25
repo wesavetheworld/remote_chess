@@ -71,7 +71,7 @@ function piece_glyph( $piece, $class = 'glyph' )
 			case 'k' : $ret .= '&#9818;'; break;
 
 			default:
-				debug_out( "\nPIECE: $piece" );
+				debug_out( "\ngenerate_markup: piece_glyph: PIECE: $piece" );
 				return '?';
 		}
 
@@ -282,12 +282,12 @@ function promotion_dialog_markup( $href_this, $current_player, $row, $col, $hist
 /**
  * piece_class_markup()
  */
-function piece_class_markup( $code, $selected = false )
+function piece_class_markup( $code, $is_selected = false )
 {
 	$class_name = piece_class_name( $code );
 
 	if ($class_name != '') {
-		if ($selected) $class_name .= ' selected';
+		if ($is_selected) $class_name .= ' selected';
 		return " class=\"$class_name\"";
 	} else {
 		return '';
@@ -333,8 +333,8 @@ function piece_in_field( $pieces, $selected, $field_name )
 
 	foreach( $pieces as $f => $p ) {
 		if ($f == $field_name) {
-			$selected = in_array( $f, $selected );
-			$class = piece_class_markup( $p, $selected );
+			$is_selected = in_array( $f, $selected );
+			$class = piece_class_markup( $p, $is_selected );
 			$title = piece_name_markup( $p );
 			$p = piece_glyph( $p );
 			//...$title = ucfirst( $p);
@@ -378,7 +378,7 @@ function chess_board_markup(
 	$flip_board
 ) {
 	$board_flipped = ($player == WHITES_MOVE);
-	if ($flip_board) $board_flipped = !$board_flipped;
+	if ($flip_board) $board_flipped = ! $board_flipped;
 
 	$pieces = get_pieces( $board );
 
@@ -430,10 +430,10 @@ function chess_board_markup(
 			//$base_link
 			$has_href = in_array( $field_name, $clickable );
 
-			if ($class == '') {
-				$href = update_href( $base_href, GET_FROM, $field_name );
-			} else {
+			if (get_parameter(GET_FROM) != get_parameter(GET_TO)) {
 				$href = update_href( $base_href, GET_TO, $field_name );
+			} else {
+				$href = update_href( $base_href, GET_FROM, $field_name );
 			}
 
 			// Add TD for field

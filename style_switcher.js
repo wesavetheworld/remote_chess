@@ -91,6 +91,9 @@ function toggleStyle()
 			setActiveStyleSheet('Ponies');
 			break;
 		case 'Ponies':
+			setActiveStyleSheet('Large');
+			break;
+		case 'Large':
 			setActiveStyleSheet(null);
 			break;
 		default:

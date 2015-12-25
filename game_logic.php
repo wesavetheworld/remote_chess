@@ -215,7 +215,7 @@ function select_piece( $board_array, $current_player, $from_field )
 	// Find fields, this piece can generally move to
 	// Also checks for obstacles and possible captures
 
-	$clickable = $selected = possible_move_list(
+	$clickable = possible_move_list(
 		$board_array,
 		$current_player,
 		$from_field
@@ -294,7 +294,8 @@ function select_piece( $board_array, $current_player, $from_field )
 		}
 	}
 
-	$clickable = $selected = $new;
+	$clickable = $new;
+	$selected = Array( $clickable[0] );
 
 	return Array( $clickable, $selected );
 
@@ -414,6 +415,16 @@ function main_control()
 	// Exec: Move
 	if (($cmd_from != '') && ($cmd_to != '')) {
 
+		$turn_nr = 1 + strlen($history)/4 - substr_count( $history, '(' );
+		if (($turn_nr - floor($turn_nr)) == 0.5) {
+			$turn_nr = floor($turn_nr);
+			$color = 'Black';
+		} else {
+			$color = 'White';
+		}
+		debug_out( "$name_white vs. $name_black, $turn_nr, $color: $cmd_from - $cmd_to\n" );
+
+
 		list($f_row, $f_col) = field_to_rowcol( $cmd_from );
 		list($t_row, $t_col) = field_to_rowcol( $cmd_to );
 
@@ -504,7 +515,6 @@ function main_control()
 			$board_array,
 			$current_player
 		);
-debug_array($clickable, "\nmain_control: clickable");
 
 		// Get rid of moves with king in check afterwards
 		$new = Array();
@@ -521,19 +531,7 @@ debug_array($clickable, "\nmain_control: clickable");
 			}
 		}
 		$clickable = $new;
-/*//...
-		if (count($clickable) == 1) {
-			$test = select_piece(
-				$board_array,
-				$current_player,
-				$clickable[0]
-			);
-			if (count($test[0]) == 1) {
-				$clickable = $selected = Array();
-			}
-			debug_array($test, "\ntest");
-		}
-*/
+
 		if (count($clickable) == 0) {
 			if (king_in_check( $board_array, $current_player )) {
 				$heading = "<strong>Checkmate!</strong>";
@@ -551,7 +549,6 @@ debug_array($clickable, "\nmain_control: clickable");
 			$current_player,
 			$cmd_from
 		);
-
 		$heading = 'Select target';
 	}
 
@@ -567,7 +564,6 @@ debug_array($clickable, "\nmain_control: clickable");
 	// Generate links for main menu and board markup (pieces)
 
 	$board_encoded = encode_board( $base_array );
-debug_out( "\nboard_encoded = $board_encoded\nboard_initial = ".INITIAL_BOARD_CODED );
 
 
 	// Name parameter as code for who's player's term this is
@@ -596,12 +592,11 @@ debug_out( "\nboard_encoded = $board_encoded\nboard_initial = ".INITIAL_BOARD_CO
 	} else {
 		$href_player = update_href( $href_this, GET_PLAYER, GET_BLACK );
 	}
-debug_out( "\nhref_this = $href_this" );
 
 
 	// HTTP redirect?
 
-	if ($redirect_after_move) {
+	if (!false && $redirect_after_move) {
 
 		if (DEBUG) {
 			#die( "Continue: <a href='$href_this'>$href_this</a>" );
@@ -617,6 +612,7 @@ debug_out( "\nhref_this = $href_this" );
 
 	// Create HTML markup
 
+	// History
 	$history_markup = history_markup(
 		$base_array,
 		$history,
@@ -625,6 +621,7 @@ debug_out( "\nhref_this = $href_this" );
 		$name_black
 	);
 
+	// Promotion
 	if ($promotion_popup) {
 		$promotion_dialog_markup = promotion_dialog_markup(
 			$href_this,
@@ -637,6 +634,7 @@ debug_out( "\nhref_this = $href_this" );
 		$promotion_dialog_markup = '';
 	}
 
+	// Board
 	if ((STEADY_BOARD) && ($current_player == BLACKS_MOVE)) {
 		//... GET switch
 		$flip_board = ! $flip_board;
@@ -644,7 +642,17 @@ debug_out( "\nhref_this = $href_this" );
 
 	if (isset( $_GET[GET_GOTO] )) {
 		$clickable = $selected = Array();
-		//...Make it possible to continue playing from a previous move?
+	}
+	else if (($history > '') || ($cmd_from == $cmd_to)) {
+		if (substr($history, -4, 1) == '(') {
+			// Skip promotion
+			$selected[] = decode_field( substr($history, -3, 1) );
+			$selected[] = decode_field( substr($history, -6, 1) );
+		} else {
+			// Normal move
+			$selected[] = decode_field( substr($history, -2, 1) ); 
+			$selected[] = decode_field( substr($history, -1, 1) ); 
+		}
 	}
 
 	$chess_board_markup = chess_board_markup(
@@ -670,6 +678,11 @@ debug_out( "\nhref_this = $href_this" );
 	&&  (strpos( $heading, 'mate') === false)
 	) {
 		$heading .= ' - <strong>Check!</strong>';
+	}
+
+	if ($goto != '') {
+		$round = round($goto/2) - substr_count( $history, '(' );
+		$heading = "Round $round, $heading";
 	}
 
 	$heading = get_parameter( GET_COMMENT, $heading );

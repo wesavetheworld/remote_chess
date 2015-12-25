@@ -1,23 +1,16 @@
 /*** REMOTE CHESS STYLES ***/
 
-html {
-	background:#888 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAIAAAAmzuBxAAAAAXNSR0IArs4c6QAAAAZiS0dEAJAAkACQJVm32wAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wCGAwaK1POoBsAAABCSURBVBjTfc/BDQAhDANBk9eWnZJTAp8gBHfY31lFyshMrQGAzoXnqgrPfcOwpPDchWEgPN/Fl49vf3kXL+7CsKQJRZIfxgj2msAAAAAASUVORK5CYII=)
-	repeat scroll 0 0;
-}
 body {
 	display:inline-block;
     -webkit-box-shadow:2px 2px 12px #60645d;  /*666*/
        -moz-box-shadow:2px 2px 12px #60645d;
 	    box-shadow:2px 2px 12px #60645d;
+	margin:0.5em;
+	border:solid 4px #333;
+	border-radius:0.5em;
 }
-@media (min-width:1025px) {
-	body {
-		margin:0.5em 0;
-		border:solid 4px #333;
-		border-radius:0.5em;
-	}
-}
-section:nth-child(2) { margin-left:1.5em; }
+#chess_board section { Xmargin:0 1em; }
+Xsection:nth-child(2) { Xmargin-left:1.5em; }
 
 /* PAGE LAYOUT */
 
