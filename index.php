@@ -1,4 +1,4 @@
-<?php /* index.php */ $VERSION = 'v0.2.6&beta;';
+<?php /* index.php */ $VERSION = 'v0.2.8&beta;';
 /******************************************************************************
 * REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
 * MAIN SCRIPT and HTML TEMPLATE
@@ -28,6 +28,7 @@ main_control();   // see  game_logic.php
 <meta name="description" content="Web service for playing chess via e-mail or instant messenger. No login required.">
 <meta name="keywords" content="remote,correspondence,mail,chess,fern,post,brief,schach">
 <meta name="robots" content="index,follow">
+<meta name=viewport content="width=device-width, width=560">
 <link rel="stylesheet" type="text/css" href="default.css">
 <link rel="alternate stylesheet" type="text/css" href="three_d.css" title="Perspective">
 <link rel="alternate stylesheet" type="text/css" href="no_guides.css" title="No Guides">

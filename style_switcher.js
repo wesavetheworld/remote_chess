@@ -90,10 +90,10 @@ function toggleStyle()
 		case 'Fancy':
 			setActiveStyleSheet('Ponies');
 			break;
-		case 'Ponies':
+		case 'Ponies':/*
 			setActiveStyleSheet('Large');
 			break;
-		case 'Large':
+		case 'Large':*/
 			setActiveStyleSheet('Small');
 			break;
 		case 'Small':

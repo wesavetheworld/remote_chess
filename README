@@ -213,15 +213,6 @@ Selecting a replacement will trigger a "normal" move with a redirect.
 
 5. RESOURCES
 ============
-
-http://derstandard.at/r1229777262316/Raetsel--Sudoku
-
-https://en.wikipedia.org/wiki/Portable_Game_Notation
-https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
-https://www.reddit.com/r/dailyprogrammer/comments/3t0xdw/20151116_challenge_241_easy_unicode_chess/
-https://en.wikipedia.org/wiki/Correspondence_chess
-https://en.wikipedia.org/wiki/Elo_rating_system
-
 https://en.wikipedia.org/wiki/Chess
 https://en.wikipedia.org/wiki/Castling
 https://en.wikipedia.org/wiki/Promotion_%28chess%29
@@ -230,14 +221,29 @@ https://en.wikipedia.org/wiki/Checkmate
 https://en.wikipedia.org/wiki/Stalemate
 https://en.wikipedia.org/wiki/Draw_%28chess%29
 https://en.wikipedia.org/wiki/Threefold_repetition
-https://en.wikipedia.org/wiki/Chess_composition
+
+https://en.wikipedia.org/wiki/Chess_notation
 https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
+https://en.wikipedia.org/wiki/Portable_Game_Notation
+https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+https://www.reddit.com/r/dailyprogrammer/comments/3t0xdw/20151116_challenge_241_easy_unicode_chess/
+https://en.wikipedia.org/wiki/Correspondence_chess
+https://en.wikipedia.org/wiki/Elo_rating_system
+
+https://en.wikipedia.org/wiki/Chess_composition
+http://derstandard.at/r1229777262316/Raetsel--Sudoku
+
+https://developers.google.com/speed/pagespeed/insights/
+https://developers.google.com/speed/docs/insights/UseLegibleFontSizes
+https://developers.google.com/speed/docs/insights/ConfigureViewport
 
 
 6. TODO v0.2b
 =============
 - Detect Draw
 == OPTIONAL ===================================================================
+- JS: Button to copy the history
+* a2enmod headers expires ; service apache2 restart
 - mailto:username@example.com?subject=Subject&body=message%20goes%20here
   http://stackoverflow.com/questions/13231125/automically-open-default-email-client-and-pre-populate-content
 - "A. White's move - Check!": Dash still green --> black
@@ -247,13 +253,12 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 - Send This Link Section: Start date and last move date in URL
 - Send This Link Section: Move of previous player
 - History: Prev/Next
-- History: Show promotions
-- History: Remove redundant parts (Initial moves of pawns, etc.)
 - History: Show En Passant
-- History: No prompt, when check mate
+- History: Show Castling
+- History: Show Check!
+? History: No prompt, when check mate
 ? History: Cont: Make it possible to continue playing from a previous move
 ? History: Cont: Click history back, Return Link shows link to clear rest of history
-? History: Show previous move
 - Keep orientation: &top={white|black}
 - Chess Riddles: $riddle[code]=description html
 . Capture: Utilize "Taken by player" locations "." and ":"

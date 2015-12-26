@@ -82,22 +82,22 @@ function generic_move_list( $board_array, $current_player, $field, $moves )
 	list( $row, $col ) = field_to_rowcol( $field );
 
 	for( $i = 0 ; $i < count($moves) ; $i++ ) {
-		$offset_r = $moves[$i][0];
-		$offset_c = $moves[$i][1];
+
+		$row_offset = $moves[$i][0];
+		$col_offset = $moves[$i][1];
+
 		$target = check_target(
 			$board_array,
 			$current_player,
-			$row + $offset_r,
-			$col + $offset_c
+			$row + $row_offset,
+			$col + $col_offset
 		);
 
 		if (($target == EMPTY_FIELD) || ($target == OPPONENTS_PIECE)) {
 
-			//... Test: Move not ending in king being in check?
-
 			$ret[] = rowcol_to_field(
-				$row + $offset_r,
-				$col + $offset_c
+				$row + $row_offset,
+				$col + $col_offset
 			);
 		}
 	}

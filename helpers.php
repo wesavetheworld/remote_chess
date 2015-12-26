@@ -121,4 +121,36 @@ function decode_field( $code )
 }
 
 
+/**
+ * i_to_round()
+ * Calculate from length of  $history  string, accounting for promotions
+ */
+function i_to_round( $history, $i = -1 )
+{
+	if ($i == -1) {
+		$i = strlen( $history );
+	}
+	$round = 1 + floor( $i / 4 );
+
+	$promotions = substr_count(
+		substr( $history, 0, $i ),
+		')'
+	);
+
+	return $round - $promotions;
+}
+
+function goto_to_round( $history, $goto )
+{
+	$round = floor( ($goto + 1) / 2 );
+
+	$promotions = substr_count(
+		substr($history, 0, $round*4 ),
+		')'
+	);
+
+	return $round - $promotions;
+}
+
+
 # EOF ?>

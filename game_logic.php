@@ -165,29 +165,34 @@ function apply_move( $board_array,  $f_row, $f_col,  $t_row, $t_col )
 /**
  * decode_history()
  */
-function decode_history( $base_array, $history, $goto )
+function decode_history( $base_array, $history, $goto = '' )
 {
 	$ret = $base_array;
 
-	$length = strlen( $history );
-
-	if (($goto != '') && ($length >= $goto)) {
-		$length = $goto * 2;
+	if ($goto == '') {
+		// Calculate move number from history length
+		$promotions = substr_count( $history, '(' );
+		$goto = (strlen($history) - $promotions*4) / 2;
 	}
 
-	if (substr($history, $length, 1) == '(') {
-		$length += 2;
-	}
-
-	for( $i = 0 ; $i < $length ; $i += 2 ) {
+	// Board reconstruction: Moving the pieces around according to history
+	for
+	( $parsed_moves = 0, $i = 0
+	; ($parsed_moves < $goto) || (substr($history, $i, 1) == '(')
+	; $i += 2
+	) {
 		$from_code = substr( $history, $i, 1 );
 		$to_code   = substr( $history, $i+1, 1 );
 
 		if ($from_code == '(') {   // Promotion of previously moved pawn
+			// Find out, to what piece the pawn was promoted to
 			$field = decode_field( $to_code );
 			$piece = substr( $history, $i+2, 1 );
 			list( $row, $col ) = field_to_rowcol( $field );
+
+			// Turn piece into new one
 			$ret[$row][$col] = $piece;
+
 			$i += 2;
 		}
 		else {   // Normal move
@@ -198,6 +203,7 @@ function decode_history( $base_array, $history, $goto )
 			list( $t_row, $t_col ) = field_to_rowcol( $to_field );
 
 			$ret = apply_move( $ret,  $f_row, $f_col,  $t_row, $t_col );
+			$parsed_moves++;
 		}
 	}
 
@@ -249,6 +255,9 @@ function select_piece( $board_array, $current_player, $from_field )
 				$current_player
 			);
 
+debug_out(($current_player?'W':'B')." from=$from_field to=$to_field king=$king_field \t");
+foreach($hot_fields as $f)debug_out("$f ");
+debug_out("\n");
 			if (! in_array( $king_field, $hot_fields )) {
 				// King is NOT under attack when doing the move
 				$attacked = false;   // Not direclty, at least
@@ -274,7 +283,7 @@ function select_piece( $board_array, $current_player, $from_field )
 				}
 
 				if ($piece == 'l') {    // Black king
-					if ($dir = -2) { // B, C, D must be free
+					if ($dir == -2) { // B, C, D must be free
 						$attacked
 						=  in_array( 'B8', $hot_fields )
 						|| in_array( 'C8', $hot_fields )
@@ -288,13 +297,14 @@ function select_piece( $board_array, $current_player, $from_field )
 						;
 					}
 				}
-
+debug_out("ATTACKED: ".($attacked?'yes':'no')." dir:$dir\n");
 				if (/* normal move or */ ! $attacked) {
 					$new[] = $to_field;
 				}
 			}
 		}
 	}
+#debug_array($new);
 
 	$clickable = $new;
 	$selected = Array( $clickable[0] );
@@ -321,6 +331,8 @@ function main_control()
 	global $href_this, $href_player, $href_flip;
 	global $game_state_link, $hmw_home_link;
 
+
+debug_out("***************************************************************\n");
 
 	// Initialize a bit
 
@@ -417,14 +429,15 @@ function main_control()
 	// Exec: Move
 	if (($cmd_from != '') && ($cmd_to != '')) {
 
-		$turn_nr = 1 + strlen($history)/4 - substr_count( $history, '(' );
+		$turn_nr = i_to_round( $history );
+
 		if (($turn_nr - floor($turn_nr)) == 0.5) {
 			$turn_nr = floor($turn_nr);
 			$color = 'Black';
 		} else {
 			$color = 'White';
 		}
-		debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, $color: $cmd_from - $cmd_to\n" );
+debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, $color: $cmd_from - $cmd_to\n" );
 
 
 		list($f_row, $f_col) = field_to_rowcol( $cmd_from );
@@ -669,6 +682,10 @@ function main_control()
 
 	// If no heading was set above, say who's next
 
+	if ($goto != '') {
+		$current_player = (($goto % 2) != 0);
+	}
+
 	if ($heading == '') {
 		$heading = ($current_player) ? $name_white : $name_black ;
 		$heading = ucfirst($heading) . "'";
@@ -683,8 +700,8 @@ function main_control()
 	}
 
 	if ($goto != '') {
-		$round = round($goto/2) - substr_count( $history, '(' );
-		$heading = "Round $round, $heading";
+		$turn_nr = goto_to_round( $history, $goto );
+		$heading = "Round $turn_nr, $heading";
 	}
 
 	$heading = get_parameter( GET_COMMENT, $heading );
@@ -693,10 +710,11 @@ function main_control()
 	// Game title
 
 	if (isset( $_GET[GET_WHITE] )) {
-		$turn_nr = 1 + floor( strlen($history) / 4 );
+		$turn_nr = i_to_round( $history );
 		$game_title = "$name_white vs. $name_black - Turn #$turn_nr - ";
 	}
 
+	$turn_nr = floor($turn_nr);
 
 	// Links for copy and paste
 

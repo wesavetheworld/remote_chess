@@ -47,9 +47,9 @@ function piece_class_name( $code )
  */
 function piece_glyph( $piece, $class = 'glyph' )
 {
-	if (USE_UNICODE_GLYPHS) {
+	$ret = '';
 
-		$ret = "<span class=\"$class\">";
+	if (USE_UNICODE_GLYPHS) {
 
 		switch ($piece) {
 			case 'P' : $ret .= '&#9817;'; break;
@@ -74,8 +74,6 @@ function piece_glyph( $piece, $class = 'glyph' )
 				debug_out( "\ngenerate_markup: piece_glyph: PIECE: $piece" );
 				return '?';
 		}
-
-		$ret .= '</span>';
 	}
 	else {
 		$ret = $piece;
@@ -90,21 +88,15 @@ function piece_glyph( $piece, $class = 'glyph' )
 * HISTORY MARKUP
 ******************************************************************************/
 
-function history_link( $href_this, $i, $player )
+function history_link( $href_this, $goto, $player )
 {
-	$i /= 2;
-
-	if ($player == WHITES_MOVE) {
-		$i += 1;
-	} else {
-		$i += 2;
-	}
-
-	$ret = update_href( $href_this, GET_GOTO, $i );
+	if ($player == BLACKS_MOVE) $goto++;
+	$ret = update_href( $href_this, GET_GOTO, $goto );
+/*
 	if ($i == 0) {
 		$ret .= '&amp;goto=0';
 	}
-
+*/
 	return $ret;
 }
 
@@ -115,9 +107,33 @@ function history_link( $href_this, $i, $player )
  */
 function history_markup( $board, $history, $href_this, $name_white, $name_black )
 {
-	global $PIECE_NAMES;
+	$white_pawn = piece_glyph('P');
+	$black_pawn = piece_glyph('p');
+	$PAWN_OPENINGS = Array(
+		"{$white_pawn}a2 &ndash; a3" => "a3",  "{$white_pawn}a2 &ndash; a4" => "a4",
+		"{$white_pawn}b2 &ndash; b3" => "b3",  "{$white_pawn}b2 &ndash; b4" => "b4",
+		"{$white_pawn}c2 &ndash; c3" => "c3",  "{$white_pawn}c2 &ndash; c4" => "c4",
+		"{$white_pawn}d2 &ndash; d3" => "d3",  "{$white_pawn}d2 &ndash; d4" => "d4",
+		"{$white_pawn}e2 &ndash; e3" => "e3",  "{$white_pawn}e2 &ndash; e4" => "e4",
+		"{$white_pawn}f2 &ndash; f3" => "f3",  "{$white_pawn}f2 &ndash; f4" => "f4",
+		"{$white_pawn}g2 &ndash; g3" => "g3",  "{$white_pawn}g2 &ndash; g4" => "g4",
+		"{$white_pawn}h2 &ndash; h3" => "h3",  "{$white_pawn}h2 &ndash; h4" => "h4",
+
+		"{$black_pawn}a7 &ndash; a6" => "a6",  "{$black_pawn}a7 &ndash; a5" => "a5",
+		"{$black_pawn}b7 &ndash; b6" => "b6",  "{$black_pawn}b7 &ndash; b5" => "b5",
+		"{$black_pawn}c7 &ndash; c6" => "c6",  "{$black_pawn}c7 &ndash; c5" => "c5",
+		"{$black_pawn}d7 &ndash; d6" => "d6",  "{$black_pawn}d7 &ndash; d5" => "d5",
+		"{$black_pawn}e7 &ndash; e6" => "e6",  "{$black_pawn}e7 &ndash; e5" => "e5",
+		"{$black_pawn}f7 &ndash; f6" => "f6",  "{$black_pawn}f7 &ndash; f5" => "f5",
+		"{$black_pawn}g7 &ndash; g6" => "g6",  "{$black_pawn}g7 &ndash; g5" => "g5",
+		"{$black_pawn}h7 &ndash; h6" => "h6",  "{$black_pawn}h7 &ndash; h5" => "h5",
+
+		"&#215; {$white_pawn}" => "&#215; ",   "&#215; {$black_pawn}" => "&#215; ",
+		$white_pawn => '', $black_pawn => ''
+	);
 
 	$history .= '__';
+	$goto = get_parameter( GET_GOTO );
 
 	$ret
 	= "<h2><strong>$name_white</strong>"
@@ -125,8 +141,10 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 	. "<ul>\n"
 	;
 
+	$current_move = 0;   //... Newly introduced. Routine might need cleanup.
 	$skipped_turns = 0;
 	$length = strlen( $history );
+
 	for( $i = 0 ; $i < $length ; $i += 2 ) {
 		$from_code = substr( $history, $i, 1 );
 		$to_code   = substr( $history, $i+1, 1 );
@@ -137,61 +155,91 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
 		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
 
-		if (($i > 0) && ($i % 96 == 0)) {
+		if (($i > 0) && (($i-4*$skipped_turns) % 80 == 0)) {
 			$ret .= "</ul><ul>\n";
 		}
 
 		switch ($from_code) {
 		case '_':   // Last item, show prompt
 			if ($i % 4 == 0) {
-				$link = $href_this; //history_link( $href_this, $i, WHITES_MOVE );
+				$link = $href_this;
 				$ret .= "\t<li>";
-				$ret .= "<a href=\"$link\">";
-				$nr = (($i/4 + 1) - $skipped_turns);
+				$nr = i_to_round( $history, $i );
 				$ret .= $nr . ': ';
+				$ret .= "<a href=\"$link\">";
 			}
 
-			$ret .= '<span><strong>?</strong></span>';   // add a prompt
+			$ret .= '<strong>?</strong>';   // add a prompt
 			break;
 
 		case '(':   // Pawn Promotion
+
+			// Find out, to what piece the pawn was promoted to
+			$field = decode_field( $to_code );
+			$piece = substr( $history, $i+2, 1 );
+			list( $row, $col ) = field_to_rowcol( $field );
+
+			// Turn piece into new one
+			$board[$row][$col] = $piece;
+
 			$i += 2;
 			$skipped_turns++;
 			break;
 
 		default:   // Move
+			$new_move = '';
+			$current_move++;
+
 			if ($i % 4 == 0) {
 				if ($i < $length) {
-					$link = history_link( $href_this, $i, WHITES_MOVE );
+					$link = history_link( $href_this, $current_move, WHITES_MOVE );
 				} else {
 					$link = $href_this;
 				}
-				$ret .= "\t<li><a href=\"$link\">";
-				$nr = (($i/4 + 1) - $skipped_turns);
-				$ret .= $nr . ': ';
+
+				// Highlight history entry
+				$class
+				= ($current_move == $goto)
+				? ' class="selected"'
+				: ''
+				;
+
+				$nr = i_to_round( $history, $i );
+				$new_move .= "\t<li>$nr: <a href=\"$link\"$class>";
 			}
 
 			$piece = $board[$f_row][$f_col];
-			$ret .= piece_glyph( $piece );
-			$ret .= '<span>' . strtolower( $from_field ) . '</span>';
+			$new_move .= piece_glyph( $piece );
+			$new_move .= strtolower( $from_field );
 
 			if ($board[$t_row][$t_col] != '') {
-				$ret .= '<span>&#215;</span>';
+				$new_move .= ' &#215; ';
+				$new_move .= piece_glyph( $board[$t_row][$t_col] );
 			} else {
-				$ret .= '<span>&ndash;</span>';
+				$new_move .= ' &ndash; ';
 			}
 
-			$ret .= '<span>' . strtolower( $to_field ) . '</span>';
+			$new_move .= strtolower( $to_field );
+
+			if (substr($history, $i+2, 1) == '(') {
+				$piece = substr( $history, $i+4, 1 );
+				$new_move .= piece_glyph( $piece );
+			}
 
 			if ($i % 4 == 0) {
 				if ($i+4 < $length) {
-					$link = history_link( $href_this, $i, BLACKS_MOVE );
+					$link = history_link( $href_this, $current_move, BLACKS_MOVE );
 				} else {
 					$link = $href_this;
 				}
-				$ret .= "</a>, <a href=\"$link\">";
+				$class
+				= ($current_move + 1 == $goto)
+				? ' class="selected"'
+				: ''
+				;
+				$new_move .= ",</a> <a href=\"$link\"$class>";
 			} else {
-				$ret .= "</a>\n";
+				$new_move .= "</a>\n";
 			}
 
 			$board = apply_move(
@@ -199,6 +247,18 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 				$f_row, $f_col,
 				$t_row, $t_col
 			);
+
+			// Reduce opening pawn moves
+
+			foreach( $PAWN_OPENINGS as $old => $new ) {
+				$new_move = str_replace(
+					$old,
+					$new,
+					$new_move
+				);
+			}
+
+			$ret .= $new_move;
 		} // switch
 	}
 
