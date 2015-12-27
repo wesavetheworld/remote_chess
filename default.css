@@ -106,7 +106,7 @@ table a {
 	display:block; width:100%; height:100%; Xoutline:dashed 1px #0f0;
 	background:rgba(255, 255, 128, 0.5);
 }
-table a:focus { outline:solid 2px #00f; }
+table a:focus { outline:solid 2px #0f0; }
 
 td.prev_move { background:#fff; }
 td.selected { outline:dotted 2px #fff; }
@@ -186,35 +186,27 @@ p { margin:0.5em 0; }
 .history ul {
 	display:inline-block;
 	Xfloat:left;
-	list-style-type:none;
-	list-style-position:outside;
-	margin:0 2em 0em 0;
+	list-style-type:none; list-style-position:outside;
+	margin:0 2em 0em 0; line-height:1.2em;
+	letter-spacing:0.035em; word-spacing:-0.2em;
 }
-.history ul:nth-child(2) { Xmargin-left:0; line-height:1.2em; }
 .history h2 { font-weight:normal; }
 .history h2 strong { color:#000; }
 .history li { Xwhite-space:nowrap; Xmargin-bottom:0.2em; font-weight:bold; }
 .history a { display:inline-block; position:relative; left:0.35em; padding:0.15em 0.5em; font-weight:normal; }
 
 .history li { display:table-row; font-weight:bold; }
-.history a { display:table-cell; width:auto; }
+.history li strong { color:#0a0; } 
 
-.history a.selected { Xcolor:#080; background:#ddffc0; Xoutline:solid 1px #0c0; }
-.history .glyph {
-	display:inline-block;
-	Xmargin:-0.25em 0em -0.25em 0;
-	Xfont-size:1.5em;
-}
-.history span { display:inline-block; width:1.2em; text-align:center; }
-.history a { color:#000; }
+.history a { display:table-cell; width:auto; color:#000; }
 .history a:hover { color:#00f; background:#eef; }
 .history .selected a:hover,
 .history a:hover strong { color:#00f; background:#eef; font-weight:normal; }
 .history a:visited span { color:#986; }
 .history a:active span { color:#f00; }
 .history a:hover span { text-decoration:underline; }
-.history li strong { color:#0a0; } 
-.promotion { text-align:center; }
+.history a.selected { Xcolor:#080; background:#ddffc0; Xoutline:solid 1px #0c0; }
+.history span { display:inline-block; width:1.2em; text-align:center; }
 
 
 /* FOOTER */

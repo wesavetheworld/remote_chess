@@ -137,6 +137,8 @@ main_control();   // see  game_logic.php
 	<li><a href="<?= update_href( TEST_LINK_HISTORY, '', '' ); ?>">Test: History</a>
 	<hr>
 	<li><a href="<?= update_href( CHESS_RIDDLE, '', '' ); ?>">Riddle</a>
+	<hr>
+	<li><a accesskey="n" href="<?= $history_next; ?>" title="Firefox: Alt+Shift+N">History: Next (&uarr;N)</a>
 </ul>
 </nav>
 

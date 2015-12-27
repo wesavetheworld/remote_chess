@@ -88,6 +88,9 @@ function piece_glyph( $piece, $class = 'glyph' )
 * HISTORY MARKUP
 ******************************************************************************/
 
+/**
+ * history_link()
+ */
 function history_link( $href_this, $goto, $player )
 {
 	if ($player == BLACKS_MOVE) $goto++;
@@ -100,15 +103,15 @@ function history_link( $href_this, $goto, $player )
 	return $ret;
 }
 
+
 /**
- * history_markup()
- * See  decode_history  in  game_logic.php , it was the template for this
- * function.
+ * simplify_history()
  */
-function history_markup( $board, $history, $href_this, $name_white, $name_black )
+function simplify_history( $markup )
 {
 	$white_pawn = piece_glyph('P');
 	$black_pawn = piece_glyph('p');
+
 	$PAWN_OPENINGS = Array(
 		"{$white_pawn}a2 &ndash; a3" => "a3",  "{$white_pawn}a2 &ndash; a4" => "a4",
 		"{$white_pawn}b2 &ndash; b3" => "b3",  "{$white_pawn}b2 &ndash; b4" => "b4",
@@ -132,6 +135,26 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 		$white_pawn => '', $black_pawn => ''
 	);
 
+	foreach( $PAWN_OPENINGS as $old => $new ) {
+		$markup = str_replace(
+			$old,
+			$new,
+			$markup
+		);
+	}
+
+	return $markup;
+
+} // simplify_history
+
+
+/**
+ * history_markup()
+ * See  decode_history  in  game_logic.php , it was the template for this
+ * function.
+ */
+function history_markup( $board, $history, $href_this, $name_white, $name_black )
+{
 	$history .= '__';
 	$goto = get_parameter( GET_GOTO );
 
@@ -249,16 +272,9 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 			);
 
 			// Reduce opening pawn moves
-
-			foreach( $PAWN_OPENINGS as $old => $new ) {
-				$new_move = str_replace(
-					$old,
-					$new,
-					$new_move
-				);
-			}
-
+			$new_move = simplify_history( $new_move );
 			$ret .= $new_move;
+
 		} // switch
 	}
 

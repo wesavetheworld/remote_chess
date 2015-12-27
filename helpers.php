@@ -152,5 +152,19 @@ function goto_to_round( $history, $goto )
 	return $round - $promotions;
 }
 
+/**
+ * count_moves()
+ */
+function count_moves( $history )
+{
+	$moves = strlen( $history );
+	$promotions = substr_count( $history, '(' );
+
+	$moves -= $promotions * 4;
+	$moves /= 2;
+
+	return $moves;
+}
+
 
 # EOF ?>
