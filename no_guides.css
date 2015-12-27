@@ -3,8 +3,9 @@
 table a { background:none; }
 body td.selected { outline:none; }
 
+.history ul { display:inline-block; margin:0 1em 1em; }
 .history li { display:block; }
-.history a { display:inline-block; position:inline; padding:0.15em 0.15em;  }
+.history a { display:inline-block; padding:0.15em 0.15em;  }
 
 
 /* EOF */

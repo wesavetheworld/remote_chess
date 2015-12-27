@@ -51,7 +51,6 @@ section {
 	margin:0 1em 0.5em 1em;
 	vertical-align:top;
 }
-section:nth-child(4) { Xmargin-right:0; }
 
 /* NEW GAME */
 
@@ -106,7 +105,7 @@ table a {
 	display:block; width:100%; height:100%; Xoutline:dashed 1px #0f0;
 	background:rgba(255, 255, 128, 0.5);
 }
-table a:focus { outline:solid 2px #0f0; }
+table a:focus { outline:solid 2px #fff; }
 
 td.prev_move { background:#fff; }
 td.selected { outline:dotted 2px #fff; }
@@ -179,26 +178,19 @@ p { margin:0.5em 0; }
 
 /* HISTORY */
 
-.history {
-	display:inline-block;  Xwidth:14em; margin-bottom:1em;
-	text-align:left;
-}
+.history { display:inline-block; text-align:left; padding-bottom:1em; }
 .history ul {
-	display:inline-block;
-	Xfloat:left;
-	list-style-type:none; list-style-position:outside;
-	margin:0 2em 0em 0; line-height:1.2em;
-	letter-spacing:0.035em; word-spacing:-0.2em;
+	Xmax-height:480px; Xoverflow:auto; Xpadding-right:2em; Xwhite-space:nowrap;
+	list-style-type:none;
+	display:inline; vertical-align:top;
+	line-height:1.2em; word-spacing:1em; letter-spacing:0.2em;
+	margin-right:0.35em; 
 }
 .history h2 { font-weight:normal; }
 .history h2 strong { color:#000; }
-.history li { Xwhite-space:nowrap; Xmargin-bottom:0.2em; font-weight:bold; }
-.history a { display:inline-block; position:relative; left:0.35em; padding:0.15em 0.5em; font-weight:normal; }
-
-.history li { display:table-row; font-weight:bold; }
+.history li { display:table-row; letter-spacing:0.035em; word-spacing:-0.2em; font-weight:bold; }
 .history li strong { color:#0a0; } 
-
-.history a { display:table-cell; width:auto; color:#000; }
+.history a { display:table-cell; position:relative; left:0.35em; padding:0.15em 0.5em; font-weight:normal; color:#000; }
 .history a:hover { color:#00f; background:#eef; }
 .history .selected a:hover,
 .history a:hover strong { color:#00f; background:#eef; font-weight:normal; }
@@ -213,7 +205,6 @@ p { margin:0.5em 0; }
 footer {
 	border-top:solid 1px #ccc;
 	border-bottom:solid 1px #eaeaea;
-	Xborder-radius:0 0 0.5em 0.5em;
 	background:#eaeaea; color:#000;
 }
 footer h3 { margin:0; padding:0.3em; font-size:0.65em; font-weight:normal; }

@@ -255,9 +255,6 @@ function select_piece( $board_array, $current_player, $from_field )
 				$current_player
 			);
 
-debug_out(($current_player?'W':'B')." from=$from_field to=$to_field king=$king_field \t");
-foreach($hot_fields as $f)debug_out("$f ");
-debug_out("\n");
 			if (! in_array( $king_field, $hot_fields )) {
 				// King is NOT under attack when doing the move
 				$attacked = false;   // Not direclty, at least
@@ -297,14 +294,13 @@ debug_out("\n");
 						;
 					}
 				}
-debug_out("ATTACKED: ".($attacked?'yes':'no')." dir:$dir\n");
+
 				if (/* normal move or */ ! $attacked) {
 					$new[] = $to_field;
 				}
 			}
 		}
 	}
-#debug_array($new);
 
 	$clickable = $new;
 	$selected = Array( $clickable[0] );

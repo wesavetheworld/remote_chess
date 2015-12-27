@@ -128,7 +128,7 @@ define( 'TEST_LINK_EP', '?player=black&history=mC5QCK&white=A.+White&black=B.+Bl
 define( 'TEST_LINK_CA', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQz&white=A.+White&black=B.+Black&from=E1' );
 define( 'TEST_LINK_PR', '?player=black&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91qHKCHqCuedumBJ&white=A.+White&black=B.+Black' );
 define( 'TEST_LINK_MATE', '?player=white&white=A.+White&black=B.+Black&base=KePmpuqRq2k8' );
-define( 'TEST_LINK_HISTORY', '?player=black&history=lBZJkAJAbs5QmC7BfABAgv*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj*TjrT*rj&white=Harald&black=Clemens&from=C4&to=C4' );
+define( 'TEST_LINK_HISTORY', '?player=black&history=lBZJksYIBI6Lgv7GdJ*TJXLCX6G76787vKTJcM1TMDTKDKJDK5DtmtCL5D2UtB0KDK92fH$8H878K2LCnvCteltLhe812K49KR3Ne01*RK910W1WIQW0KRLCbqUMR0CLQYLUY6(6Q)U865MEvENFEMFxBJxoqHog(gq)5K&white=A.+White&black=B.+Black' );
 define( 'TEST_LINK', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91&white=A.+White&black=B.+Black' );
 
 # EOF ?>

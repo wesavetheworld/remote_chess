@@ -196,15 +196,6 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 			break;
 
 		case '(':   // Pawn Promotion
-
-			// Find out, to what piece the pawn was promoted to
-			$field = decode_field( $to_code );
-			$piece = substr( $history, $i+2, 1 );
-			list( $row, $col ) = field_to_rowcol( $field );
-
-			// Turn piece into new one
-			$board[$row][$col] = $piece;
-
 			$i += 2;
 			$skipped_turns++;
 			break;
@@ -244,14 +235,39 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 
 			$new_move .= strtolower( $to_field );
 
+
+			// Update the board
+
+			$board = apply_move(
+				$board,
+				$f_row, $f_col,
+				$t_row, $t_col
+			);
+
+
+			// Promotion
+
 			if (substr($history, $i+2, 1) == '(') {
 				$piece = substr( $history, $i+4, 1 );
 				$new_move .= piece_glyph( $piece );
+
+				$board[$t_row][$t_col] = substr( $history, $i+4, 1 );
+			}
+
+
+			// Do we threaten the other king?
+
+			if (king_in_check( $board, ($current_move % 2)-1 )) {
+				$new_move .= '+';
 			}
 
 			if ($i % 4 == 0) {
 				if ($i+4 < $length) {
-					$link = history_link( $href_this, $current_move, BLACKS_MOVE );
+					$link = history_link(
+						$href_this,
+						$current_move,
+						BLACKS_MOVE
+					);
 				} else {
 					$link = $href_this;
 				}
@@ -265,13 +281,9 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 				$new_move .= "</a>\n";
 			}
 
-			$board = apply_move(
-				$board,
-				$f_row, $f_col,
-				$t_row, $t_col
-			);
 
 			// Reduce opening pawn moves
+
 			$new_move = simplify_history( $new_move );
 			$ret .= $new_move;
 
