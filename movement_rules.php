@@ -123,7 +123,6 @@ function pawn_move_list( $board_array, $current_player, $field )
 		$row+$dir*1, $col
 		) == EMPTY_FIELD
 	) {
-		//... Test: Move not ending in king being in check?
 		$ret[] = rowcol_to_field( $row+$dir*1, $col );
 
 		$is_initial_move
@@ -138,8 +137,6 @@ function pawn_move_list( $board_array, $current_player, $field )
 				$row+$dir*2, $col
 				) == EMPTY_FIELD
 			) {
-				//... Test: Move not ending in king being in check?
-
 				//... En passant for opponent next move?
 
 				$ret[] = rowcol_to_field( $row+$dir*2, $col );
@@ -173,32 +170,33 @@ function pawn_move_list( $board_array, $current_player, $field )
 
 	// En passant
 	
-	if (($row == 3) || ($row == 4)) {
+	$e = get_parameter( GET_EN_PASSANT );
 
-		$e = get_parameter( GET_EN_PASSANT );
+	if (($e != '') && (($row == 3) || ($row == 4))) {
+
 		$e = ord($e) - ord('A');
 
-		if (($e == $col+1) || ($e == $col-1)) {
-			if ($col > 0) {   // check to the left
-				if (check_target(
-					$board_array,
-					$current_player,
-					$row, $col-1
-					) == OPPONENTS_PIECE
-				) {
-					$ret[] = rowcol_to_field( $row+$dir*1, $col-1 );
-				}
+		// check to the left, without rank A
+		if (($e == $col-1) && ($col > 0)) {
+			if (check_target(
+				$board_array,
+				$current_player,
+				$row, $col-1
+				) == OPPONENTS_PIECE
+			) {
+				$ret[] = rowcol_to_field( $row+$dir*1, $col-1 );
 			}
+		}
 
-			if ($col < 7) {   // check to the right
-				if (check_target(
-					$board_array,
-					$current_player,
-					$row, $col+1
-					) == OPPONENTS_PIECE
-				) {
-					$ret[] = rowcol_to_field( $row+$dir*1, $col+1 );
-				}
+		// check to the right, without rank H
+		if (($e == $col+1) && ($col < 7)) {
+			if (check_target(
+				$board_array,
+				$current_player,
+				$row, $col+1
+				) == OPPONENTS_PIECE
+			) {
+				$ret[] = rowcol_to_field( $row+$dir*1, $col+1 );
 			}
 		}
 	}

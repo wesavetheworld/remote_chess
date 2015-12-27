@@ -19,6 +19,7 @@ body table {
 	}
 }
 
+.history ul { line-height:1.22em; }
 section.game_window { width:520px; }
 .game_window h2 { margin-bottom:0.5em; }
 

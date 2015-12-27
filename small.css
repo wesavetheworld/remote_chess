@@ -31,7 +31,7 @@ div.black { background:url(symbols_40px.png); }
 .popup li div { overflow:hidden; width:40px; height:40px; }
 
 
-.history ul { line-height:0.98em; }
+.history ul { line-height:1.06em; }
 .history li { font-size:0.82em; }
 
 /* EOF */

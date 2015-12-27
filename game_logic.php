@@ -323,7 +323,8 @@ function main_control()
 	global $show_command_form, $flip_board;
 	global $preset_from_value, $preset_to_value, $id_focus;
 	global $chess_board_markup, $history_markup, $promotion_dialog_markup;
-	global $board_encoded, $game_title, $turn_nr, $history_next;
+	global $board_encoded, $game_title, $turn_nr;
+	global $history_next, $history_prev;
 	global $href_this, $href_player, $href_flip;
 	global $game_state_link, $hmw_home_link;
 
@@ -713,12 +714,17 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 	$turn_nr = floor($turn_nr);
 
 
-	// History link
-	$next_goto = $goto + 1;
-	if ($next_goto > count_moves($history)) {
-		$next_goto = 0;
-	}
+	// History links
+
+	$next_goto = ($goto + 1) % (count_moves($history) + 1);
 	$history_next = update_href(
+		$href_this,
+		GET_GOTO,
+		$next_goto
+	);
+
+	$next_goto = ($goto + count_moves($history)) % (count_moves($history) + 1);
+	$history_prev = update_href(
 		$href_this,
 		GET_GOTO,
 		$next_goto

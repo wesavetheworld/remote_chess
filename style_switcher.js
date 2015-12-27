@@ -108,6 +108,9 @@ function toggleStyle()
 		title = 'Default';
 	}
 	document.title = original_title + ' - Style: ' + title;
+
+	SetMenuButtonCaption( title );
+	//window.setTimeout( 'SetMenuButtonCaption("'+title+'")', 10 );
 }
 
 

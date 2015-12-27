@@ -183,7 +183,7 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 		}
 
 		switch ($from_code) {
-		case '_':   // Last item, show prompt
+		case '_':   // Last item, show prompt /////////////////////////
 			if ($i % 4 == 0) {
 				$link = $href_this;
 				$ret .= "\t<li>";
@@ -195,18 +195,24 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 			$ret .= '<strong>?</strong>';   // add a prompt
 			break;
 
-		case '(':   // Pawn Promotion
+		case '(':   // Pawn Promotion /////////////////////////////////
 			$i += 2;
 			$skipped_turns++;
 			break;
 
-		default:   // Move
+		default:   // Move ////////////////////////////////////////////
 			$new_move = '';
 			$current_move++;
+			$current_color = (($current_move % 2) == WHITES_MOVE);
+			$opponent_color = ! $current_color;
 
 			if ($i % 4 == 0) {
 				if ($i < $length) {
-					$link = history_link( $href_this, $current_move, WHITES_MOVE );
+					$link = history_link(
+						$href_this,
+						$current_move,
+						WHITES_MOVE
+					);
 				} else {
 					$link = $href_this;
 				}
@@ -227,8 +233,10 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 			$new_move .= strtolower( $from_field );
 
 			if ($board[$t_row][$t_col] != '') {
-				$new_move .= ' &#215; ';
-				$new_move .= piece_glyph( $board[$t_row][$t_col] );
+				$new_move
+				.= ' &#215; '
+				.  piece_glyph( $board[$t_row][$t_col] )
+				;
 			} else {
 				$new_move .= ' &ndash; ';
 			}
@@ -251,18 +259,22 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 				$piece = substr( $history, $i+4, 1 );
 				$new_move .= piece_glyph( $piece );
 
-				$board[$t_row][$t_col] = substr( $history, $i+4, 1 );
+				$board[$t_row][$t_col] = substr(
+					$history,
+					$i + 4,
+					1
+				);
 			}
 
 
 			// Do we threaten the other king?
 
-			if (king_in_check( $board, ($current_move % 2)-1 )) {
+			if (king_in_check( $board, ! $current_color )) {
 				$new_move .= '+';
 			}
 
 			if ($i % 4 == 0) {
-				if ($i+4 < $length) {
+				if ($i + 4 < $length) {
 					$link = history_link(
 						$href_this,
 						$current_move,
@@ -287,8 +299,8 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 			$new_move = simplify_history( $new_move );
 			$ret .= $new_move;
 
-		} // switch
-	}
+		} // switch $from_code
+	} // for $i
 
 	$ret .= '</a>';
 

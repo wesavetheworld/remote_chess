@@ -21,7 +21,9 @@ main_control();   // see  game_logic.php
 * OUTPUT TO BROWSER - after  main_control()  returns, markup is built and sent
 ******************************************************************************/
 
-//////////////////////////////////////////////////////////////// COMMON HEAD ?>
+$page_title = 'Correspondence Chess';
+
+////////////////////////////////////////////////////////////// COMMON HEADER ?>
 <!DOCTYPE html><html id="top" lang="en"><head><meta charset="utf-8">
 <title><?= $game_title ?>Remote Chess - <?= $VERSION ?></title>
 <meta name="author" content="Harald Markus Wirth, http://harald.ist.org/">
@@ -30,7 +32,7 @@ main_control();   // see  game_logic.php
 <meta name="robots" content="index,follow">
 <meta name=viewport content="width=device-width, width=560">
 <link rel="stylesheet" type="text/css" href="default.css">
-<link rel="alternate stylesheet" type="text/css" href="three_d.css" title="Perspective">
+<link rel="alternate stylesheet" type="text/css" href="perspective.css" title="Perspective">
 <link rel="alternate stylesheet" type="text/css" href="no_guides.css" title="No Guides">
 <link rel="alternate stylesheet" type="text/css" href="fancy.css" title="Fancy">
 <link rel="alternate stylesheet" type="text/css" href="ponies.css" title="Ponies">
@@ -43,7 +45,7 @@ main_control();   // see  game_logic.php
 </head><body id="new_game">
 
 <form action="./" method="get" accept-charset="utf-8">
-<h1>Remote Chess</h1>
+<h1><?= $page_title ?></h1>
 
 <p>Enter names:</p>
 <p class="names">
@@ -65,7 +67,7 @@ main_control();   // see  game_logic.php
 </head><body id="chess_board">
 
 <header>
-<h1>Remote Chess</h1>
+<h1><?= $page_title ?></h1>
 </header>
 
 <? IF (!isset( $_GET[GET_GOTO] )): ?>
@@ -121,13 +123,16 @@ main_control();   // see  game_logic.php
 
 <nav>
 <h2 class="nocss">Site Navigation</h2>
-<ul>
-	<li><button onclick="toggleStyle()" accesskey="s">Switch Style</button>
+<ul id="menu">
+	<li><button onclick="toggleStyle()" accesskey="s" title="Firefox: Next Style: Alt+Shift+S">Menu</button>
 	<hr>
 	<li><a href="./">New Game</a>
 	<li><a href="<?= $href_flip ?>">Flip Board</a>
 	<li><a href="<?= $href_player ?>">Switch Sides</a>
 	<li><a href="./?base=">Empty Board</a>
+	<hr>
+	<li><a accesskey="p" href="<?= $history_prev; ?>" title="Firefox: Alt+Shift+P">History: Back (&uarr;P)</a>
+	<li><a accesskey="n" href="<?= $history_next; ?>" title="Firefox: Alt+Shift+N">History: Next (&uarr;N)</a>
 	<hr>
 	<li><a href="<?= update_href( TEST_LINK, '', '' ); ?>">Test: Temp</a>
 	<li><a href="<?= update_href( TEST_LINK_EP, '', '' ); ?>">Test: EnPassant</a>
@@ -137,8 +142,6 @@ main_control();   // see  game_logic.php
 	<li><a href="<?= update_href( TEST_LINK_HISTORY, '', '' ); ?>">Test: History</a>
 	<hr>
 	<li><a href="<?= update_href( CHESS_RIDDLE, '', '' ); ?>">Riddle</a>
-	<hr>
-	<li><a accesskey="n" href="<?= $history_next; ?>" title="Firefox: Alt+Shift+N">History: Next (&uarr;N)</a>
 </ul>
 </nav>
 
