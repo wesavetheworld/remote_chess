@@ -1,4 +1,4 @@
-<?php /* index.php */ $VERSION = 'v0.2.8&beta;';
+<?php /* index.php */ $VERSION = 'v0.2.9&beta;';
 /******************************************************************************
 * REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
 * MAIN SCRIPT and HTML TEMPLATE

@@ -3,20 +3,23 @@
 td {
 	width:40px; height:40px;
 }
+th {
+	width:20px; height:20px;
+}
 
-div.white { background:url(symbols_white_40px.png); }
-div.black { background:url(symbols_black_40px.png); }
+div.white,
+div.black { background:url(symbols_40px.png); }
 
 .piece, td div {
 	overflow:hidden; width:40px; height:40px;
 }
 
-.black.king   { background-position:    0px 0px; }
-.black.queen  { background-position:  -40px 0px; }
-.black.rook   { background-position:  -80px 0px; }
-.black.bishop { background-position: -120px 0px; }
-.black.knight { background-position: -160px 0px; }
-.black.pawn   { background-position: -200px 0px; }
+.black.king   { background-position:    0px 40px; }
+.black.queen  { background-position:  -40px 40px; }
+.black.rook   { background-position:  -80px 40px; }
+.black.bishop { background-position: -120px 40px; }
+.black.knight { background-position: -160px 40px; }
+.black.pawn   { background-position: -200px 40px; }
 
 .white.king   { background-position:    0px 0; }
 .white.queen  { background-position:  -40px 0; }
@@ -28,7 +31,7 @@ div.black { background:url(symbols_black_40px.png); }
 .popup li div { overflow:hidden; width:40px; height:40px; }
 
 
-.history ul { line-height:1em; }
+.history ul { line-height:0.98em; }
 .history li { font-size:0.82em; }
 
 /* EOF */

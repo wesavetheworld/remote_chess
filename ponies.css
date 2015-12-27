@@ -1,7 +1,37 @@
 /*** REMOTE CHESS STYLES ***/
 
-div.white { background:url(ponies_white.png); }
-div.black { background:url(ponies_black.png); }
+td {
+	width:45px; height:45px;
+}
+th {
+	width:22.5px; height:22.5px;
+}
 
+div.white,
+div.black { background:url(ponies_45px.png); }
+
+.piece, td div {
+	overflow:hidden; width:45px; height:45px;
+}
+
+.black.king   { background-position:    0px 45px; }
+.black.queen  { background-position:  -45px 45px; }
+.black.rook   { background-position:  -90px 45px; }
+.black.bishop { background-position: -135px 45px; }
+.black.knight { background-position: -180px 45px; }
+.black.pawn   { background-position: -225px 45px; }
+
+.white.king   { background-position:    0px 0; }
+.white.queen  { background-position:  -45px 0; }
+.white.rook   { background-position:  -90px 0; }
+.white.bishop { background-position: -135px 0; }
+.white.knight { background-position: -180px 0; }
+.white.pawn   { background-position: -225px 0; }
+
+.popup li div { overflow:hidden; width:45px; height:45px; }
+
+
+.history ul { line-height:1.1em; }
+.history li { font-size:0.9em; }
 
 /* EOF */
