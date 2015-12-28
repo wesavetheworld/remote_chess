@@ -10,10 +10,10 @@
  */
 function new_board()
 {
-	$ret = Array();
+	$ret = array();
 
 	for( $row = 0 ; $row < 8 ; $row++ ) {
-		$ret[$row] = Array();
+		$ret[$row] = array();
 		for( $col = 0 ; $col < 8 ; $col++ ) {
 			$ret[$row][$col] = '';
 		}
@@ -57,7 +57,7 @@ function find_king( $board_array, $current_player )
  */
 function hot_fields( $board_array, $current_player )
 {
-	$ret = Array();
+	$ret = array();
 	$hot_array = new_board();
 
 	$movable_opponents = find_movable_pieces(
@@ -168,6 +168,7 @@ function apply_move( $board_array,  $f_row, $f_col,  $t_row, $t_col )
 function decode_history( $base_array, $history, $goto = '' )
 {
 	$ret = $base_array;
+	//...$positions = array();
 
 	if ($goto == '') {
 		// Calculate move number from history length
@@ -203,11 +204,16 @@ function decode_history( $base_array, $history, $goto = '' )
 			list( $t_row, $t_col ) = field_to_rowcol( $to_field );
 
 			$ret = apply_move( $ret,  $f_row, $f_col,  $t_row, $t_col );
+			//...?$positions[] = encode_board( $ret );
 			$parsed_moves++;
 		}
 	}
 
-	return $ret;
+
+	//...// Analyze positions
+	//...$tie_info = false;
+
+	return $ret; //...array( $ret, $tie_info );
 
 } // decode_history
 
@@ -229,7 +235,7 @@ function select_piece( $board_array, $current_player, $from_field )
 
 	// Eliminate moves that would end in own king being in check
 
-	$new = Array( $clickable[0] );
+	$new = array( $clickable[0] );
 	list( $f_row, $f_col ) = field_to_rowcol( $from_field );
 	$piece = $board_array[$f_row][$f_col];
 
@@ -303,9 +309,9 @@ function select_piece( $board_array, $current_player, $from_field )
 	}
 
 	$clickable = $new;
-	$selected = Array( $clickable[0] );
+	$selected = array( $clickable[0] );
 
-	return Array( $clickable, $selected );
+	return array( $clickable, $selected );
 
 } // select_piece
 
@@ -329,17 +335,17 @@ function main_control()
 	global $game_state_link, $hmw_home_link;
 
 
-debug_out("***************************************************************\n");
-
 	// Initialize a bit
 
-	$promotion_popup = false;    //...NYI Show pawn promotion dialog
-	$show_command_form = true;   // Show the move input dialog
+	$promotion_popup = false;     //...NYI Show pawn promotion dialog
+	$show_command_form = true;    // Show the move input dialog
 
-	$heading = '';               // "White's move" caption
-	$game_title = '';            // Current game info for page title
-	$game_state_link = '';       // "Send this link"-link ..
-	$hmw_home_link = '';         // .. corrected for my stupid router
+	$game_status = IN_PROGRESS;   // The game has not ended yet
+	$heading = '';                // "White's move" caption
+	$game_title = '';             // Current game info for page title
+	$game_state_link = '';        // "Send this link"-link ..
+	$hmw_home_link = '';          // .. corrected for my stupid router
+
 
 
 	//... Remember an initial double move of a pawn
@@ -371,6 +377,7 @@ debug_out("***************************************************************\n");
 
 	// Trace history (Reconstruct the current board from initial positions)
 
+	//...list( $board_array, $tie_info ) = decode_history(
 	$board_array = decode_history(
 		$base_array,
 		$history,
@@ -380,11 +387,11 @@ debug_out("***************************************************************\n");
 
 	// Execute given command
 
-	// retreive FORM input
+	// Retreive FORM input
 	// Move: "from" and "to" must be field names
 	// Edit: "from" must be the code character for a piece and "to" a field
 
-	$clickable = $selected = Array();
+	$clickable = $selected = array();
 	$redirect_after_move = false;
 
 	$cmd_piece = get_parameter(GET_FROM);
@@ -505,7 +512,7 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 
 		// New move applied, prepare for fresh move
 
-		$clickable = $selected = Array();
+		$clickable = $selected = array();
 		
 		$cmd_from = $cmd_to = '';   // Fall through to NO COMMAND mode
 		$current_player = ! $current_player;
@@ -520,7 +527,7 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 		}
 	}
 
-	// Exec: Deselect
+	// Exec: Deselect, continuation of fall throughs above
 	if (($cmd_from == '') && ($cmd_to == '')) {
 
 		$clickable = find_movable_pieces(
@@ -529,7 +536,7 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 		);
 
 		// Get rid of moves with king in check afterwards
-		$new = Array();
+		$new = array();
 		foreach( $clickable as $from_field ) {
 			// Get two arrays (clickable, selected)
 			$temp = select_piece(
@@ -543,18 +550,23 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 			}
 		}
 		$clickable = $new;
-
 		if (count($clickable) == 0) {
 			if (king_in_check( $board_array, $current_player )) {
-				$heading = "<strong>Checkmate!</strong>";
+				$heading = HEADING_CHECK_MATE;
+				$game_status
+				= ($current_player != WHITES_MOVE)
+				? WHITE_WINS
+				: BLACK_WINS
+				;
 			} else {
-				$heading = "<strong>Stalemate!</strong>";
+				$heading = HEADING_STALE_MATE;
+				$game_status = NOONE_WINS;
 			}
 		}
 	}
 
 	// Exec: Select piece
-	if (($cmd_from != '') && ($cmd_to == '')) {
+	if (($cmd_from != '') && ($cmd_to == '') && ($goto == '')) {
 
 		list( $clickable, $selected ) = select_piece(
 			$board_array,
@@ -630,7 +642,8 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 		$history,
 		$href_this,
 		$name_white,
-		$name_black
+		$name_black,
+		$game_status
 	);
 
 	// Promotion
@@ -641,7 +654,7 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 			$t_row, $t_col,
 			$history
 		);
-		$clickable = $selected = Array();
+		$clickable = $selected = array();
 	} else {
 		$promotion_dialog_markup = '';
 	}
@@ -653,7 +666,7 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 	}
 
 	if (isset( $_GET[GET_GOTO] )) {
-		$clickable = $selected = Array();
+		$clickable = $selected = array();
 	}
 	else if (($history > '') && ($cmd_from == $cmd_to)) {
 		if (substr($history, -4, 1) == '(') {
@@ -745,7 +758,7 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 		$t = str_replace( '&amp;', '&', $href_this );
 		$game_state_link = str_replace( ' ', '+', $t );
 
-		$home_IPs = Array( '192.168.14.1', '213.47.94.176', 'local.at' );
+		$home_IPs = array( '192.168.14.1', '213.47.94.176', 'local.at' );
 		foreach( $home_IPs as $ip_address ) {
 			if (strpos($game_state_link, $ip_address) !== false) {
 				$hmw_home_link = str_replace(
@@ -763,6 +776,8 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 		$game_state_link = str_replace( 'flip&', '', $game_state_link );
 		$game_state_link = str_replace( '&', '&amp;', $game_state_link );
 	}
+
+debug_out("board_encoded = $board_encoded\n");
 
 } // main_conrol
 

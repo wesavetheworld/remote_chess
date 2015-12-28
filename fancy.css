@@ -6,7 +6,7 @@ body {
        -moz-box-shadow:2px 2px 12px #60645d;
 	    box-shadow:2px 2px 12px #60645d;
 	margin:0.5em;
-	border:solid 4px #333;
+	border:solid 4px #555;
 	border-radius:0.5em;
 }
 #chess_board section { Xmargin:0 1em; }

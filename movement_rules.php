@@ -78,7 +78,7 @@ function check_move( $board_array, $current_player,  $f_row, $f_col,  $t_row, $t
  */
 function generic_move_list( $board_array, $current_player, $field, $moves )
 {
-	$ret = Array( $field );   // Add current piece for deselection link
+	$ret = array( $field );   // Add current piece for deselection link
 	list( $row, $col ) = field_to_rowcol( $field );
 
 	for( $i = 0 ; $i < count($moves) ; $i++ ) {
@@ -112,7 +112,7 @@ function generic_move_list( $board_array, $current_player, $field, $moves )
 
 function pawn_move_list( $board_array, $current_player, $field )
 {
-	$ret = Array( $field );   // Add current piece for deselection link
+	$ret = array( $field );   // Add current piece for deselection link
 	list( $row, $col ) = field_to_rowcol( $field );
 
 	$dir = ($current_player == WHITES_MOVE) ? +1 : -1 ;
@@ -208,10 +208,10 @@ function pawn_move_list( $board_array, $current_player, $field )
 
 function rook_move_list( $board_array, $current_player, $field )
 {
-	$ret = Array( $field );   // Add current piece for deselection link
+	$ret = array( $field );   // Add current piece for deselection link
 	list( $row, $col ) = field_to_rowcol( $field );
 
-	$dir = Array( true, true, true, true );
+	$dir = array( true, true, true, true );
 
 	for( $i = 1 ; $i < 8 ; $i++ ) {
 		if ($dir[0]) {
@@ -297,11 +297,11 @@ function rook_move_list( $board_array, $current_player, $field )
 
 function knight_move_list( $board_array, $current_player, $field )
 {
-	$moves = Array(
-		Array( +2, -1 ), Array( +2, +1 ),
-		Array( -2, -1 ), Array( -2, +1 ),
-		Array( -1, +2 ), Array( +1, +2 ),
-		Array( -1, -2 ), Array( +1, -2 ),
+	$moves = array(
+		Array( +2, -1 ), array( +2, +1 ),
+		Array( -2, -1 ), array( -2, +1 ),
+		Array( -1, +2 ), array( +1, +2 ),
+		Array( -1, -2 ), array( +1, -2 ),
 	);
 
 	return generic_move_list(
@@ -316,10 +316,10 @@ function knight_move_list( $board_array, $current_player, $field )
 
 function bishop_move_list( $board_array, $current_player, $field )
 {
-	$ret = Array( $field );   // Add current piece for deselection link
+	$ret = array( $field );   // Add current piece for deselection link
 	list( $row, $col ) = field_to_rowcol( $field );
 
-	$dir = Array( true, true, true, true );
+	$dir = array( true, true, true, true );
 
 	for( $i = 1 ; $i < 8 ; $i++ ) {
 		if ($dir[0]) {
@@ -415,11 +415,11 @@ function queen_move_list( $board_array, $current_player, $field )
 
 function king_move_list( $board_array, $current_player, $field, $piece )
 {
-	$moves = Array(
-		Array( +0, -1 ), Array( +0, +1 ),
-		Array( +1, -0 ), Array( -1, +0 ),
-		Array( -1, -1 ), Array( -1, +1 ),
-		Array( +1, -1 ), Array( +1, +1 ),
+	$moves = array(
+		Array( +0, -1 ), array( +0, +1 ),
+		Array( +1, -0 ), array( -1, +0 ),
+		Array( -1, -1 ), array( -1, +1 ),
+		Array( +1, -1 ), array( +1, +1 ),
 	);
 
 	$ret = generic_move_list(
@@ -477,7 +477,7 @@ function king_move_list( $board_array, $current_player, $field, $piece )
  */
 function possible_move_list( $board_array, $current_player, $from_field )
 {
-	$ret = Array();
+	$ret = array();
 	list( $row, $col ) = field_to_rowcol( $from_field );
 
 	$piece_codes = get_player_pieces( $current_player );
@@ -520,7 +520,7 @@ function possible_move_list( $board_array, $current_player, $from_field )
  */
 function find_movable_pieces( $board_array, $current_player )
 {
-	$ret = Array();
+	$ret = array();
 	$player_pieces = get_player_pieces( $current_player );
 
 	for( $row = 0 ; $row < 8 ; $row++ ) {

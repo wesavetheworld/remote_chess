@@ -14,7 +14,7 @@
  */
 function piece_class_name( $code )
 {
-	$class_names = Array(
+	$class_names = array(
 		'P' => 'white pawn',
 		'S' => 'white rook notmoved',
 		'R' => 'white rook',
@@ -112,7 +112,7 @@ function simplify_history( $markup )
 	$white_pawn = piece_glyph('P');
 	$black_pawn = piece_glyph('p');
 
-	$PAWN_OPENINGS = Array(
+	$PAWN_OPENINGS = array(
 		"{$white_pawn}a2 &ndash; a3" => "a3",  "{$white_pawn}a2 &ndash; a4" => "a4",
 		"{$white_pawn}b2 &ndash; b3" => "b3",  "{$white_pawn}b2 &ndash; b4" => "b4",
 		"{$white_pawn}c2 &ndash; c3" => "c3",  "{$white_pawn}c2 &ndash; c4" => "c4",
@@ -153,15 +153,23 @@ function simplify_history( $markup )
  * See  decode_history  in  game_logic.php , it was the template for this
  * function.
  */
-function history_markup( $board, $history, $href_this, $name_white, $name_black )
-{
+function history_markup(
+	$board,
+	$history,
+	$href_this,
+	$name_white,
+	$name_black,
+	$prompt
+) {
 	$history .= '__';
 	$goto = get_parameter( GET_GOTO );
 
+
+	$class = HISTORY_BREAK_UL ? '' : ' class="scrolling"';
 	$ret
 	= "<h2><strong>$name_white</strong>"
 	. " vs. <strong>$name_black</strong></h2>\n"
-	. "<ul>\n"
+	. "<ul$class>\n"
 	;
 
 	$current_move = 0;   //... Newly introduced. Routine might need cleanup.
@@ -178,7 +186,7 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
 		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
 
-		if (($i > 0) && (($i-4*$skipped_turns) % 80 == 0)) {
+		if ((HISTORY_BREAK_UL) && ($i > 0) && (($i-4*$skipped_turns) % 80 == 0)) {
 			$ret .= "</ul><ul>\n";
 		}
 
@@ -192,7 +200,7 @@ function history_markup( $board, $history, $href_this, $name_white, $name_black 
 				$ret .= "<a href=\"$link\">";
 			}
 
-			$ret .= '<strong>?</strong>';   // add a prompt
+			$ret .= $prompt;
 			break;
 
 		case '(':   // Pawn Promotion /////////////////////////////////
@@ -451,7 +459,7 @@ function piece_in_field( $pieces, $selected, $field_name )
  */
 function get_pieces( $board )
 {
-	$ret = Array();
+	$ret = array();
 
 	for( $row = 0 ; $row < 8 ; $row++ ) {
 		for( $col = 0 ; $col < 8 ; $col++ ) {

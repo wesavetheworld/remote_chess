@@ -1,4 +1,6 @@
-<?php /* index.php */ $VERSION = 'v0.2.9&beta;';
+<?php /* index.php */
+$PROGRAM_NAME = 'Mail Chess';
+$VERSION      = 'v0.2.9&beta;';
 /******************************************************************************
 * REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
 * MAIN SCRIPT and HTML TEMPLATE
@@ -6,6 +8,7 @@
 
 //... Log everything! No errors to the browser!
 set_time_limit( 2 /*seconds*/ );   // Script run time, stops endless loops
+$start_time = microtime( true );   // Seconds since boot (float)
 
 include 'helpers.php';             // Debug and other small helper functions
 include 'definitions.php';         // Constant values, signal names
@@ -16,22 +19,24 @@ include 'game_logic.php';          // Main game control
 
 main_control();   // see  game_logic.php
 
+$elapsed_seconds = round((microtime(true) - $start_time) * 100000) / 100;
+debug_out("<span class=\"time\">Time = {$elapsed_seconds}ms</span>");
+
 
 /******************************************************************************
 * OUTPUT TO BROWSER - after  main_control()  returns, markup is built and sent
 ******************************************************************************/
 
-$page_title = 'Correspondence Chess';
-
 ////////////////////////////////////////////////////////////// COMMON HEADER ?>
 <!DOCTYPE html><html id="top" lang="en"><head><meta charset="utf-8">
-<title><?= $game_title ?>Remote Chess - <?= $VERSION ?></title>
+<title><?= $game_title ?><?= $PROGRAM_NAME ?> - <?= $VERSION ?></title>
 <meta name="author" content="Harald Markus Wirth, http://harald.ist.org/">
 <meta name="description" content="Web service for playing chess via e-mail or instant messenger. No login required.">
 <meta name="keywords" content="remote,correspondence,mail,chess,fern,post,brief,schach">
 <meta name="robots" content="index,follow">
 <meta name=viewport content="width=device-width, width=560">
 <link rel="stylesheet" type="text/css" href="default.css">
+<? IF ($_SERVER['QUERY_STRING'] != ''): // NOT NEW GAME ?>
 <link rel="alternate stylesheet" type="text/css" href="perspective.css" title="Perspective">
 <link rel="alternate stylesheet" type="text/css" href="no_guides.css" title="No Guides">
 <link rel="alternate stylesheet" type="text/css" href="fancy.css" title="Fancy">
@@ -41,22 +46,21 @@ $page_title = 'Correspondence Chess';
 <link rel="shortcut icon" href="chess-icon.png">
 <script type="text/javascript" src="chess_board.js"></script>
 <script type="text/javascript" src="style_switcher.js"></script>
+<? ENDIF ?>
 <? IF ($_SERVER['QUERY_STRING'] == ''): /////////////////////////// NEW GAME ?>
 </head><body id="new_game">
 
 <form action="./" method="get" accept-charset="utf-8">
-<h1><?= $page_title ?></h1>
-
+<h1><?= $PROGRAM_NAME ?></h1>
 <p>Enter names:</p>
 <p class="names">
-	<label for="idWhite" class="nocss"><?= ucfirst(GET_WHITE) ?>:</label>
+	<label for="idWhite" class="no_css"><?= ucfirst(GET_WHITE) ?>:</label>
 	<input type="text" id="idWhite" name="white" value="<?= $name_white ?>">
 	vs.
-	<label for="idBlack" class="nocss"><?= ucfirst(GET_BLACK) ?>:</label>
+	<label for="idBlack" class="no_css"><?= ucfirst(GET_BLACK) ?>:</label>
 	<input type="text" id="idBlack" name="black" value="<?= $name_black ?>">
-</p>
-<p>
-	<label for="idSubmit" class="nocss">Submit:</label>
+</p><p>
+	<label for="idSubmit" class="no_css">Submit:</label>
 	<input type="submit" value="Start Game">
 </p>
 <input type="hidden" name="<?= GET_NEW_GAME ?>">
@@ -67,7 +71,7 @@ $page_title = 'Correspondence Chess';
 </head><body id="chess_board">
 
 <header>
-<h1><?= $page_title ?></h1>
+<h1><?= $PROGRAM_NAME ?></h1>
 </header>
 
 <? IF (!isset( $_GET[GET_GOTO] )): ?>
@@ -91,7 +95,7 @@ $page_title = 'Correspondence Chess';
 	<label for="idTo">to:</label>
 	<input type="text" id="idTo" name="to" value="<?= $preset_to_value ?>">
 </p><p>
-	<label for="idSubmit" class="nocss">Submit:</label>
+	<label for="idSubmit" class="no_css">Submit:</label>
 	<input type="submit" id="idSubmit" value="Submit">
 </p>
 <?   ENDIF ?>
@@ -122,7 +126,7 @@ $page_title = 'Correspondence Chess';
 </section><!-- /history -->
 
 <nav>
-<h2 class="nocss">Site Navigation</h2>
+<h2 class="no_css">Site Navigation</h2>
 <ul id="menu">
 	<li><button onclick="toggleStyle()" accesskey="s" title="Firefox: Next Style: Alt+Shift+S">Menu</button>
 	<hr>
@@ -134,12 +138,9 @@ $page_title = 'Correspondence Chess';
 	<li><a accesskey="p" href="<?= $history_prev; ?>" title="Firefox: Alt+Shift+P">History: Back (&uarr;P)</a>
 	<li><a accesskey="n" href="<?= $history_next; ?>" title="Firefox: Alt+Shift+N">History: Next (&uarr;N)</a>
 	<hr>
-	<li><a href="<?= update_href( TEST_LINK, '', '' ); ?>">Test: Temp</a>
-	<li><a href="<?= update_href( TEST_LINK_EP, '', '' ); ?>">Test: EnPassant</a>
-	<li><a href="<?= update_href( TEST_LINK_CA, '', '' ); ?>">Test: Castle</a>
-	<li><a href="<?= update_href( TEST_LINK_PR, '', '' ); ?>">Test: Promotion</a>
-	<li><a href="<?= update_href( TEST_LINK_MATE, '', '' ); ?>">Test: Mate</a>
-	<li><a href="<?= update_href( TEST_LINK_HISTORY, '', '' ); ?>">Test: History</a>
+<? foreach( $TEST_LINKS as $caption => $link ) { ?>
+	<li><a href="<?= update_href( $link, '', '' ); ?>">Test: <?= $caption ?></a>
+<? } ?>
 	<hr>
 	<li><a href="<?= update_href( CHESS_RIDDLE, '', '' ); ?>">Riddle</a>
 </ul>
@@ -147,7 +148,17 @@ $page_title = 'Correspondence Chess';
 
 <? ENDIF ///////////////////////////////////////////////////// COMMON FOOTER ?>
 <footer>
-<h3>Remote Chess <?= $VERSION ?><br>Copy(l)eft 2015 by <a href="https://github.com/hwirth/remote_chess">hmw</a></h3>
+<? IF ($_SERVER['QUERY_STRING'] != ''): // NOT NEW GAME ?>
+<h2 class="no_css">Main Menu</h2>
+<nav><ul>
+	<li><a href="./" title="Enter names and start a new game">New Game</a>
+	<li><a Xaccesskey="p" href="<?= $history_prev; ?>" title="History: Show previous move. Firefox: Alt+Shift+P">Back</a>
+	<li><a Xaccesskey="n" href="<?= $history_next; ?>" title="History: Show next move. Firefox: Alt+Shift+N">Next</a>
+	<li><a href="<?= update_href( CHESS_RIDDLE, '', '' ); ?>" title="Show a chess composition for beginners">Riddle</a>
+	<li class="js_required"><a href="javascript:return false" onclick="toggleStyle()">Style</a>
+</ul></nav>
+<? ENDIF ?>
+<h3><?= $PROGRAM_NAME ?> <?= $VERSION ?><br>Copy(l)eft 2015 by <a href="https://github.com/hwirth/remote_chess">hmw</a></h3>
 <? IF (DEBUG): ?>
 <pre class="debug">
 <?= $debug_html ?>

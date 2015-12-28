@@ -12,7 +12,7 @@
  * Debug information will be collected in  $debug_html  and may be output
  * in the HTML output, if  DEBUG  is set to true in  definitions.php .
  */
-$debug_html = 'Remote Chess ' . $VERSION;
+$debug_html = "$PROGRAM_NAME $VERSION\n";
 
 /**
  * debug_out() - Usually you begin this with a "\n".
@@ -94,7 +94,7 @@ function field_to_rowcol( $field )
 	$col = ord( $field[0] ) - ord('A');
 	$row = ord( $field[1] ) - ord('1');
 
-	return Array( $row, $col );
+	return array( $row, $col );
 }
 
 

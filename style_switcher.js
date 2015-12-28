@@ -107,10 +107,10 @@ function toggleStyle()
 	if (title == null) {
 		title = 'Default';
 	}
+
 	document.title = original_title + ' - Style: ' + title;
 
-	SetMenuButtonCaption( title );
-	//window.setTimeout( 'SetMenuButtonCaption("'+title+'")', 10 );
+	setMenuButtonCaption( title );
 }
 
 

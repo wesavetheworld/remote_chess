@@ -131,7 +131,7 @@ function update_href( $current_link = '', $parameter_name = '', $add_value = '' 
 	$params_exp = explode( '&', $params_url );
 
 	// Create array using named indices ("params_key[name]=value")
-	$params_key = Array();
+	$params_key = array();
 	if ($params_url != '') {
 		foreach( $params_exp as $key_name ) {
 			if (strpos($key_name, '=') !== false) {
@@ -158,7 +158,7 @@ function update_href( $current_link = '', $parameter_name = '', $add_value = '' 
 	// SORT parameters for increased niceness
 
 	$order = explode( ' ', GET_PARAMETER_ORDER );
-	$new_order = Array();
+	$new_order = array();
 
 	foreach( $order as $key ) {
 
@@ -172,7 +172,7 @@ function update_href( $current_link = '', $parameter_name = '', $add_value = '' 
 
 	// SERIALIZE: Build URL parameter string
 
-	$GET_toggles = Array( 'flip', 'redirect' );   // Allow toggling of certain parameters here
+	$GET_toggles = array( 'flip', 'redirect' );   // Allow toggling of certain parameters here
 
 	$params_out = '';
 	foreach( $params_key as $key => $value ) {

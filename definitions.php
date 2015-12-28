@@ -8,10 +8,11 @@
 * OPTIONS
 ******************************************************************************/
 
-define( 'DEBUG', false );                      // Show  debug_out()  messages
+define( 'DEBUG', !false );                      // Show  debug_out()  messages
 define( 'DEBUG_TO_FILE', false );              // Write messages to file
 define( 'DEBUG_FILE_NAME', '../debug.log' );
 
+define( 'HISTORY_BREAK_UL', true );          // Insert </ul><ul> every 20 moves
 define( 'USE_UNICODE_GLYPHS', true );          // Use special characters
 define( 'STEADY_BOARD', false );               // true: Black plays downwards,
                                                // board never flips
@@ -26,6 +27,14 @@ define( 'DEFAULT_NAME_BLACK', 'B. Black' );
 
 define( 'WHITES_MOVE', true );     //... This could be done nicer, there are..
 define( 'BLACKS_MOVE', false );    //... .. too many black/white related names
+
+define( 'IN_PROGRESS', '<b>?</b>' );
+define( 'WHITE_WINS', '<strong>1 &mdash; 0</strong>' );   // Used for output and for signaling
+define( 'BLACK_WINS', '<strong>0 &mdash; 1</strong>' );
+define( 'NOONE_WINS', '<strong>&frac12; &mdash; &frac12;</strong>' );
+
+define( 'HEADING_CHECK_MATE', '<strong>Checkmate!</strong>' );
+define( 'HEADING_STALE_MATE', '<strong>Stalemate!</strong>' );
 
 /**
  * If these change, check:
@@ -124,11 +133,15 @@ define( 'CHESS_RIDDLE', "?player=white&base=QzkJKTNWpXpZn5&comment=White+moves+a
 /**
  * TEST LINK
  */
-define( 'TEST_LINK_EP', '?player=black&history=mC5QCK&white=A.+White&black=B.+Black&from=F7' );
-define( 'TEST_LINK_CA', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQz&white=A.+White&black=B.+Black&from=E1' );
-define( 'TEST_LINK_PR', '?player=black&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91qHKCHqCuedumBJ&white=A.+White&black=B.+Black' );
-define( 'TEST_LINK_MATE', '?player=white&white=A.+White&black=B.+Black&base=KePmpuqRq2k8' );
-define( 'TEST_LINK_HISTORY', '?player=black&history=lBZJksYIBI6Lgv7GdJ*TJXLCX6G76787vKTJcM1TMDTKDKJDK5DtmtCL5D2UtB0KDK92fH$8H878K2LCnvCteltLhe812K49KR3Ne01*RK910W1WIQW0KRLCbqUMR0CLQYLUY6(6Q)U865MEvENFEMFxBJxoqHog(gq)5K&white=A.+White&black=B.+Black' );
-define( 'TEST_LINK', '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91&white=A.+White&black=B.+Black' );
+$TEST_LINKS = array(
+	'En Passant' => '?player=black&history=mC5QCK1LnD&enpassant=F&white=A.+White&black=B.+Black&from=D7',
+	'Castle'     => '?player=white&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQz&white=A.+White&black=B.+Black&from=E1',
+	'Promotion'  => '?player=black&history=mC5QCK1LdE2UlB*TbqTNcV9VfAZRgvQzKR7ZecZyhe8*RZ0Kdl91qHKCHqCuedumBJ&white=A.+White&black=B.+Black',
+	'Check Mate' => '?player=white&white=A.+White&black=B.+Black&base=KePmpuqRq2k8',
+	'Stale Mate' => '?player=white&history=lBZJksYIBI6Lgv7GdJ*TJXLCX6G76787vKTJcM1TMDTKDKJDK5DtmtCL5D2UtB0KDK92fH$8H878K2LCnvCteltLhe812K49KR3Ne01*RK910W1WIQW0KRLCbqUMR0CLQYLUY6(6Q)U865MEvENFEMFxBJxoqHog(gq)5K*3HY3UY8gapFaiKTUN82NF0RijltjHsAHJAJFETDEx2NxoMUoxU2xoDuofulfg2*(*Q)gh&white=A.+White&black=B.+Black',
+	'History'    => '?player=black&history=lBZJksYIBI6Lgv7GdJ*TJXLCX6G76787vKTJcM1TMDTKDKJDK5DtmtCL5D2UtB0KDK92fH$8H878K2LCnvCteltLhe812K49KR3Ne01*RK910W1WIQW0KRLCbqUMR0CLQYLUY6(6Q)U865MEvENFEMFxBJxoqHog(gq)5K&white=A.+White&black=B.+Black',
+	'Queens'     => '?base=QaQkQuQEQHQOQ2Q7',
+);
+
 
 # EOF ?>

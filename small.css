@@ -30,8 +30,10 @@ div.black { background:url(symbols_40px.png); }
 
 .popup li div { overflow:hidden; width:40px; height:40px; }
 
+table { border-radius:8px; }
 
-.history ul { line-height:1.06em; }
-.history li { font-size:0.82em; }
+.history ul { line-height:1.1em; }
+.history ul.scrolling { max-height:390px; }
+.history li { font-size:1em; }
 
 /* EOF */

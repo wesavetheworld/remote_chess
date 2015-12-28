@@ -276,10 +276,11 @@ https://developers.google.com/speed/docs/insights/ConfigureViewport
 - Rename files with dash using underscore
 - <base href> for shorter links?
 - Errors: Proper error messages instead of  die() .
+- Errors: Manually type move that would get king in check: Get rid of die()
 - Errors: Select valid piece of opponent: No error is shown! Must be ignored completly.
 - Errors: Respond to improper input verbously
 == RE-CHECK ===================================================================
-- CSS: Cross browser compatibility
+- CSS: Cross browser compatibility, Print Style, Mobile Friendly
 - Long history, long player names
 - Sync GET parameter order between  update_href()  and form in  index.php
 - Replace all hardcoded strings with constants (GET_TO, GET_FROM, ...)
