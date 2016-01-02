@@ -168,7 +168,7 @@ function apply_move( $board_array,  $f_row, $f_col,  $t_row, $t_col )
 function decode_history( $base_array, $history, $goto = '' )
 {
 	$ret = $base_array;
-	//...$positions = array();
+	//...$positions = array();   // Search for repeating positions
 
 	if ($goto == '') {
 		// Calculate move number from history length
@@ -301,10 +301,17 @@ function select_piece( $board_array, $current_player, $from_field )
 					}
 				}
 
-				if (/* normal move or */ ! $attacked) {
+				$in_check = king_in_check(
+					$board_array,
+					$current_player
+				);
+
+				if( /* normal move or */ (! $attacked)
+				&& !($in_check && ($dir == +2))
+				&& !($in_check && ($dir == -2))
+				) {
 					$new[] = $to_field;
-				}
-			}
+				}			}
 		}
 	}
 
@@ -335,9 +342,9 @@ function main_control()
 	global $game_state_link, $hmw_home_link;
 
 
-	// Initialize a bit
+	// Initialize things
 
-	$promotion_popup = false;     //...NYI Show pawn promotion dialog
+	$promotion_popup = false;     // Show pawn promotion dialog
 	$show_command_form = true;    // Show the move input dialog
 
 	$game_status = IN_PROGRESS;   // The game has not ended yet
@@ -347,20 +354,14 @@ function main_control()
 	$hmw_home_link = '';          // .. corrected for my stupid router
 
 
-
-	//... Remember an initial double move of a pawn
-
-	$get_en_passant = get_parameter( GET_EN_PASSANT );
-	$new_en_passant = '';
-
-
 	// Retreive GET data
 
-	$flip_board = isset( $_GET[GET_FLIP_BOARD] );
-	$history    = get_parameter( GET_HISTORY );
-	$goto       = get_parameter( GET_GOTO );
-	$name_white = get_parameter( GET_WHITE, DEFAULT_NAME_WHITE );
-	$name_black = get_parameter( GET_BLACK, DEFAULT_NAME_BLACK );
+	$get_en_passant = get_parameter( GET_EN_PASSANT );
+	$flip_board     = isset( $_GET[GET_FLIP_BOARD] );
+	$history        = get_parameter( GET_HISTORY );
+	$goto           = get_parameter( GET_GOTO );
+	$name_white     = get_parameter( GET_WHITE, DEFAULT_NAME_WHITE );
+	$name_black     = get_parameter( GET_BLACK, DEFAULT_NAME_BLACK );
 
 	if (get_parameter(GET_PLAYER, GET_WHITE) != GET_WHITE) {
 		//  &player  set, but not to "white", is taken as "black"
@@ -458,12 +459,12 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 		// Check if it is our//... piece (or a piece at all)
 
 		if (! in_array( $cmd_from, $clickable )) {
-			die( "Error: clickable[$f_row][$f_col] empty." );
+			die( "main_control: empty: clickable[$f_row][$f_col]" );
 		}
 
 		if (! in_array( $cmd_to, $clickable )) {
 			// Capturing a piece!
-			echo "Capture! clickable = ";
+			echo "main_control: capture none: clickable = ";
 			print_r( $clickable );
 			die();
 		}
@@ -699,7 +700,11 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 	if ($heading == '') {
 		$heading = ($current_player) ? $name_white : $name_black ;
 		$heading = ucfirst($heading) . "'";
-		if (substr($heading, -2, 1) != 's') $heading .= 's';
+		if( (substr($heading, -2, 1) != 's')
+		&&  (substr($heading, -2, 1) != 'x')
+		) {
+			$heading .= 's';
+		}
 		$heading .= ' move';
 	}
 
@@ -777,7 +782,8 @@ debug_out( $_SERVER['REMOTE_ADDR'] . " - $name_white vs. $name_black, $turn_nr, 
 		$game_state_link = str_replace( '&', '&amp;', $game_state_link );
 	}
 
-debug_out("board_encoded = $board_encoded\n");
+debug_out("base  = $board_encoded\n");
+debug_out("board = " . encode_board($board_array) . "\n");
 
 } // main_conrol
 

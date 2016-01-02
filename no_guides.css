@@ -5,6 +5,7 @@ body td.selected { outline:none; }
 
 .history ul { display:inline-block; margin:0 1em 1em; }
 .history li { display:block; }
+.history span,
 .history a { display:inline-block; padding:0.15em 0.15em;  }
 
 

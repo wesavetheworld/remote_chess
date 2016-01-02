@@ -12,7 +12,7 @@
  * Debug information will be collected in  $debug_html  and may be output
  * in the HTML output, if  DEBUG  is set to true in  definitions.php .
  */
-$debug_html = "$PROGRAM_NAME $VERSION\n";
+$debug_html = "Debug\n$PROGRAM_NAME $VERSION\n";
 
 /**
  * debug_out() - Usually you begin this with a "\n".

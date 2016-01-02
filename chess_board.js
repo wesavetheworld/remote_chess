@@ -41,13 +41,17 @@ function setMenuButtonCaption( new_title )
 		new_title = 'Menu';
 	}
 
-	var e = document.getElementsByTagName('button')[0];
+	var e = document.getElementsByTagName('button');
 
+	if (e[0] == undefined) {
+		document.title = 'SNAFU';
+		return;
+	}
 	// Prevent the mouse over event of the menu from setting the caption to
 	// "Switch Style", when the button was NOT showing "Menu" before.
 	// (I.e. the current style name was displayed on the button)
-	if ((e.innerHTML == 'Menu') || (new_title != 'Switch Style')) {
-		e.innerHTML = new_title;
+	if ((e[0].innerHTML == 'Menu') || (new_title != 'Switch Style')) {
+		e[0].innerHTML = new_title;
 	}
 
 	// (Re)set a timer to revert the caption back to "Menu" after a while

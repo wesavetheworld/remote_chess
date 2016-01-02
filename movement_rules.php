@@ -1,7 +1,7 @@
 <?php /* movement_rules.php */ if (!isset($VERSION)) die('Include only.');
 /******************************************************************************
 * REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
-* MOVEMENT RULES
+* MOVEMENT RULES - Calculating possible moves, NOT regarding kings in check
 ******************************************************************************/
 
 /**
@@ -54,27 +54,13 @@ function check_target( $board_array, $current_player, $row, $col )
 } // check_target
 
 
-/**
- * check_move() - Checks, if a move would leave the king in check
- */
-function check_move( $board_array, $current_player,  $f_row, $f_col,  $t_row, $t_col )
-{
-	//...
-	// Create board with move applied
-	// Build opponent's possible moves
-	// See, if king can be captured
-
-	return true;
-}
-
-
 /******************************************************************************
 * PIECE MOVEMENT RULES
 ******************************************************************************/
 
 /**
  * generic_move_list()
- * Checks, if any of  $moves  is possible. Used by the King, Knight, //...Pawn?
+ * Checks, if any of  $moves  is possible. Used by the King, Knight
  */
 function generic_move_list( $board_array, $current_player, $field, $moves )
 {
@@ -137,8 +123,6 @@ function pawn_move_list( $board_array, $current_player, $field )
 				$row+$dir*2, $col
 				) == EMPTY_FIELD
 			) {
-				//... En passant for opponent next move?
-
 				$ret[] = rowcol_to_field( $row+$dir*2, $col );
 			}
 		}
@@ -153,7 +137,6 @@ function pawn_move_list( $board_array, $current_player, $field )
 		$row+$dir*1, $col+1
 		) == OPPONENTS_PIECE
 	) {
-		//... Test: Move not ending in king being in check?
 		$ret[] = rowcol_to_field( $row+$dir*1, $col+1 );
 	}
 
@@ -163,7 +146,6 @@ function pawn_move_list( $board_array, $current_player, $field )
 		$row+$dir*1, $col-1
 		) == OPPONENTS_PIECE
 	) {
-		//... Test: Move not ending in king being in check?
 		$ret[] = rowcol_to_field( $row+$dir*1, $col-1 );
 	}
 
@@ -224,7 +206,6 @@ function rook_move_list( $board_array, $current_player, $field )
 			if(($target == EMPTY_FIELD)
 			|| ($target == OPPONENTS_PIECE)
 			) {
-				//... Test: Move not ending in king being in check?
 				$ret[] = rowcol_to_field( $row, $col+$i );
 				if ($target == OPPONENTS_PIECE) {
 					$dir[0] = false;
@@ -243,7 +224,6 @@ function rook_move_list( $board_array, $current_player, $field )
 			if(($target == EMPTY_FIELD)
 			|| ($target == OPPONENTS_PIECE)
 			) {
-				//... Test: Move not ending in king being in check?
 				$ret[] = rowcol_to_field( $row, $col-$i );
 				if ($target == OPPONENTS_PIECE) {
 					$dir[1] = false;
@@ -261,7 +241,6 @@ function rook_move_list( $board_array, $current_player, $field )
 			if(($target == EMPTY_FIELD)
 			|| ($target == OPPONENTS_PIECE)
 			) {
-				//... Test: Move not ending in king being in check?
 				$ret[] = rowcol_to_field( $row+$i, $col );
 				if ($target == OPPONENTS_PIECE) {
 					$dir[2] = false;
@@ -279,7 +258,6 @@ function rook_move_list( $board_array, $current_player, $field )
 			if(($target == EMPTY_FIELD)
 			|| ($target == OPPONENTS_PIECE)
 			) {
-				//... Test: Move not ending in king being in check?
 				$ret[] = rowcol_to_field( $row-$i, $col );
 				if ($target == OPPONENTS_PIECE) {
 					$dir[3] = false;
@@ -543,8 +521,7 @@ function find_movable_pieces( $board_array, $current_player )
 				// First entry of the returned move list is
 				// the FIELD of the currently checked piece:
 				if (isset( $moves[1] )) {
-#debug_array($moves,"\nfind_movable_pieces: ".($current_player?'WHITE':'BLACK').": field = $field, moves");
-					$ret[] = $field; //...$moves[0];
+					$ret[] = $field;   // == $moves[0];
 				}
 
 			}

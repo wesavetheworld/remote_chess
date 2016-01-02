@@ -1,15 +1,9 @@
 /*** REMOTE CHESS STYLES ***/
 
 body table {
-	perspective: 800px;
+	
 	perspective-origin: 50% 50%;
-	transform:
-		rotateX( 20deg )
-		rotateY( 0deg )
-		rotateZ( 0deg )
-	;
-	/*transition:margin 1s, transform 1s;*/
-
+	transform: perspective(800px) rotateX(20deg);
 	margin:-2em auto 2em;
 }
 
@@ -19,7 +13,14 @@ body table {
 	}
 }
 
-.history ul { line-height:1.3em; }
+table {
+	border-width:4px 10px 16px;
+    -webkit-box-shadow:2px 2px 8px #764;  /*666*/
+       -moz-box-shadow:2px 2px 8px #764;
+            box-shadow:2px 2px 8px #764;
+}
+
+.history ul { line-height:1.31em; }
 .history ul.scrolling { max-height:450px; }
 section.game_window { width:520px; }
 .game_window h2 { margin-bottom:0.5em; }

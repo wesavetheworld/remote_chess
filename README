@@ -250,6 +250,7 @@ https://developers.google.com/speed/docs/insights/ConfigureViewport
 - Reflect end of game in History
 == OPTIONAL ===================================================================
 - JS: Button to copy the history
+? GET_STEADY_BOARD
 * a2enmod headers expires ; service apache2 restart
 - mailto:username@example.com?subject=Subject&body=message%20goes%20here
   http://stackoverflow.com/questions/13231125/automically-open-default-email-client-and-pre-populate-content
@@ -261,9 +262,6 @@ https://developers.google.com/speed/docs/insights/ConfigureViewport
 - Send This Link Section: Move of previous player
 - History: Show En Passant
 - History: Show Castling
-- History: Show Check!
-- History: Goto Previous
-? History: No prompt, when check mate
 ? History: Cont: Make it possible to continue playing from a previous move
 ? History: Cont: Click history back, Return Link shows link to clear rest of history
 - Keep orientation: &top={white|black}
@@ -285,4 +283,4 @@ https://developers.google.com/speed/docs/insights/ConfigureViewport
 - Sync GET parameter order between  update_href()  and form in  index.php
 - Replace all hardcoded strings with constants (GET_TO, GET_FROM, ...)
 - Test with links2 or lynx
-- Fix everything marked with  "//..."
+- Fix everything marked with  "//...":  grep -n '//\.\.\.' *

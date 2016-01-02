@@ -71,7 +71,8 @@ function piece_glyph( $piece, $class = 'glyph' )
 			case 'k' : $ret .= '&#9818;'; break;
 
 			default:
-				debug_out( "\ngenerate_markup: piece_glyph: PIECE: $piece" );
+				debug_out("generate_markup: piece_glyph: ");
+				debug_out("Unknown piece code: $piece\n");
 				return '?';
 		}
 	}
@@ -151,7 +152,11 @@ function simplify_history( $markup )
 /**
  * history_markup()
  * See  decode_history  in  game_logic.php , it was the template for this
- * function.
+ * function. The coded history string is analyzed 2 chars at a time, because
+ * the main portion of content will be from-to codes for moves on the board.
+ * If a from-code is a round left paranthesis, these 2 bytes and the following
+ * 2 contain information of a promotion. Those 4 bytes are considered an "empty"
+ * or not counted round, regarding the output move list. 
  */
 function history_markup(
 	$board,
@@ -161,11 +166,11 @@ function history_markup(
 	$name_black,
 	$prompt
 ) {
-	$history .= '__';
+	$history .= '__';   // Add code representing the "?" prompt
 	$goto = get_parameter( GET_GOTO );
+	$link = '';
 
-
-	$class = HISTORY_BREAK_UL ? '' : ' class="scrolling"';
+	$class = (HISTORY_BREAK_UL) ? '' : ' class="scrolling"';
 	$ret
 	= "<h2><strong>$name_white</strong>"
 	. " vs. <strong>$name_black</strong></h2>\n"
@@ -173,39 +178,48 @@ function history_markup(
 	;
 
 	$current_move = 0;   //... Newly introduced. Routine might need cleanup.
-	$skipped_turns = 0;
+	$promotions = 0;     // Nr. of promotions, each leading to 4 chars of
+	                     //  $history  being skipped
+
 	$length = strlen( $history );
 
 	for( $i = 0 ; $i < $length ; $i += 2 ) {
+
+		// Extract 2 char instruction from history
+		// (Usually from-field and to-field codes or possibly
+		// promotion of a pawn into another piece)
+
 		$from_code = substr( $history, $i, 1 );
-		$to_code   = substr( $history, $i+1, 1 );
+		$to_code   = substr( $history, $i+1, 1 ); 
 
-		$from_field = decode_field( $from_code );
-		$to_field   = decode_field( $to_code );
-
-		list( $f_row, $f_col ) = field_to_rowcol( $from_field );
-		list( $t_row, $t_col ) = field_to_rowcol( $to_field );
-
-		if ((HISTORY_BREAK_UL) && ($i > 0) && (($i-4*$skipped_turns) % 80 == 0)) {
+		if ((HISTORY_BREAK_UL) && ($i > 0) && (($i-4*$promotions) % 80 == 0)) {
 			$ret .= "</ul><ul>\n";
 		}
 
 		switch ($from_code) {
 		case '_':   // Last item, show prompt /////////////////////////
 			if ($i % 4 == 0) {
-				$link = $href_this;
+				if (HISTORY_LINK_BACK) {
+					$link = $href_this;
+				}
 				$ret .= "\t<li>";
 				$nr = i_to_round( $history, $i );
 				$ret .= $nr . ': ';
-				$ret .= "<a href=\"$link\">";
+				if (HISTORY_LINK_BACK) {
+					$ret .= "<a href=\"$link\">";
+				} else {
+					$ret .= '<span>';
+				}
 			}
 
 			$ret .= $prompt;
 			break;
 
 		case '(':   // Pawn Promotion /////////////////////////////////
+			//... This section used to be larger and is now almost
+			//... obsolete, integrate into "Move" section!
 			$i += 2;
-			$skipped_turns++;
+			$promotions++;
 			break;
 
 		default:   // Move ////////////////////////////////////////////
@@ -214,15 +228,23 @@ function history_markup(
 			$current_color = (($current_move % 2) == WHITES_MOVE);
 			$opponent_color = ! $current_color;
 
+			$from_field = decode_field( $from_code );
+			$to_field   = decode_field( $to_code );
+
+			list( $f_row, $f_col ) = field_to_rowcol( $from_field );
+			list( $t_row, $t_col ) = field_to_rowcol( $to_field );
+
 			if ($i % 4 == 0) {
-				if ($i < $length) {
-					$link = history_link(
-						$href_this,
-						$current_move,
-						WHITES_MOVE
-					);
-				} else {
-					$link = $href_this;
+				if (HISTORY_LINK_BACK) {
+					if ($i < $length) {
+						$link = history_link(
+							$href_this,
+							$current_move,
+							WHITES_MOVE
+						);
+					} else {
+						$link = $href_this;
+					}
 				}
 
 				// Highlight history entry
@@ -233,7 +255,12 @@ function history_markup(
 				;
 
 				$nr = i_to_round( $history, $i );
-				$new_move .= "\t<li>$nr: <a href=\"$link\"$class>";
+				$new_move .= "\t<li>$nr: ";
+				if (HISTORY_LINK_BACK) {
+					$new_move .= "<a href=\"$link\"$class>";
+				} else {
+					$new_move .= '<span>';
+				}
 			}
 
 			$piece = $board[$f_row][$f_col];
@@ -282,23 +309,35 @@ function history_markup(
 			}
 
 			if ($i % 4 == 0) {
-				if ($i + 4 < $length) {
-					$link = history_link(
-						$href_this,
-						$current_move,
-						BLACKS_MOVE
-					);
-				} else {
-					$link = $href_this;
+				if (HISTORY_LINK_BACK) {
+					if ($i + 4 < $length) {
+						$link = history_link(
+							$href_this,
+							$current_move,
+							BLACKS_MOVE
+						);
+					} else {
+						$link = $href_this;
+					}
 				}
 				$class
 				= ($current_move + 1 == $goto)
 				? ' class="selected"'
 				: ''
 				;
-				$new_move .= ",</a> <a href=\"$link\"$class>";
+				$new_move .= ',';
+				if (HISTORY_LINK_BACK) {
+					$new_move .= "</a> <a href=\"$link\"$class>";
+				} else {
+					$new_move .= '</span> <span>';
+				}
 			} else {
-				$new_move .= "</a>\n";
+				if (HISTORY_LINK_BACK) {
+					$new_move .= '</a>';
+				} else {
+					$new_move .= '</span>';
+				}
+				$new_move .= "\n";
 			}
 
 
@@ -310,7 +349,11 @@ function history_markup(
 		} // switch $from_code
 	} // for $i
 
-	$ret .= '</a>';
+	if (HISTORY_LINK_BACK) {
+		$ret .= '</a>';
+	} else {
+		$ret .= '</span>';
+	}
 
 	if (substr($ret, -1, 1) != "\n") {
 		$ret .= "\n";
@@ -445,7 +488,6 @@ function piece_in_field( $pieces, $selected, $field_name )
 			$class = piece_class_markup( $p, $is_selected );
 			$title = piece_name_markup( $p );
 			$p = piece_glyph( $p );
-			//...$title = ucfirst( $p);
 			return "<div$class$title>$p</div>";
 		}
 	}

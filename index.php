@@ -1,26 +1,33 @@
 <?php /* index.php */
 $PROGRAM_NAME = 'Mail Chess';
-$VERSION      = 'v0.2.9&beta;';
+$VERSION      = 'v0.2.11&beta;';
 /******************************************************************************
 * REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
 * MAIN SCRIPT and HTML TEMPLATE
 ******************************************************************************/
 
-//... Log everything! No errors to the browser!
-set_time_limit( 2 /*seconds*/ );   // Script run time, stops endless loops
 $start_time = microtime( true );   // Seconds since boot (float)
+
+error_reporting( E_ALL | E_STRICT );   // Show everything, notices included
+ini_set( 'display_errors', 'off'  );   // Don't show errors in the browser, ..
+ini_set( 'display_startup_errors', 'off' );   // .. not even startup errors.
+ini_set( 'log_errors', 'on' );         // Should be active by default
+set_time_limit( 2 /*seconds*/ );       // Stops unintended endless loops
 
 include 'helpers.php';             // Debug and other small helper functions
 include 'definitions.php';         // Constant values, signal names
 include 'movement_rules.php';      // Find fields a piece can move to
-include 'url_helpers.php';         //  update_parameters() , etc.
+include 'url_helpers.php';         //  update_href() , etc.
 include 'generate_markup.php';     // Output to HTML
 include 'game_logic.php';          // Main game control
 
 main_control();   // see  game_logic.php
 
-$elapsed_seconds = round((microtime(true) - $start_time) * 100000) / 100;
-debug_out("<span class=\"time\">Time = {$elapsed_seconds}ms</span>");
+$cpu_mhz = substr(trim(shell_exec('grep MHz /proc/cpuinfo | head -n 1')), 11);
+$cpu_mhz = round($cpu_mhz * 100) / 100;
+$elapsed_ms = round((microtime(true) - $start_time) * 100000) / 100;
+$cycles = round(($elapsed_ms/100) * $cpu_mhz) / 10;
+debug_out("<span class=\"time\">{$elapsed_ms}ms@{$cpu_mhz}MHz={$cycles}Mc</span>");
 
 
 /******************************************************************************
@@ -100,14 +107,14 @@ debug_out("<span class=\"time\">Time = {$elapsed_seconds}ms</span>");
 </p>
 <?   ENDIF ?>
 <?   IF ($id_focus != ''): ?>
-<script type="text/javascript"> document.getElementById('<?= $id_focus ?>').focus(); </script>
+<!-- script type="text/javascript"> document.getElementById('<?= $id_focus ?>').focus(); </script -->
 <?   ENDIF ?>
 </form>
 <?  ENDIF ?>
 <?  IF ($game_state_link != ''):  ?>
 <h2>Return Link</h2><!-- h2>Send this link:</h2 -->
 <p>
-	Turn #<?= $turn_nr //...substr($game_title, 0, -3) ?>:
+	Turn #<?= $turn_nr ?>:
 	<br>
 	<a href="<?= $game_state_link ?>" title="Copy/paste this link"><?= $game_state_link ?></a>
 </p>
@@ -131,8 +138,8 @@ debug_out("<span class=\"time\">Time = {$elapsed_seconds}ms</span>");
 	<li><button onclick="toggleStyle()" accesskey="s" title="Firefox: Next Style: Alt+Shift+S">Menu</button>
 	<hr>
 	<li><a href="./">New Game</a>
-	<li><a href="<?= $href_flip ?>">Flip Board</a>
-	<li><a href="<?= $href_player ?>">Switch Sides</a>
+	<li><a accesskey="f" href="<?= $href_flip ?>">Flip Board</a>
+	<li><a accesskey="x" href="<?= $href_player ?>">Switch Sides</a>
 	<li><a href="./?base=">Empty Board</a>
 	<hr>
 	<li><a accesskey="p" href="<?= $history_prev; ?>" title="Firefox: Alt+Shift+P">History: Back (&uarr;P)</a>

@@ -12,7 +12,12 @@ define( 'DEBUG', !false );                      // Show  debug_out()  messages
 define( 'DEBUG_TO_FILE', false );              // Write messages to file
 define( 'DEBUG_FILE_NAME', '../debug.log' );
 
-define( 'HISTORY_BREAK_UL', true );          // Insert </ul><ul> every 20 moves
+// TRUE: Use <a href="..."> instead of <span> for the moves:
+define( 'HISTORY_LINK_BACK', isset($_GET['goto']) );   // Link each single move
+
+// TRUE: Insert </ul><ul> every 20 moves, breaking the list into columns:
+define( 'HISTORY_BREAK_UL', isset($_GET['goto']) );    // Non-semantic cheat
+
 define( 'USE_UNICODE_GLYPHS', true );          // Use special characters
 define( 'STEADY_BOARD', false );               // true: Black plays downwards,
                                                // board never flips
@@ -140,7 +145,7 @@ $TEST_LINKS = array(
 	'Check Mate' => '?player=white&white=A.+White&black=B.+Black&base=KePmpuqRq2k8',
 	'Stale Mate' => '?player=white&history=lBZJksYIBI6Lgv7GdJ*TJXLCX6G76787vKTJcM1TMDTKDKJDK5DtmtCL5D2UtB0KDK92fH$8H878K2LCnvCteltLhe812K49KR3Ne01*RK910W1WIQW0KRLCbqUMR0CLQYLUY6(6Q)U865MEvENFEMFxBJxoqHog(gq)5K*3HY3UY8gapFaiKTUN82NF0RijltjHsAHJAJFETDEx2NxoMUoxU2xoDuofulfg2*(*Q)gh&white=A.+White&black=B.+Black',
 	'History'    => '?player=black&history=lBZJksYIBI6Lgv7GdJ*TJXLCX6G76787vKTJcM1TMDTKDKJDK5DtmtCL5D2UtB0KDK92fH$8H878K2LCnvCteltLhe812K49KR3Ne01*RK910W1WIQW0KRLCbqUMR0CLQYLUY6(6Q)U865MEvENFEMFxBJxoqHog(gq)5K&white=A.+White&black=B.+Black',
-	'Queens'     => '?base=QaQkQuQEQHQOQ2Q7',
+	'Queens'     => '?base=QbQlQvQFQIQOQ2Q8',
 );
 
 
