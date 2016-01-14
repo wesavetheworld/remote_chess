@@ -226,6 +226,7 @@ https://en.wikipedia.org/wiki/Chess_opening
 https://en.wikipedia.org/wiki/Chess_middlegame
 https://en.wikipedia.org/wiki/Chess_endgame
 https://en.wikipedia.org/wiki/Glossary_of_chess
+https://en.wikipedia.org/wiki/Ply_%28game_theory%29
 
 https://en.wikipedia.org/wiki/Chess_notation
 https://en.wikipedia.org/wiki/Algebraic_chess_notation
@@ -250,6 +251,7 @@ https://developers.google.com/speed/docs/insights/ConfigureViewport
 - Reflect end of game in History
 == OPTIONAL ===================================================================
 - JS: Button to copy the history
+- Blind chess trainer option
 ? GET_STEADY_BOARD
 * a2enmod headers expires ; service apache2 restart
 - mailto:username@example.com?subject=Subject&body=message%20goes%20here

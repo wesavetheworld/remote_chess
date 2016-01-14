@@ -233,8 +233,6 @@ function select_piece( $board_array, $current_player, $from_field )
 		$from_field
 	);
 
-	// Eliminate moves that would end in own king being in check
-
 	$new = array( $clickable[0] );
 	list( $f_row, $f_col ) = field_to_rowcol( $from_field );
 	$piece = $board_array[$f_row][$f_col];
@@ -302,7 +300,7 @@ function select_piece( $board_array, $current_player, $from_field )
 				}
 
 				$in_check = king_in_check(
-					$board_array,
+					$new_array,
 					$current_player
 				);
 
@@ -311,7 +309,8 @@ function select_piece( $board_array, $current_player, $from_field )
 				&& !($in_check && ($dir == -2))
 				) {
 					$new[] = $to_field;
-				}			}
+				}
+			}
 		}
 	}
 

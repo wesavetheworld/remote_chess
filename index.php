@@ -1,6 +1,6 @@
 <?php /* index.php */
 $PROGRAM_NAME = 'Mail Chess';
-$VERSION      = 'v0.2.11&beta;';
+$VERSION      = 'v0.2.10&beta;';
 /******************************************************************************
 * REMOTE CHESS - Copy(L)eft 2015                         http://harald.ist.org/
 * MAIN SCRIPT and HTML TEMPLATE
